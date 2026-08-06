@@ -46,7 +46,7 @@ export default async function DemoPage() {
               {DEMO_DISCLAIMER}
             </Alert>
 
-            <Card className="mt-6 border-white/12 bg-ink-900/60 p-5">
+            <Card className="bg-ink-900/60 mt-6 border-white/12 p-5">
               <h3 className="text-sm font-semibold text-white">What the demo is showing you</h3>
               <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-slate-400">
                 <li>
@@ -56,9 +56,7 @@ export default async function DemoPage() {
                 <li>
                   How findings are framed: what was observed, why it matters and what to change.
                 </li>
-                <li>
-                  How the action plan is prioritized by severity, impact and effort.
-                </li>
+                <li>How the action plan is prioritized by severity, impact and effort.</li>
               </ul>
               <p className="mt-4 text-sm text-slate-400">
                 Want the full version?{' '}
@@ -74,7 +72,7 @@ export default async function DemoPage() {
             {settings.demoModeEnabled ? (
               <InstantDemo size="full" />
             ) : (
-              <Card className="border-white/12 bg-ink-900/60 p-8 text-center text-slate-300">
+              <Card className="bg-ink-900/60 border-white/12 p-8 text-center text-slate-300">
                 <p>The interactive demo is temporarily unavailable.</p>
               </Card>
             )}
@@ -82,7 +80,7 @@ export default async function DemoPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-16 lg:py-20">
           <SectionHeading
             eyebrow="Free live preview"
@@ -94,14 +92,14 @@ export default async function DemoPage() {
             {settings.freePreviewEnabled ? (
               <LivePreview />
             ) : (
-              <Card className="mx-auto max-w-3xl border-white/12 bg-ink-900/60 p-8 text-center text-slate-300">
+              <Card className="bg-ink-900/60 mx-auto max-w-3xl border-white/12 p-8 text-center text-slate-300">
                 <p>The free preview is temporarily unavailable. Please try again later.</p>
               </Card>
             )}
           </div>
 
           <div className="mx-auto mt-10 max-w-3xl">
-            <Card className="border-white/12 bg-ink-900/60 p-5">
+            <Card className="bg-ink-900/60 border-white/12 p-5">
               <h3 className="text-sm font-semibold text-white">How the preview treats your site</h3>
               <ul className="mt-3 space-y-2 text-[0.8125rem] leading-relaxed text-slate-400">
                 <li>Fetches one page — your homepage — and nothing else.</li>

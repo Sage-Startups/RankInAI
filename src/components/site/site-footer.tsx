@@ -7,7 +7,7 @@ export function SiteFooter({ supportEmail }: { supportEmail: string }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/10 bg-ink-950 text-slate-300">
+    <footer className="bg-ink-950 border-t border-white/10 text-slate-300">
       <div className="rk-container py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
@@ -44,10 +44,7 @@ export function SiteFooter({ supportEmail }: { supportEmail: string }) {
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} RankInAI. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <a
-              href={`mailto:${supportEmail}`}
-              className="transition-colors hover:text-slate-300"
-            >
+            <a href={`mailto:${supportEmail}`} className="transition-colors hover:text-slate-300">
               {supportEmail}
             </a>
             <Link href="/legal/privacy" className="transition-colors hover:text-slate-300">

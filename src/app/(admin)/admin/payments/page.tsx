@@ -85,13 +85,27 @@ export default async function AdminPaymentsPage({
             <caption className="sr-only">All payments</caption>
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                <th scope="col" className="px-5 py-3 font-semibold">Date</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Customer</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Product</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Amount</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Status</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Refunded</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Credits</th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Date
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Customer
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Product
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Amount
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Refunded
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Credits
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -124,10 +138,10 @@ export default async function AdminPaymentsPage({
                       {payment.status.replace(/_/g, ' ').toLowerCase()}
                     </Badge>
                   </td>
-                  <td className="px-5 py-3 tabular-nums text-[var(--muted-foreground)]">
+                  <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
                     {payment.refundedCents > 0 ? formatUsd(payment.refundedCents) : '—'}
                   </td>
-                  <td className="px-5 py-3 tabular-nums text-[var(--muted-foreground)]">
+                  <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
                     {payment.purchases.reduce((sum, p) => sum + p.creditsGranted, 0) || '—'}
                   </td>
                 </tr>
@@ -153,7 +167,10 @@ export default async function AdminPaymentsPage({
         ) : (
           <ul className="divide-y divide-[var(--border)]">
             {webhooks.map((event) => (
-              <li key={event.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+              <li
+                key={event.id}
+                className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5"
+              >
                 <div className="min-w-0">
                   <p className="text-sm">
                     <span className="font-mono text-xs">{event.type}</span>

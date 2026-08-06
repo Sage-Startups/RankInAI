@@ -34,7 +34,7 @@ export function AdminNav() {
                   href={link.href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'inline-block whitespace-nowrap border-b-2 px-3.5 py-3 text-sm font-medium transition-colors',
+                    'inline-block border-b-2 px-3.5 py-3 text-sm font-medium whitespace-nowrap transition-colors',
                     active
                       ? 'border-cyan-500 text-[var(--foreground)]'
                       : 'border-transparent text-[var(--muted-foreground)] hover:border-[var(--border-strong)] hover:text-[var(--foreground)]',

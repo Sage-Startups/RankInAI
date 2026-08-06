@@ -59,7 +59,9 @@ export function ForgotPasswordForm() {
           autoFocus
           className="mt-2"
           aria-invalid={firstError(state?.fieldErrors, 'email') ? true : undefined}
-          aria-describedby={firstError(state?.fieldErrors, 'email') ? 'forgot-email-error' : undefined}
+          aria-describedby={
+            firstError(state?.fieldErrors, 'email') ? 'forgot-email-error' : undefined
+          }
         />
         <FieldError id="forgot-email-error" message={firstError(state?.fieldErrors, 'email')} />
       </div>

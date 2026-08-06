@@ -221,14 +221,14 @@ export default function FeaturesPage() {
           {AUDIT_CATEGORIES.map((category) => {
             const Icon = category.icon;
             return (
-              <Card key={category.key} className="border-white/12 bg-ink-900/60 p-6 sm:p-8">
+              <Card key={category.key} className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
                 <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:gap-10">
                   <div>
                     <div className="flex items-center gap-3">
                       <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/12 text-cyan-300">
                         <Icon className="size-5" aria-hidden="true" />
                       </span>
-                      <span className="rounded-full border border-white/12 px-2.5 py-0.5 text-xs tabular-nums text-slate-400">
+                      <span className="rounded-full border border-white/12 px-2.5 py-0.5 text-xs text-slate-400 tabular-nums">
                         {Math.round(CATEGORY_WEIGHTS[category.key] * 100)}% of score
                       </span>
                     </div>
@@ -239,7 +239,7 @@ export default function FeaturesPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                    <h3 className="text-xs font-semibold tracking-[0.12em] text-slate-400 uppercase">
                       What is checked
                     </h3>
                     <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
@@ -264,7 +264,7 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-16 lg:py-20">
           <SectionHeading
             eyebrow="Platform"
@@ -275,7 +275,7 @@ export default function FeaturesPage() {
             {PLATFORM_FEATURES.map((feature) => {
               const Icon = feature.icon;
               return (
-                <Card key={feature.title} className="border-white/12 bg-ink-900/60 p-5">
+                <Card key={feature.title} className="bg-ink-900/60 border-white/12 p-5">
                   <span className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
                     <Icon className="size-4.5" aria-hidden="true" />
                   </span>
@@ -298,7 +298,7 @@ export default function FeaturesPage() {
         />
 
         <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
-          <Card className="border-white/12 bg-ink-900/60 p-6">
+          <Card className="bg-ink-900/60 border-white/12 p-6">
             <h3 className="text-sm font-semibold text-white">AI narrative enhancement</h3>
             <p className="mt-2.5 text-sm leading-relaxed text-slate-400">
               When an OpenAI key is configured, a model rewrites executive summaries and
@@ -308,7 +308,7 @@ export default function FeaturesPage() {
             </p>
           </Card>
 
-          <Card className="border-white/12 bg-ink-900/60 p-6">
+          <Card className="bg-ink-900/60 border-white/12 p-6">
             <h3 className="text-sm font-semibold text-white">Public-web search observations</h3>
             <p className="mt-2.5 text-sm leading-relaxed text-slate-400">
               When a search provider is configured, RankInAI runs a small fixed set of queries

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { SubscriptionStatus } from '@prisma/client';
+import { type SubscriptionStatus } from '@prisma/client';
 
 import { Badge, Card, EmptyState, Skeleton } from '@/components/ui/primitives';
 import { DemoToggle } from '@/components/admin/demo-toggle';
@@ -52,8 +52,8 @@ export default async function AdminSubscriptionsPage({
         <div>
           <h1 className="text-2xl font-bold">Subscriptions</h1>
           <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-            {overview.subscriptions.active} active ·{' '}
-            {formatUsd(overview.subscriptions.mrrCents)} monthly recurring revenue.
+            {overview.subscriptions.active} active · {formatUsd(overview.subscriptions.mrrCents)}{' '}
+            monthly recurring revenue.
           </p>
         </div>
         <Suspense fallback={<Skeleton className="h-10 w-56" />}>
@@ -67,7 +67,7 @@ export default async function AdminSubscriptionsPage({
           const entitlements = entitlementsForPlan(plan);
           return (
             <Card key={plan} className="p-5">
-              <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+              <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
                 {planLabel(plan)}
               </p>
               <p className="mt-2 text-2xl font-bold tabular-nums">{count}</p>
@@ -94,20 +94,37 @@ export default async function AdminSubscriptionsPage({
             <caption className="sr-only">All subscriptions</caption>
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                <th scope="col" className="px-5 py-3 font-semibold">Customer</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Plan</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Status</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Usage</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Renews</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Cancels</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Stripe ID</th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Customer
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Plan
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Usage
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Renews
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Cancels
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Stripe ID
+                </th>
               </tr>
             </thead>
             <tbody>
               {subscriptions.map((subscription) => {
                 const allowance = entitlementsForPlan(subscription.plan).auditsPerPeriod;
                 return (
-                  <tr key={subscription.id} className="border-b border-[var(--border)] last:border-0">
+                  <tr
+                    key={subscription.id}
+                    className="border-b border-[var(--border)] last:border-0"
+                  >
                     <th scope="row" className="px-5 py-3 font-normal">
                       <Link
                         href={`/admin/users/${subscription.user.id}`}

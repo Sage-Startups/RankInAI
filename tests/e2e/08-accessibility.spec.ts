@@ -94,9 +94,7 @@ test.describe('Accessibility: no serious or critical violations', () => {
     expect(outcome.status).toBe('COMPLETED');
 
     await page.goto(`/dashboard/audits/${auditId}`);
-    await expect(
-      page.getByRole('heading', { name: /Overall AI Visibility Score/i }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Overall AI Visibility Score/i })).toBeVisible();
     await scan(page, 'audit report');
   });
 

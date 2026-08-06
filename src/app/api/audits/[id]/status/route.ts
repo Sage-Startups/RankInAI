@@ -8,10 +8,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /** Lightweight progress endpoint polled by the audit detail page. */
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireApiUser();
   if (!auth.ok) {
     return NextResponse.json({ error: auth.message }, { status: auth.status });

@@ -36,7 +36,9 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
-    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: `${SITE.name} — ${SITE.tagline}` }],
+    images: [
+      { url: '/opengraph-image', width: 1200, height: 630, alt: `${SITE.name} — ${SITE.tagline}` },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -78,12 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         ) : null}
         <AnalyticsProvider />
         {children}
-        <Toaster
-          position="bottom-right"
-          richColors
-          closeButton
-          toastOptions={{ duration: 5000 }}
-        />
+        <Toaster position="bottom-right" richColors closeButton toastOptions={{ duration: 5000 }} />
       </body>
     </html>
   );

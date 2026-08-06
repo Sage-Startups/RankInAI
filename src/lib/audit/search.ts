@@ -13,7 +13,9 @@ import type { SearchObservation } from '@/lib/audit/types';
 
 export interface SearchProvider {
   name: string;
-  search(query: string): Promise<{ results: Array<{ title: string; link: string; snippet: string }> }>;
+  search(
+    query: string,
+  ): Promise<{ results: Array<{ title: string; link: string; snippet: string }> }>;
 }
 
 class SerperProvider implements SearchProvider {
@@ -82,9 +84,13 @@ export async function collectSearchObservations(
   const service = (input.primaryServices ?? '').split(/[,;]/)[0]?.trim();
   const queries = [
     service ? `${input.businessName} ${service}` : `${input.businessName} services`,
-    input.businessLocation ? `${input.businessName} ${input.businessLocation}` : `${input.businessName} reviews`,
+    input.businessLocation
+      ? `${input.businessName} ${input.businessLocation}`
+      : `${input.businessName} reviews`,
     `${input.businessName} reviews`,
-    service ? `best ${service} ${input.businessLocation ?? ''}`.trim() : `${input.businessName} expertise`,
+    service
+      ? `best ${service} ${input.businessLocation ?? ''}`.trim()
+      : `${input.businessName} expertise`,
   ].filter((q, i, arr) => q.length > 0 && arr.indexOf(q) === i);
 
   const observations: SearchObservation[] = [];

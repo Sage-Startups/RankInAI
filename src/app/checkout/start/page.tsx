@@ -48,7 +48,7 @@ export default async function CheckoutStartPage({
       <main id="main" className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
           <Card className="p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-300">
+            <p className="text-xs font-semibold tracking-[0.14em] text-violet-600 uppercase dark:text-violet-300">
               Confirm your purchase
             </p>
             <h1 className="mt-2 text-2xl font-bold">{product.name}</h1>

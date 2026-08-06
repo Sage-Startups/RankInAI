@@ -2,7 +2,7 @@ import {
   AuditStatus,
   CompetitorStatus,
   EvidenceSource,
-  Prisma,
+  type Prisma,
   type Audit,
 } from '@prisma/client';
 
@@ -312,8 +312,7 @@ export async function runAudit(
         effectiveWeight: category.effectiveWeight,
         rawPoints: category.rawPoints,
         maxPoints: category.maxPoints,
-        summary:
-          categoryNarratives.get(CATEGORY_LABELS[category.category]) ?? category.summary,
+        summary: categoryNarratives.get(CATEGORY_LABELS[category.category]) ?? category.summary,
       })),
     });
 

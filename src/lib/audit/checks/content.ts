@@ -28,7 +28,15 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Average content depth --------------------------------------------
   const depthRatio =
-    avgWords >= 800 ? 1 : avgWords >= 500 ? 0.8 : avgWords >= 300 ? 0.55 : avgWords >= 150 ? 0.3 : 0.1;
+    avgWords >= 800
+      ? 1
+      : avgWords >= 500
+        ? 0.8
+        : avgWords >= 300
+          ? 0.55
+          : avgWords >= 150
+            ? 0.3
+            : 0.1;
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'content.average-depth',
@@ -84,18 +92,28 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Editorial / resource content -------------------------------------
   const articlePages = pages.filter(
-    (p) => p.role === PageRole.ARTICLE || p.role === PageRole.BLOG_INDEX || p.role === PageRole.CASE_STUDY,
+    (p) =>
+      p.role === PageRole.ARTICLE ||
+      p.role === PageRole.BLOG_INDEX ||
+      p.role === PageRole.CASE_STUDY,
   );
   const articleRatio = scaleToTarget(articlePages.length, 3);
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'content.editorial-presence',
       title: 'Site publishes explanatory or educational content',
-      status: articlePages.length >= 3 ? Status.PASS : articlePages.length >= 1 ? Status.WARN : Status.FAIL,
+      status:
+        articlePages.length >= 3
+          ? Status.PASS
+          : articlePages.length >= 1
+            ? Status.WARN
+            : Status.FAIL,
       ratio: articleRatio,
       maxPoints: 8,
       evidence: {
-        editorialPagesFound: articlePages.map((p) => ({ url: p.finalUrl, role: p.role })).slice(0, 10),
+        editorialPagesFound: articlePages
+          .map((p) => ({ url: p.finalUrl, role: p.role }))
+          .slice(0, 10),
         count: articlePages.length,
       },
       explanation:
@@ -137,12 +155,14 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Vague marketing language ------------------------------------------
   const vagueHits = [...new Set(pages.flatMap((p) => p.vaguePhrases))];
-  const vagueRatio = vagueHits.length === 0 ? 1 : vagueHits.length <= 2 ? 0.65 : vagueHits.length <= 4 ? 0.35 : 0;
+  const vagueRatio =
+    vagueHits.length === 0 ? 1 : vagueHits.length <= 2 ? 0.65 : vagueHits.length <= 4 ? 0.35 : 0;
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'content.vague-language',
       title: 'Copy avoids empty marketing filler',
-      status: vagueHits.length === 0 ? Status.PASS : vagueHits.length <= 2 ? Status.WARN : Status.FAIL,
+      status:
+        vagueHits.length === 0 ? Status.PASS : vagueHits.length <= 2 ? Status.WARN : Status.FAIL,
       ratio: vagueRatio,
       maxPoints: 5,
       evidence: {
@@ -167,7 +187,12 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'content.unsupported-superlatives',
       title: 'Claims are not built on unsupported superlatives',
-      status: superlativeHits.length === 0 ? Status.PASS : superlativeHits.length <= 2 ? Status.WARN : Status.FAIL,
+      status:
+        superlativeHits.length === 0
+          ? Status.PASS
+          : superlativeHits.length <= 2
+            ? Status.WARN
+            : Status.FAIL,
       ratio: superRatio,
       maxPoints: 4,
       evidence: {
@@ -190,17 +215,32 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
   const parsedDates = dated
     .map((p) => new Date(p.modifiedDate ?? p.publishedDate ?? ''))
     .filter((d) => !Number.isNaN(d.getTime()));
-  const newest = parsedDates.length > 0 ? new Date(Math.max(...parsedDates.map((d) => d.getTime()))) : null;
+  const newest =
+    parsedDates.length > 0 ? new Date(Math.max(...parsedDates.map((d) => d.getTime()))) : null;
   const monthsSince = newest ? (Date.now() - newest.getTime()) / (1000 * 60 * 60 * 24 * 30) : null;
   const freshRatio =
-    monthsSince == null ? 0 : monthsSince <= 6 ? 1 : monthsSince <= 12 ? 0.7 : monthsSince <= 24 ? 0.4 : 0.15;
+    monthsSince == null
+      ? 0
+      : monthsSince <= 6
+        ? 1
+        : monthsSince <= 12
+          ? 0.7
+          : monthsSince <= 24
+            ? 0.4
+            : 0.15;
 
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'content.freshness',
       title: 'Content carries visible dates and is kept current',
       status:
-        monthsSince == null ? Status.FAIL : monthsSince <= 12 ? Status.PASS : monthsSince <= 24 ? Status.WARN : Status.FAIL,
+        monthsSince == null
+          ? Status.FAIL
+          : monthsSince <= 12
+            ? Status.PASS
+            : monthsSince <= 24
+              ? Status.WARN
+              : Status.FAIL,
       ratio: freshRatio,
       maxPoints: 6,
       evidence: {
@@ -229,7 +269,8 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'content.internal-linking',
       title: 'Pages are connected by internal links',
-      status: avgInternalLinks >= 8 ? Status.PASS : avgInternalLinks >= 4 ? Status.WARN : Status.FAIL,
+      status:
+        avgInternalLinks >= 8 ? Status.PASS : avgInternalLinks >= 4 ? Status.WARN : Status.FAIL,
       ratio: linkRatio,
       maxPoints: 5,
       evidence: {
@@ -269,7 +310,11 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
         problems: pages
           .filter((p) => p.h1.length !== 1 || !p.headingHierarchyValid)
           .slice(0, 5)
-          .map((p) => ({ url: p.finalUrl, h1Count: p.h1.length, validHierarchy: p.headingHierarchyValid })),
+          .map((p) => ({
+            url: p.finalUrl,
+            h1Count: p.h1.length,
+            validHierarchy: p.headingHierarchyValid,
+          })),
       },
       explanation:
         'Headings are how a document is split into retrievable chunks. A broken hierarchy or multiple H1s produces chunks that do not match the topics on the page.',
@@ -285,11 +330,15 @@ export function runContentChecks(ctx: AuditContext): CheckResult[] {
   // --- Original evidence / proof -----------------------------------------
   const proofSignals = {
     caseStudies: pages.filter((p) => p.role === PageRole.CASE_STUDY).length,
-    testimonialLanguage: /\b(testimonial|review|client said|what our customers say|rated \d)\b/i.test(allText),
-    originalData: /\b(our (data|research|survey|study|analysis)|we (surveyed|analyzed|measured|tested))\b/i.test(
+    testimonialLanguage:
+      /\b(testimonial|review|client said|what our customers say|rated \d)\b/i.test(allText),
+    originalData:
+      /\b(our (data|research|survey|study|analysis)|we (surveyed|analyzed|measured|tested))\b/i.test(
+        allText,
+      ),
+    projectCounts: /\b\d{2,}\s*(projects?|installations?|clients?|customers?|homes?|jobs?)\b/i.test(
       allText,
     ),
-    projectCounts: /\b\d{2,}\s*(projects?|installations?|clients?|customers?|homes?|jobs?)\b/i.test(allText),
   };
   const proofCount = Object.values(proofSignals).filter(Boolean).length;
   const proofRatio = proofCount / 4;

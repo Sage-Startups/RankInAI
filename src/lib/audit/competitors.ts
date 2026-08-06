@@ -86,7 +86,10 @@ export async function analyzeCompetitors(
 function deriveCompetitorName(title: string | null, domain: string): string {
   if (!title) return domain;
   // Titles are usually "Topic | Brand" or "Brand — Topic".
-  const parts = title.split(/[|—–\-·]/).map((p) => p.trim()).filter(Boolean);
+  const parts = title
+    .split(/[|—–\-·]/)
+    .map((p) => p.trim())
+    .filter(Boolean);
   if (parts.length === 0) return domain;
   const last = parts[parts.length - 1] ?? '';
   const first = parts[0] ?? '';
@@ -114,7 +117,13 @@ function competitorCategoryScores(
     (Object.keys(signals.openGraph).length >= 3 ? 20 : 0);
 
   const content =
-    (signals.wordCount >= 800 ? 45 : signals.wordCount >= 500 ? 35 : signals.wordCount >= 300 ? 22 : 8) +
+    (signals.wordCount >= 800
+      ? 45
+      : signals.wordCount >= 500
+        ? 35
+        : signals.wordCount >= 300
+          ? 22
+          : 8) +
     (signals.paragraphCount >= 6 ? 25 : signals.paragraphCount >= 3 ? 15 : 5) +
     (signals.factualDataPoints >= 3 ? 20 : signals.factualDataPoints >= 1 ? 10 : 0) +
     (signals.vaguePhrases.length === 0 ? 10 : 0);
@@ -127,7 +136,9 @@ function competitorCategoryScores(
     (signals.headings.length >= 5 ? 10 : 0);
 
   const structured =
-    (signals.schemaTypes.some((t) => ['Organization', 'LocalBusiness', 'Corporation'].includes(t)) ? 40 : 0) +
+    (signals.schemaTypes.some((t) => ['Organization', 'LocalBusiness', 'Corporation'].includes(t))
+      ? 40
+      : 0) +
     (signals.schemaTypes.length >= 3 ? 25 : signals.schemaTypes.length >= 1 ? 12 : 0) +
     (signals.schemaTypes.includes('FAQPage') ? 20 : 0) +
     (signals.jsonLd.every((b) => b.valid) && signals.jsonLd.length > 0 ? 15 : 0);
@@ -152,7 +163,9 @@ function competitorCategoryScores(
 function buildHighlights(signals: ReturnType<typeof analyzeHtml>): string[] {
   const highlights: string[] = [];
   if (signals.schemaTypes.length >= 3) {
-    highlights.push(`Declares ${signals.schemaTypes.length} schema types: ${signals.schemaTypes.slice(0, 5).join(', ')}`);
+    highlights.push(
+      `Declares ${signals.schemaTypes.length} schema types: ${signals.schemaTypes.slice(0, 5).join(', ')}`,
+    );
   }
   if (signals.wordCount >= 600) {
     highlights.push(`Substantial homepage copy (${signals.wordCount} words)`);

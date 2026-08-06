@@ -30,7 +30,8 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'tech.https',
       title: 'Site is served over HTTPS',
-      status: pages.length === 0 ? Status.FAIL : statusFromRatio(httpsRatio, { passAt: 1, warnAt: 0.5 }),
+      status:
+        pages.length === 0 ? Status.FAIL : statusFromRatio(httpsRatio, { passAt: 1, warnAt: 0.5 }),
       ratio: httpsRatio,
       maxPoints: 8,
       evidence: {
@@ -77,7 +78,8 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Redirect chain length --------------------------------------------
   const longestChain = pages.reduce((max, p) => Math.max(max, p.redirectChain.length), 0);
-  const chainRatio = longestChain === 0 ? 1 : longestChain === 1 ? 0.8 : longestChain === 2 ? 0.5 : 0;
+  const chainRatio =
+    longestChain === 0 ? 1 : longestChain === 1 ? 0.8 : longestChain === 2 ? 0.5 : 0;
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'tech.redirect-chains',
@@ -111,7 +113,9 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'tech.indexability',
       title: 'Pages are indexable (no noindex directives)',
-      status: !homepageIndexable ? Status.FAIL : statusFromRatio(indexRatio, { passAt: 0.95, warnAt: 0.7 }),
+      status: !homepageIndexable
+        ? Status.FAIL
+        : statusFromRatio(indexRatio, { passAt: 0.95, warnAt: 0.7 }),
       ratio: homepageIndexable ? indexRatio : 0,
       maxPoints: 9,
       evidence: {
@@ -169,7 +173,8 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'tech.ai-crawler-access',
       title: 'AI and answer-engine crawlers are not blocked',
-      status: blockedAi.length === 0 ? Status.PASS : blockedAi.length <= 2 ? Status.WARN : Status.FAIL,
+      status:
+        blockedAi.length === 0 ? Status.PASS : blockedAi.length <= 2 ? Status.WARN : Status.FAIL,
       ratio: blockedAi.length === 0 ? 1 : blockedAi.length <= 2 ? 0.5 : 0,
       maxPoints: 7,
       evidence: {
@@ -311,7 +316,9 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
       explanation:
         'The html lang attribute tells retrieval systems which language a passage is in, which affects whether it is considered for a given query.',
       recommendedAction:
-        langRatio >= 0.9 ? 'No action needed.' : 'Set a lang attribute (for example lang="en-US") on the html element.',
+        langRatio >= 0.9
+          ? 'No action needed.'
+          : 'Set a lang attribute (for example lang="en-US") on the html element.',
       effort: Effort.LOW,
       impact: Impact.LOW,
     }),
@@ -401,8 +408,7 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
   );
 
   // --- Response speed ----------------------------------------------------
-  const avgMs =
-    pages.length > 0 ? pages.reduce((sum, p) => sum + p.fetchMs, 0) / pages.length : 0;
+  const avgMs = pages.length > 0 ? pages.reduce((sum, p) => sum + p.fetchMs, 0) / pages.length : 0;
   const speedRatio =
     avgMs === 0 ? 0 : avgMs <= 800 ? 1 : avgMs <= 1800 ? 0.7 : avgMs <= 3500 ? 0.4 : 0.1;
   checks.push(
@@ -422,7 +428,8 @@ export function runTechnicalChecks(ctx: AuditContext): CheckResult[] {
       evidence: {
         averageResponseMs: Math.round(avgMs),
         slowestPage: pages.reduce<{ url: string; ms: number } | null>(
-          (slowest, p) => (!slowest || p.fetchMs > slowest.ms ? { url: p.finalUrl, ms: p.fetchMs } : slowest),
+          (slowest, p) =>
+            !slowest || p.fetchMs > slowest.ms ? { url: p.finalUrl, ms: p.fetchMs } : slowest,
           null,
         ),
         note: 'Measured from this audit run and affected by network conditions.',

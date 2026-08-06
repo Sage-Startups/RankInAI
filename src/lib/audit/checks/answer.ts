@@ -189,7 +189,8 @@ export function runAnswerChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'answer.comparison-content',
       title: 'Site addresses comparison questions',
-      status: comparisonPages.length > 0 ? Status.PASS : comparisonSignals ? Status.WARN : Status.FAIL,
+      status:
+        comparisonPages.length > 0 ? Status.PASS : comparisonSignals ? Status.WARN : Status.FAIL,
       ratio: comparisonRatio,
       maxPoints: 5,
       evidence: {
@@ -276,7 +277,9 @@ export function runAnswerChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Homepage answers the core question ----------------------------------
   const homeOpening = homepage?.mainTextExcerpt.slice(0, 300) ?? '';
-  const homeAnswers = homeOpening.length >= 100 && /\b(is|are|provides?|offers?|specializ|serves?)\b/i.test(homeOpening);
+  const homeAnswers =
+    homeOpening.length >= 100 &&
+    /\b(is|are|provides?|offers?|specializ|serves?)\b/i.test(homeOpening);
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'answer.homepage-summary',

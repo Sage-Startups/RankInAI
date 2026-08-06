@@ -61,7 +61,7 @@ export default async function AdminUsersPage({
             </label>
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--muted-foreground)]"
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--muted-foreground)]"
                 aria-hidden="true"
               />
               <Input
@@ -102,13 +102,27 @@ export default async function AdminUsersPage({
             <caption className="sr-only">Registered users</caption>
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                <th scope="col" className="px-5 py-3 font-semibold">User</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Role</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Status</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Credits</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Audits</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Joined</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Last sign-in</th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  User
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Role
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Credits
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Audits
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Joined
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Last sign-in
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -121,7 +135,9 @@ export default async function AdminUsersPage({
                     >
                       {user.name ?? user.email}
                     </Link>
-                    <span className="block text-xs text-[var(--muted-foreground)]">{user.email}</span>
+                    <span className="block text-xs text-[var(--muted-foreground)]">
+                      {user.email}
+                    </span>
                     {user.isDemo ? (
                       <Badge tone="demo" className="mt-1">
                         Demo account

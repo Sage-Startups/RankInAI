@@ -101,7 +101,10 @@ export default async function AdminAuditDetailPage({
             <strong>Customer message:</strong> {audit.failureMessage ?? '—'}
           </p>
           {audit.job?.lastError ? (
-            <pre tabIndex={0} className="mt-3 overflow-x-auto rounded bg-[var(--surface-muted)] p-3 text-xs">
+            <pre
+              tabIndex={0}
+              className="mt-3 overflow-x-auto rounded bg-[var(--surface-muted)] p-3 text-xs"
+            >
               {audit.job.lastError}
             </pre>
           ) : null}
@@ -116,10 +119,19 @@ export default async function AdminAuditDetailPage({
         <Card className="p-5">
           <h2 className="text-sm font-semibold">Audit</h2>
           <dl className="mt-3 space-y-2 text-sm">
-            <Row label="Score" value={audit.overallScore != null ? String(audit.overallScore) : '—'} />
-            <Row label="Previous score" value={audit.previousScore != null ? String(audit.previousScore) : '—'} />
+            <Row
+              label="Score"
+              value={audit.overallScore != null ? String(audit.overallScore) : '—'}
+            />
+            <Row
+              label="Previous score"
+              value={audit.previousScore != null ? String(audit.previousScore) : '—'}
+            />
             <Row label="Plan at creation" value={audit.planAtCreation} />
-            <Row label="Credit source" value={audit.creditSource.replace(/_/g, ' ').toLowerCase()} />
+            <Row
+              label="Credit source"
+              value={audit.creditSource.replace(/_/g, ' ').toLowerCase()}
+            />
             <Row label="Page limit" value={String(audit.pageLimit)} />
             <Row label="Competitor limit" value={String(audit.competitorLimit)} />
           </dl>
@@ -149,7 +161,10 @@ export default async function AdminAuditDetailPage({
             <Row label="Pages recorded" value={String(audit._count.pages)} />
             <Row label="Findings" value={String(audit._count.findings)} />
             <Row label="Recommendations" value={String(audit._count.recommendations)} />
-            <Row label="LLM enhanced" value={audit.llmEnhanced ? (audit.llmModel ?? 'yes') : 'no'} />
+            <Row
+              label="LLM enhanced"
+              value={audit.llmEnhanced ? (audit.llmModel ?? 'yes') : 'no'}
+            />
             <Row label="Search provider" value={audit.searchProvider ?? 'none'} />
             <Row
               label="PDF"
@@ -167,7 +182,9 @@ export default async function AdminAuditDetailPage({
 
       {report?.pdfError ? (
         <Alert tone="warning" title="PDF generation error">
-          <pre tabIndex={0} className="overflow-x-auto text-xs">{report.pdfError}</pre>
+          <pre tabIndex={0} className="overflow-x-auto text-xs">
+            {report.pdfError}
+          </pre>
         </Alert>
       ) : null}
 
@@ -182,11 +199,21 @@ export default async function AdminAuditDetailPage({
               <caption className="sr-only">Category scores for this audit</caption>
               <thead>
                 <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                  <th scope="col" className="px-5 py-3 font-semibold">Category</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Score</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Points</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Base weight</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Effective weight</th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Category
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Score
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Points
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Base weight
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Effective weight
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -203,13 +230,13 @@ export default async function AdminAuditDetailPage({
                     <td className="px-5 py-3 font-semibold tabular-nums">
                       {score.available ? score.score : '—'}
                     </td>
-                    <td className="px-5 py-3 tabular-nums text-[var(--muted-foreground)]">
+                    <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
                       {score.rawPoints} / {score.maxPoints}
                     </td>
-                    <td className="px-5 py-3 tabular-nums text-[var(--muted-foreground)]">
+                    <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
                       {Math.round(score.baseWeight * 100)}%
                     </td>
-                    <td className="px-5 py-3 tabular-nums text-[var(--muted-foreground)]">
+                    <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
                       {Math.round(score.effectiveWeight * 100)}%
                     </td>
                   </tr>
@@ -248,11 +275,14 @@ export default async function AdminAuditDetailPage({
                     {SEVERITY_LABELS[finding.severity]}
                   </Badge>
                   <span className="text-sm">{finding.title}</span>
-                  <span className="ml-auto text-xs tabular-nums text-[var(--muted-foreground)]">
+                  <span className="ml-auto text-xs text-[var(--muted-foreground)] tabular-nums">
                     {finding.pointsAwarded} / {finding.pointsPossible}
                   </span>
                 </div>
-                <pre tabIndex={0} className="mt-2.5 overflow-x-auto rounded bg-[var(--surface-muted)] p-3 text-xs">
+                <pre
+                  tabIndex={0}
+                  className="mt-2.5 overflow-x-auto rounded bg-[var(--surface-muted)] p-3 text-xs"
+                >
                   {JSON.stringify(finding.evidence, null, 2)}
                 </pre>
               </li>

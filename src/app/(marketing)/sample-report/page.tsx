@@ -40,7 +40,12 @@ export default function SampleReportPage() {
                 <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/25 text-white hover:bg-white/10">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white/25 text-white hover:bg-white/10"
+            >
               <Link href="/pricing">See pricing</Link>
             </Button>
           </div>
@@ -49,7 +54,11 @@ export default function SampleReportPage() {
 
       <div className="bg-[var(--background)]">
         <div className="rk-container py-10 lg:py-14">
-          <Alert tone="warning" title="Interactive sample using fictional demonstration data" className="mb-8">
+          <Alert
+            tone="warning"
+            title="Interactive sample using fictional demonstration data"
+            className="mb-8"
+          >
             {DEMO_DISCLAIMER} Every score, finding and figure below was authored for this
             demonstration.
           </Alert>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { AuditStatus, Prisma } from '@prisma/client';
+import { AuditStatus, type Prisma } from '@prisma/client';
 import { FileSearch, FilePlus2, Search } from 'lucide-react';
 
 import { Badge, Card, EmptyState, Input, Select } from '@/components/ui/primitives';
@@ -35,7 +35,8 @@ export default async function AuditsPage({
 
   const page = Math.max(1, Number.parseInt(params.page ?? '1', 10) || 1);
   const query = (params.q ?? '').trim();
-  const statusFilter = params.status && params.status in AuditStatus ? (params.status as AuditStatus) : undefined;
+  const statusFilter =
+    params.status && params.status in AuditStatus ? (params.status as AuditStatus) : undefined;
   const showArchived = params.archived === '1';
 
   const where: Prisma.AuditWhereInput = {
@@ -94,7 +95,7 @@ export default async function AuditsPage({
             </label>
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--muted-foreground)]"
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--muted-foreground)]"
                 aria-hidden="true"
               />
               <Input
@@ -172,12 +173,24 @@ export default async function AuditsPage({
             <caption className="sr-only">Your audits</caption>
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                <th scope="col" className="px-5 py-3 font-semibold">Business</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Website</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Score</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Status</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Date</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Used</th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Business
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Website
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Score
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Date
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Used
+                </th>
                 <th scope="col" className="px-5 py-3 font-semibold">
                   <span className="sr-only">Actions</span>
                 </th>
@@ -206,7 +219,7 @@ export default async function AuditsPage({
                     {audit.overallScore != null ? (
                       <span className="font-bold tabular-nums">{audit.overallScore}</span>
                     ) : audit.status === AuditStatus.RUNNING ? (
-                      <span className="text-xs tabular-nums text-[var(--muted-foreground)]">
+                      <span className="text-xs text-[var(--muted-foreground)] tabular-nums">
                         {audit.job?.progress ?? 0}%
                       </span>
                     ) : (

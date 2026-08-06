@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { type Prisma } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
 
@@ -108,15 +108,22 @@ export interface FunnelCounts {
 }
 
 /** Aggregate the conversion funnel. Excludes demo data unless asked. */
-export async function getFunnelCounts(options: {
-  includeDemo?: boolean;
-  since?: Date;
-  until?: Date;
-} = {}): Promise<FunnelCounts> {
+export async function getFunnelCounts(
+  options: {
+    includeDemo?: boolean;
+    since?: Date;
+    until?: Date;
+  } = {},
+): Promise<FunnelCounts> {
   const where: Prisma.AnalyticsEventWhereInput = {
     ...(options.includeDemo ? {} : { isDemo: false }),
     ...(options.since || options.until
-      ? { createdAt: { ...(options.since ? { gte: options.since } : {}), ...(options.until ? { lte: options.until } : {}) } }
+      ? {
+          createdAt: {
+            ...(options.since ? { gte: options.since } : {}),
+            ...(options.until ? { lte: options.until } : {}),
+          },
+        }
       : {}),
   };
 

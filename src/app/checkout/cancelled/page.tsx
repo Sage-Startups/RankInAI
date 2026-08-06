@@ -46,9 +46,7 @@ export default async function CheckoutCancelledPage({
             <div className="mt-7 flex flex-col gap-2.5">
               {product ? (
                 <Button asChild size="lg">
-                  <Link href={`/checkout/start?plan=${product.key}`}>
-                    Try {product.name} again
-                  </Link>
+                  <Link href={`/checkout/start?plan=${product.key}`}>Try {product.name} again</Link>
                 </Button>
               ) : null}
               <Button asChild size="lg" variant={product ? 'secondary' : 'primary'}>

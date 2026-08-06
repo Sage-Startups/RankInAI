@@ -11,7 +11,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = appUrl();
   const now = new Date();
 
-  const routes: Array<{ path: string; priority: number; frequency: MetadataRoute.Sitemap[number]['changeFrequency'] }> = [
+  const routes: Array<{
+    path: string;
+    priority: number;
+    frequency: MetadataRoute.Sitemap[number]['changeFrequency'];
+  }> = [
     { path: '/', priority: 1, frequency: 'weekly' },
     { path: '/pricing', priority: 0.9, frequency: 'weekly' },
     { path: '/how-it-works', priority: 0.8, frequency: 'monthly' },

@@ -72,9 +72,7 @@ const schema = z.object({
   CRAWL_MAX_BYTES: intFromString(3_000_000),
   CRAWL_MAX_REDIRECTS: intFromString(5),
   CRAWL_DELAY_MS: intFromString(400),
-  CRAWL_USER_AGENT: z
-    .string()
-    .default('RankInAI-Auditor/1.0 (+https://rankinai.com/crawler)'),
+  CRAWL_USER_AGENT: z.string().default('RankInAI-Auditor/1.0 (+https://rankinai.com/crawler)'),
 
   ALLOW_TEST_FIXTURE_HOST: z.string().optional(),
   TEST_FIXTURE_ORIGIN: z.string().optional(),

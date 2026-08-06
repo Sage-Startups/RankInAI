@@ -4,7 +4,12 @@ import { AlertTriangle, ArrowUpRight, Coins, FileCheck2, TrendingUp, UserPlus } 
 
 import { Badge, Card } from '@/components/ui/primitives';
 import { Logo } from '@/components/brand/logo';
-import { AuditsChart, ConversionFunnel, RevenueChart, SignupChart } from '@/components/admin/charts';
+import {
+  AuditsChart,
+  ConversionFunnel,
+  RevenueChart,
+  SignupChart,
+} from '@/components/admin/charts';
 import {
   APRIL_2026_WINDOW,
   BUYER_PREVIEW_BANNER,
@@ -57,13 +62,13 @@ export default function BusinessSnapshotPage() {
       {/* Repeating watermark */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-10 select-none overflow-hidden opacity-[0.06]"
+        className="pointer-events-none fixed inset-0 z-10 overflow-hidden opacity-[0.06] select-none"
       >
         <div className="grid h-full w-full grid-cols-2 place-items-center gap-8 sm:grid-cols-3">
           {Array.from({ length: 18 }).map((_, index) => (
             <span
               key={index}
-              className="-rotate-[24deg] whitespace-nowrap text-2xl font-black uppercase tracking-widest text-[var(--foreground)]"
+              className="-rotate-[24deg] text-2xl font-black tracking-widest whitespace-nowrap text-[var(--foreground)] uppercase"
             >
               Demo data
             </span>
@@ -76,7 +81,7 @@ export default function BusinessSnapshotPage() {
         role="alert"
         className="sticky top-0 z-40 border-b-2 border-amber-600 bg-amber-500 px-4 py-3 text-center"
       >
-        <p className="mx-auto flex max-w-5xl items-center justify-center gap-2.5 text-xs font-bold uppercase leading-relaxed tracking-wide text-amber-950 sm:text-sm">
+        <p className="mx-auto flex max-w-5xl items-center justify-center gap-2.5 text-xs leading-relaxed font-bold tracking-wide text-amber-950 uppercase sm:text-sm">
           <AlertTriangle className="size-5 shrink-0" aria-hidden="true" />
           {BUYER_PREVIEW_BANNER}
         </p>
@@ -94,9 +99,10 @@ export default function BusinessSnapshotPage() {
           <h1 className="text-2xl font-bold">Business snapshot — demonstration data</h1>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted-foreground)]">
             This page shows how business performance would be presented inside RankInAI. Every
-            figure below was fabricated by the seed script for {formatDate(APRIL_2026_WINDOW.from, 'long')}{' '}
-            through {formatDate(APRIL_2026_WINDOW.to, 'long')}. Nothing here is verified revenue,
-            real customer activity or actual historical performance.
+            figure below was fabricated by the seed script for{' '}
+            {formatDate(APRIL_2026_WINDOW.from, 'long')} through{' '}
+            {formatDate(APRIL_2026_WINDOW.to, 'long')}. Nothing here is verified revenue, real
+            customer activity or actual historical performance.
           </p>
         </div>
 
@@ -163,14 +169,14 @@ export default function BusinessSnapshotPage() {
             <Row
               label="Average revenue per sign-up"
               value={formatUsd(
-                Math.round(
-                  DEMO_SNAPSHOT_TOTALS.grossRevenueCents / DEMO_SNAPSHOT_TOTALS.signups,
-                ),
+                Math.round(DEMO_SNAPSHOT_TOTALS.grossRevenueCents / DEMO_SNAPSHOT_TOTALS.signups),
               )}
             />
             <Row
               label="Audits per paying customer"
-              value={(DEMO_SNAPSHOT_TOTALS.auditsCompleted / DEMO_SNAPSHOT_TOTALS.signups).toFixed(1)}
+              value={(DEMO_SNAPSHOT_TOTALS.auditsCompleted / DEMO_SNAPSHOT_TOTALS.signups).toFixed(
+                1,
+              )}
             />
           </dl>
         </Card>
@@ -223,19 +229,36 @@ export default function BusinessSnapshotPage() {
               </caption>
               <thead>
                 <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                  <th scope="col" className="px-5 py-3 font-semibold">Date</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Customer</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Product</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Amount</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Credits</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Audit</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Score</th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Date
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Customer
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Product
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Amount
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Credits
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Audit
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Score
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {DEMO_PURCHASES.map((purchase, index) => (
                   <tr key={index} className="border-b border-[var(--border)] last:border-0">
-                    <th scope="row" className="px-5 py-3 font-normal text-[var(--muted-foreground)]">
+                    <th
+                      scope="row"
+                      className="px-5 py-3 font-normal text-[var(--muted-foreground)]"
+                    >
                       {formatDate(new Date(`${purchase.date}T12:00:00Z`))}
                     </th>
                     <td className="px-5 py-3">
@@ -323,7 +346,7 @@ export default function BusinessSnapshotPage() {
           </p>
         </Card>
 
-        <p className="mt-8 text-center text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
+        <p className="mt-8 text-center text-xs font-semibold tracking-wide text-amber-700 uppercase dark:text-amber-400">
           {BUYER_PREVIEW_BANNER}
         </p>
       </main>
@@ -344,12 +367,12 @@ function MetricCard({
 }) {
   return (
     <Card className="relative overflow-hidden p-5">
-      <span className="absolute right-3 top-3">
+      <span className="absolute top-3 right-3">
         <Badge tone="demo">Demo</Badge>
       </span>
       <div className="flex items-center gap-2.5">
         <Icon className="size-4 text-[var(--muted-foreground)]" aria-hidden />
-        <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+        <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
           {label}
         </p>
       </div>

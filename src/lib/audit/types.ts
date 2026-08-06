@@ -154,8 +154,7 @@ export const CATEGORY_DESCRIPTIONS: Record<AuditCategory, string> = {
     'Machine-readable schema markup describing your organization, content and offerings.',
   TRUST_AND_EVIDENCE:
     'Authorship, contact details, citations and proof that support what the site claims.',
-  COMPETITIVE_VISIBILITY:
-    'How your observable signals compare with the competitors you supplied.',
+  COMPETITIVE_VISIBILITY: 'How your observable signals compare with the competitors you supplied.',
 };
 
 export const SEVERITY_LABELS: Record<Severity, string> = {

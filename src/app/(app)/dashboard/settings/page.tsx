@@ -38,10 +38,7 @@ export default async function SettingsPage() {
         </p>
       </header>
 
-      <Section
-        title="Profile"
-        description="How your account and company appear inside RankInAI."
-      >
+      <Section title="Profile" description="How your account and company appear inside RankInAI.">
         <ProfileForm
           defaults={{
             name: user.name ?? '',
@@ -107,11 +104,7 @@ export default async function SettingsPage() {
       <Card className="border-red-500/35 p-6">
         <h2 className="text-base font-semibold text-red-700 dark:text-red-400">Delete account</h2>
         <div className="mt-4">
-          <DeleteAccountForm
-            alreadyRequested={
-              user.status === AccountStatus.PENDING_DELETION
-            }
-          />
+          <DeleteAccountForm alreadyRequested={user.status === AccountStatus.PENDING_DELETION} />
         </div>
       </Card>
     </div>

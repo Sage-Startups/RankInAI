@@ -49,7 +49,7 @@ export default async function OnboardingPage() {
       <main id="main" className="rk-container py-10 lg:py-14">
         <div className="mx-auto max-w-2xl">
           <div className="mb-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-300">
+            <p className="text-xs font-semibold tracking-[0.14em] text-violet-600 uppercase dark:text-violet-300">
               Step 1 of 1
             </p>
             <h1 className="mt-2 text-2xl font-bold">Tell us a little about your work</h1>

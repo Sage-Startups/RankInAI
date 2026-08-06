@@ -77,7 +77,10 @@ export function LivePreview({ compact = false }: { compact?: boolean }) {
       }
 
       setResult(payload.data);
-      track('live_preview_completed', { score: payload.data.previewScore, domain: payload.data.domain });
+      track('live_preview_completed', {
+        score: payload.data.previewScore,
+        domain: payload.data.domain,
+      });
     } catch {
       setError('Something went wrong reaching our servers. Please try again in a moment.');
     } finally {
@@ -94,7 +97,7 @@ export function LivePreview({ compact = false }: { compact?: boolean }) {
         <div className="mt-2 flex flex-col gap-2.5 sm:flex-row">
           <div className="relative flex-1">
             <Globe
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400"
               aria-hidden="true"
             />
             <Input
@@ -113,14 +116,23 @@ export function LivePreview({ compact = false }: { compact?: boolean }) {
               className="h-12 border-white/20 bg-white/[0.06] pl-9 text-white placeholder:text-slate-400"
             />
           </div>
-          <Button type="submit" size="lg" loading={loading} loadingText="Analyzing…" className="sm:w-auto">
+          <Button
+            type="submit"
+            size="lg"
+            loading={loading}
+            loadingText="Analyzing…"
+            className="sm:w-auto"
+          >
             Run free preview
             {!loading ? <ArrowRight aria-hidden="true" /> : null}
           </Button>
         </div>
 
         {/* Honeypot — hidden from users, catches naive bots. */}
-        <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute top-auto left-[-9999px] h-px w-px overflow-hidden"
+        >
           <label htmlFor="preview-company">Company (leave blank)</label>
           <input
             id="preview-company"
@@ -134,15 +146,15 @@ export function LivePreview({ compact = false }: { compact?: boolean }) {
         </div>
 
         <p id="preview-hint" className="mt-2.5 text-xs leading-relaxed text-slate-400">
-          Analyzes your homepage only and shows up to five findings. No account required. This is not
-          the full paid audit.
+          Analyzes your homepage only and shows up to five findings. No account required. This is
+          not the full paid audit.
         </p>
 
         <FieldError id="preview-error" message={error ?? undefined} />
       </form>
 
       {loading ? (
-        <Card className="mt-6 border-white/12 bg-ink-900/70 p-6">
+        <Card className="bg-ink-900/70 mt-6 border-white/12 p-6">
           <div className="flex items-center gap-3 text-slate-300">
             <Loader2 className="size-5 animate-spin text-violet-300" aria-hidden="true" />
             <p className="text-sm">Fetching your homepage and inspecting public signals…</p>
@@ -157,7 +169,7 @@ export function LivePreview({ compact = false }: { compact?: boolean }) {
 
 function PreviewResult({ data }: { data: NonNullable<PreviewResponse['data']> }) {
   return (
-    <Card className="mt-6 animate-in-up overflow-hidden border-white/12 bg-ink-900/70 text-slate-100">
+    <Card className="animate-in-up bg-ink-900/70 mt-6 overflow-hidden border-white/12 text-slate-100">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-white/[0.03] px-5 py-3.5">
         <p className="truncate text-sm font-medium text-slate-200">{data.domain}</p>
         <Badge tone="info">Homepage preview</Badge>
@@ -167,7 +179,7 @@ function PreviewResult({ data }: { data: NonNullable<PreviewResponse['data']> })
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
           <ScoreRing score={data.previewScore} size={124} showLabel={false} className="shrink-0" />
           <div className="min-w-0 flex-1 text-center sm:text-left">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-300">
+            <p className="text-xs font-semibold tracking-[0.14em] text-cyan-300 uppercase">
               Limited preview score
             </p>
             <h3 className="mt-1 text-lg font-semibold text-white">

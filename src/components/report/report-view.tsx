@@ -90,7 +90,7 @@ export function ReportView({ data }: { data: ReportData }) {
 function ReportCover({ data }: { data: ReportData }) {
   return (
     <Card className="overflow-hidden border-[var(--border)]" id="cover">
-      <div className="rk-hero-wash border-b border-[var(--border)] bg-ink-950 px-6 py-8 text-white sm:px-8">
+      <div className="rk-hero-wash bg-ink-950 border-b border-[var(--border)] px-6 py-8 text-white sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             {data.branding.whiteLabel && data.branding.companyName ? (
@@ -101,7 +101,7 @@ function ReportCover({ data }: { data: ReportData }) {
                 <span className="text-cyan-400">AI</span>
               </p>
             )}
-            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
+            <p className="mt-1 text-xs tracking-[0.16em] text-slate-400 uppercase">
               AI Visibility &amp; GEO Audit Report
             </p>
           </div>
@@ -109,7 +109,7 @@ function ReportCover({ data }: { data: ReportData }) {
         </div>
 
         <h1 className="mt-7 text-2xl font-bold sm:text-3xl">{data.businessName}</h1>
-        <p className="mt-1.5 break-all text-sm text-slate-300">{data.websiteUrl}</p>
+        <p className="mt-1.5 text-sm break-all text-slate-300">{data.websiteUrl}</p>
 
         <dl className="mt-6 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
           <CoverField label="Audit date" value={formatDate(data.auditDate, 'long')} />
@@ -123,7 +123,8 @@ function ReportCover({ data }: { data: ReportData }) {
         <ScoreRing score={data.overallScore} size={168} />
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-semibold">
-            Overall AI Visibility Score: {data.overallScore}/100 ({scoreBandLabel(data.overallScore)})
+            Overall AI Visibility Score: {data.overallScore}/100 (
+            {scoreBandLabel(data.overallScore)})
           </h2>
           <p className="mt-2.5 text-sm leading-relaxed text-[var(--muted-foreground)]">
             {overallScoreInterpretation(data.overallScore)}
@@ -154,7 +155,7 @@ function ReportCover({ data }: { data: ReportData }) {
 function CoverField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-slate-400">{label}</dt>
+      <dt className="text-xs tracking-wide text-slate-400 uppercase">{label}</dt>
       <dd className="mt-0.5 font-medium text-white">{value}</dd>
     </div>
   );
@@ -304,7 +305,7 @@ function CategorySection({
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
         <h2 className="text-lg font-semibold">{label}</h2>
         <span className="text-sm text-[var(--muted-foreground)]">
-          Score <strong className="tabular-nums text-[var(--foreground)]">{score}</strong>/100
+          Score <strong className="text-[var(--foreground)] tabular-nums">{score}</strong>/100
         </span>
       </div>
       <p className="mb-4 text-sm leading-relaxed text-[var(--muted-foreground)]">
@@ -349,10 +350,10 @@ export function FindingCard({ finding }: { finding: ReportData['findings'][numbe
 
       {finding.status !== 'PASS' ? (
         <div className="mt-3.5 rounded-lg border border-[var(--border)] bg-[var(--surface-muted)] p-3.5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+          <p className="text-xs font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
             Recommended action
           </p>
-          <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed">
+          <p className="mt-1.5 text-sm leading-relaxed whitespace-pre-line">
             {finding.recommendedAction}
           </p>
           <p className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-xs text-[var(--muted-foreground)]">
@@ -363,7 +364,7 @@ export function FindingCard({ finding }: { finding: ReportData['findings'][numbe
       ) : null}
 
       {evidenceEntries.length > 0 ? (
-        <details className="mt-3.5 group">
+        <details className="group mt-3.5">
           <summary className="cursor-pointer list-none text-xs font-medium text-[var(--accent)] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]">
             Evidence observed on your website
           </summary>
@@ -371,7 +372,7 @@ export function FindingCard({ finding }: { finding: ReportData['findings'][numbe
             {evidenceEntries.map(([key, value]) => (
               <div key={key} className="grid gap-1 sm:grid-cols-[minmax(0,14rem)_1fr] sm:gap-3">
                 <dt className="font-mono text-xs text-[var(--muted-foreground)]">{key}</dt>
-                <dd className="overflow-x-auto break-words font-mono text-xs">
+                <dd className="overflow-x-auto font-mono text-xs break-words">
                   {formatEvidenceValue(value)}
                 </dd>
               </div>
@@ -500,7 +501,7 @@ function CompetitorSection({ data }: { data: ReportData }) {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold">{competitor.name ?? 'Competitor'}</h3>
-                  <p className="mt-0.5 break-all text-xs text-[var(--muted-foreground)]">
+                  <p className="mt-0.5 text-xs break-all text-[var(--muted-foreground)]">
                     {competitor.url}
                   </p>
                 </div>
@@ -516,13 +517,16 @@ function CompetitorSection({ data }: { data: ReportData }) {
               ) : (
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+                    <h4 className="text-xs font-semibold tracking-wide text-emerald-600 uppercase dark:text-emerald-400">
                       What they do well
                     </h4>
                     <ul className="mt-2 space-y-1.5">
                       {competitor.highlights.length > 0 ? (
                         competitor.highlights.map((item) => (
-                          <li key={item} className="text-[0.8125rem] leading-relaxed text-[var(--muted-foreground)]">
+                          <li
+                            key={item}
+                            className="text-[0.8125rem] leading-relaxed text-[var(--muted-foreground)]"
+                          >
                             {item}
                           </li>
                         ))
@@ -534,13 +538,16 @@ function CompetitorSection({ data }: { data: ReportData }) {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">
+                    <h4 className="text-xs font-semibold tracking-wide text-amber-600 uppercase dark:text-amber-400">
                       Where they are weak
                     </h4>
                     <ul className="mt-2 space-y-1.5">
                       {competitor.gaps.length > 0 ? (
                         competitor.gaps.map((item) => (
-                          <li key={item} className="text-[0.8125rem] leading-relaxed text-[var(--muted-foreground)]">
+                          <li
+                            key={item}
+                            className="text-[0.8125rem] leading-relaxed text-[var(--muted-foreground)]"
+                          >
                             {item}
                           </li>
                         ))
@@ -580,16 +587,26 @@ function SearchSection({ data }: { data: ReportData }) {
           <caption className="sr-only">Public-web search observations</caption>
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-              <th scope="col" className="px-5 py-3 font-semibold">Query</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Brand appears</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Results</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Top domains</th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Query
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Brand appears
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Results
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Top domains
+              </th>
             </tr>
           </thead>
           <tbody>
             {data.searchObservations.map((observation) => (
               <tr key={observation.query} className="border-b border-[var(--border)] last:border-0">
-                <th scope="row" className="px-5 py-3 font-normal">{observation.query}</th>
+                <th scope="row" className="px-5 py-3 font-normal">
+                  {observation.query}
+                </th>
                 <td className="px-5 py-3">
                   {observation.brandAppears ? (
                     <Badge tone="success">Yes</Badge>
@@ -696,13 +713,15 @@ export function RecommendationCard({
             {recommendation.impact.toLowerCase()} impact
           </Badge>
           <Badge tone="neutral">{recommendation.effort.toLowerCase()} effort</Badge>
-          {recommendation.source === 'AI_ENHANCED' ? <Badge tone="accent">AI-enhanced</Badge> : null}
+          {recommendation.source === 'AI_ENHANCED' ? (
+            <Badge tone="accent">AI-enhanced</Badge>
+          ) : null}
         </div>
       </div>
 
       <dl className="mt-4 space-y-3.5 text-sm">
         <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+          <dt className="text-xs font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
             Why it matters
           </dt>
           <dd className="mt-1 leading-relaxed text-[var(--muted-foreground)]">
@@ -710,27 +729,30 @@ export function RecommendationCard({
           </dd>
         </div>
         <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+          <dt className="text-xs font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
             Exact recommended change
           </dt>
-          <dd className="mt-1 whitespace-pre-line leading-relaxed">
+          <dd className="mt-1 leading-relaxed whitespace-pre-line">
             {recommendation.recommendedChange}
           </dd>
         </div>
         {recommendation.exampleImplementation ? (
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+            <dt className="text-xs font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
               Example implementation
             </dt>
             <dd className="mt-1.5">
-              <pre tabIndex={0} className="overflow-x-auto rounded-lg bg-[var(--surface-muted)] p-3.5 text-xs leading-relaxed">
+              <pre
+                tabIndex={0}
+                className="overflow-x-auto rounded-lg bg-[var(--surface-muted)] p-3.5 text-xs leading-relaxed"
+              >
                 {recommendation.exampleImplementation}
               </pre>
             </dd>
           </div>
         ) : null}
         <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+          <dt className="text-xs font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
             Expected impact
           </dt>
           <dd className="mt-1 leading-relaxed text-[var(--muted-foreground)]">
@@ -755,12 +777,24 @@ function PageObservations({ data }: { data: ReportData }) {
           <caption className="sr-only">Pages analyzed during this audit</caption>
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-              <th scope="col" className="px-5 py-3 font-semibold">Page</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Role</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Status</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Words</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Schema</th>
-              <th scope="col" className="px-5 py-3 font-semibold">Q-headings</th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Page
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Role
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Status
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Words
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Schema
+              </th>
+              <th scope="col" className="px-5 py-3 font-semibold">
+                Q-headings
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -784,7 +818,7 @@ function PageObservations({ data }: { data: ReportData }) {
                     </span>
                   ) : null}
                 </th>
-                <td className="px-5 py-3 text-xs uppercase tracking-wide text-[var(--muted-foreground)]">
+                <td className="px-5 py-3 text-xs tracking-wide text-[var(--muted-foreground)] uppercase">
                   {page.role.replace(/_/g, ' ').toLowerCase()}
                 </td>
                 <td className="px-5 py-3 tabular-nums">{page.statusCode ?? '—'}</td>
@@ -812,7 +846,10 @@ function PageObservations({ data }: { data: ReportData }) {
                   : 'Not found'
               }
             />
-            <SiteFile label="llms.txt" value={data.robotsSummary.llmsTxtFound ? 'Found' : 'Not found'} />
+            <SiteFile
+              label="llms.txt"
+              value={data.robotsSummary.llmsTxtFound ? 'Found' : 'Not found'}
+            />
             <SiteFile
               label="AI crawlers blocked"
               value={
@@ -864,22 +901,23 @@ function MethodologySection({ data }: { data: ReportData }) {
           <li className="flex gap-2.5">
             <CircleDot className="mt-0.5 size-3.5 shrink-0 text-emerald-500" aria-hidden="true" />
             <span>
-              <strong className="text-[var(--foreground)]">Observed</strong> — measured directly from
-              your website during this audit. All scores derive from these.
+              <strong className="text-[var(--foreground)]">Observed</strong> — measured directly
+              from your website during this audit. All scores derive from these.
             </span>
           </li>
           <li className="flex gap-2.5">
             <CircleDot className="mt-0.5 size-3.5 shrink-0 text-cyan-500" aria-hidden="true" />
             <span>
-              <strong className="text-[var(--foreground)]">Public-web observation</strong> — what was
-              publicly visible in search results at audit time. Never scored.
+              <strong className="text-[var(--foreground)]">Public-web observation</strong> — what
+              was publicly visible in search results at audit time. Never scored.
             </span>
           </li>
           <li className="flex gap-2.5">
             <CircleDot className="mt-0.5 size-3.5 shrink-0 text-violet-500" aria-hidden="true" />
             <span>
-              <strong className="text-[var(--foreground)]">AI-enhanced</strong> — wording improved by
-              a language model working only from computed results. Never changes a score or evidence.
+              <strong className="text-[var(--foreground)]">AI-enhanced</strong> — wording improved
+              by a language model working only from computed results. Never changes a score or
+              evidence.
             </span>
           </li>
           {data.isDemo ? (
@@ -904,7 +942,10 @@ function LimitationsSection() {
       <Card className="p-6">
         <ul className="space-y-3">
           {REPORT_LIMITATIONS.map((item) => (
-            <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-[var(--muted-foreground)]">
+            <li
+              key={item}
+              className="flex gap-2.5 text-sm leading-relaxed text-[var(--muted-foreground)]"
+            >
               <Info className="mt-0.5 size-4 shrink-0 text-cyan-500" aria-hidden="true" />
               {item}
             </li>
@@ -918,7 +959,7 @@ function LimitationsSection() {
 function SectionTitle({ number, title }: { number: string; title: string }) {
   return (
     <div className="mb-4 flex items-baseline gap-3">
-      <span className="text-sm font-bold tabular-nums text-[var(--accent)]">{number}</span>
+      <span className="text-sm font-bold text-[var(--accent)] tabular-nums">{number}</span>
       <h2 className="text-lg font-semibold">{title}</h2>
     </div>
   );

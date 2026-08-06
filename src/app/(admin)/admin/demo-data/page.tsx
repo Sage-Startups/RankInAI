@@ -162,12 +162,24 @@ export default async function AdminDemoDataPage() {
             <caption className="sr-only">Seeded April 2026 daily demonstration records</caption>
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                <th scope="col" className="px-5 py-3 font-semibold">Date</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Sign-ups</th>
-                <th scope="col" className="px-5 py-3 font-semibold">One-time sales</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Revenue</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Audits completed</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Marker</th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Date
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Sign-ups
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  One-time sales
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Revenue
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Audits completed
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Marker
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -210,7 +222,7 @@ export default async function AdminDemoDataPage() {
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <Card className="p-5">
-      <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+      <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
         {label}
       </p>
       <p className="mt-2 text-2xl font-bold tabular-nums">{value}</p>

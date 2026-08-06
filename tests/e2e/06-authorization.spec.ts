@@ -133,7 +133,11 @@ test.describe('Journey 6: authorization boundaries', () => {
     try {
       await signIn(adminPage, SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD);
       await adminPage.goto(`/admin/users?q=${encodeURIComponent(email)}`);
-      await adminPage.getByRole('row', { name: new RegExp(email) }).getByRole('link').first().click();
+      await adminPage
+        .getByRole('row', { name: new RegExp(email) })
+        .getByRole('link')
+        .first()
+        .click();
       await adminPage.waitForURL(/\/admin\/users\/[^/?]+/);
       await adminPage.getByRole('button', { name: /Suspend account/i }).click();
       await expect(adminPage.getByText('Account suspended.')).toBeVisible();

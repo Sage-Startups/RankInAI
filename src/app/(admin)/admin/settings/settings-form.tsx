@@ -3,7 +3,15 @@
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { Alert, Checkbox, FieldError, FieldHint, Input, Label, Textarea } from '@/components/ui/primitives';
+import {
+  Alert,
+  Checkbox,
+  FieldError,
+  FieldHint,
+  Input,
+  Label,
+  Textarea,
+} from '@/components/ui/primitives';
 import { Button } from '@/components/ui/button';
 import { updateSettingsAction } from '@/app/(admin)/admin/actions';
 import { SETTINGS_DESCRIPTIONS, type SystemSettings } from '@/lib/settings';
@@ -39,10 +47,7 @@ const TOGGLE_LABELS: Record<string, string> = {
 };
 
 export function SystemSettingsForm({ settings }: { settings: SystemSettings }) {
-  const [state, action] = useActionState<ActionResult | null, FormData>(
-    updateSettingsAction,
-    null,
-  );
+  const [state, action] = useActionState<ActionResult | null, FormData>(updateSettingsAction, null);
 
   return (
     <form action={action} className="space-y-6" noValidate>

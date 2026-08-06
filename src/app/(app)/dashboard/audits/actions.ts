@@ -156,7 +156,9 @@ export async function createAuditAction(
   try {
     const used = await reserveAuditCredit(user.id, audit.id, false);
     creditSource =
-      used === 'ONE_TIME_CREDIT' ? CreditSource.ONE_TIME_CREDIT : CreditSource.SUBSCRIPTION_ALLOWANCE;
+      used === 'ONE_TIME_CREDIT'
+        ? CreditSource.ONE_TIME_CREDIT
+        : CreditSource.SUBSCRIPTION_ALLOWANCE;
   } catch (error) {
     await prisma.audit.delete({ where: { id: audit.id } });
     if (error instanceof InsufficientCreditsError) {
@@ -294,7 +296,9 @@ export async function rerunAuditAction(auditId: string): Promise<ActionResult> {
   try {
     const used = await reserveAuditCredit(user.id, audit.id, false);
     creditSource =
-      used === 'ONE_TIME_CREDIT' ? CreditSource.ONE_TIME_CREDIT : CreditSource.SUBSCRIPTION_ALLOWANCE;
+      used === 'ONE_TIME_CREDIT'
+        ? CreditSource.ONE_TIME_CREDIT
+        : CreditSource.SUBSCRIPTION_ALLOWANCE;
   } catch (error) {
     await prisma.audit.delete({ where: { id: audit.id } });
     if (error instanceof InsufficientCreditsError) {

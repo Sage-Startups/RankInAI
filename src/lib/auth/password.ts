@@ -90,7 +90,10 @@ export async function hashPassword(password: string): Promise<string> {
 export async function verifyPassword(password: string, hash: string | null): Promise<boolean> {
   if (!hash) {
     // Burn comparable time so a missing hash is not distinguishable by timing.
-    await bcrypt.compare(password, '$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidi');
+    await bcrypt.compare(
+      password,
+      '$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidi',
+    );
     return false;
   }
   return bcrypt.compare(password, hash);

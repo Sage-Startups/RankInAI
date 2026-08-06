@@ -1,0 +1,148 @@
+# Railway Setup
+
+RankInAI runs on Railway as **three services in one project**: a PostgreSQL database,
+a web service and a worker service. The worker is separate on purpose — an audit takes
+tens of seconds and must not occupy a request thread.
+
+## 1. Project and database
+
+1. Create a new Railway project.
+2. **New → Database → PostgreSQL.** Railway provisions it and exposes
+   `${{Postgres.DATABASE_URL}}` to the other services.
+
+## 2. Web service
+
+**New → GitHub Repo →** this repository.
+
+Railway reads `railway.json` from the repo root:
+
+| Setting        | Value                        |
+| -------------- | ---------------------------- |
+| Build          | `npm ci && npm run build`    |
+| Pre-deploy     | `npm run db:migrate`         |
+| Start          | `npm run start`              |
+| Health check   | `/api/health`, 120 s timeout |
+| Restart policy | On failure, max 5 retries    |
+
+Then generate a public domain: **Settings → Networking → Generate Domain**.
+
+`npm run start` runs `scripts/start-web.js`, which serves the standalone Next.js
+build, honors `$PORT`, binds `0.0.0.0`, copies the static assets the standalone bundle
+expects, and runs the server in-process so `SIGTERM` propagates for graceful shutdown.
+
+## 3. Worker service
+
+**New → GitHub Repo →** the same repository, a second service.
+
+Because Railway reads `railway.json` by default, set this service's config path to
+`railway.worker.json` (**Settings → Config-as-code → Railway Config File**), or set
+the commands by hand:
+
+| Setting        | Value                           |
+| -------------- | ------------------------------- |
+| Build          | `npm ci && npm run db:generate` |
+| Start          | `npm run worker`                |
+| Restart policy | Always                          |
+
+Do **not** generate a domain for the worker. It has no HTTP surface.
+
+The worker polls the queue, claims a job with a conditional UPDATE (so two replicas
+cannot process the same job), heartbeats progress, retries with exponential backoff,
+and restores the audit credit when a job fails permanently before producing results.
+On `SIGTERM` it requeues whatever it holds and exits, so a deploy never strands a job.
+
+## 4. Environment variables
+
+Set these on **both** the web and worker services unless noted.
+
+### Required
+
+| Variable              | Value                                                |
+| --------------------- | ---------------------------------------------------- |
+| `DATABASE_URL`        | `${{Postgres.DATABASE_URL}}`                         |
+| `AUTH_SECRET`         | 48 random bytes — `openssl rand -base64 48`          |
+| `AUTH_TRUST_HOST`     | `true` (Railway terminates TLS in front of the app)  |
+| `NEXT_PUBLIC_APP_URL` | `https://<your-domain>.up.railway.app` — web service |
+| `SUPER_ADMIN_EMAIL`   | The address that gets the admin role at seed time    |
+| `NODE_ENV`            | `production`                                         |
+
+### Stripe (required for real payments)
+
+| Variable                       | Value                            |
+| ------------------------------ | -------------------------------- |
+| `STRIPE_SECRET_KEY`            | `sk_live_…`                      |
+| `STRIPE_WEBHOOK_SECRET`        | `whsec_…` from the live endpoint |
+| `STRIPE_PRICE_ONE_TIME_AUDIT`  | `price_…`                        |
+| `STRIPE_PRICE_STARTER_MONTHLY` | `price_…`                        |
+| `STRIPE_PRICE_GROWTH_MONTHLY`  | `price_…`                        |
+| `STRIPE_PRICE_AGENCY_MONTHLY`  | `price_…`                        |
+
+`npm run stripe:setup` creates the products and prints these. See `STRIPE_SETUP.md`.
+
+### Optional
+
+| Variable                                                                                           | Effect when unset                                                                         |
+| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`                                                                                   | Audits use deterministic report templates. Scores and evidence are rule-based either way. |
+| `OPENAI_MODEL`                                                                                     | Defaults to a small, cheap model                                                          |
+| `SEARCH_PROVIDER` / `SERPER_API_KEY`                                                               | Public-web search observations are omitted, and the report says so                        |
+| `EMAIL_PROVIDER` / `EMAIL_PROVIDER_API_KEY` / `EMAIL_FROM`                                         | Email is logged to the console instead of sent                                            |
+| `SUPPORT_EMAIL`                                                                                    | Falls back to a default shown on contact and legal pages                                  |
+| `CRON_SECRET`                                                                                      | Scheduled maintenance endpoints are unauthenticated — set it if you use them              |
+| `WORKER_POLL_INTERVAL_MS`                                                                          | Defaults to 5000                                                                          |
+| `CRAWL_TIMEOUT_MS`, `CRAWL_MAX_BYTES`, `CRAWL_MAX_REDIRECTS`, `CRAWL_DELAY_MS`, `CRAWL_USER_AGENT` | Sensible defaults                                                                         |
+
+### Must NOT be set in production
+
+| Variable                    | Why                                                                                                                                    |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `ALLOW_TEST_FIXTURE_HOST`   | Relaxes the crawler's SSRF protection. **The server throws on startup if it is present.**                                              |
+| `BILLING_TEST_MODE`         | Simulates checkout and takes no payment. The server refuses to start unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` acknowledges it. |
+| `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                      |
+
+## 5. First deploy
+
+1. Deploy the web service. The pre-deploy command applies migrations.
+2. Seed the super admin **once**, from the Railway shell on the web service:
+
+   ```bash
+   SUPER_ADMIN_SEED_PASSWORD='<a strong password you choose>' npm run db:seed
+   ```
+
+   The seed is idempotent and never overwrites an existing admin password unless
+   that variable is present. **Remove the variable afterwards and do not commit it
+   anywhere.**
+
+3. Deploy the worker service.
+4. Verify:
+
+   ```bash
+   npm run verify
+   ```
+
+   It reports every missing or blocking setting and exits non-zero if the environment
+   is not ready.
+
+## 6. Post-deploy checks
+
+```bash
+curl -s https://<your-domain>/api/health | jq
+curl -sI https://<your-domain>/ | grep -iE 'content-security-policy|strict-transport|x-frame'
+curl -sI https://<your-domain>/business-snapshot | grep -i x-robots-tag
+```
+
+- `/api/health` should return 200 with `"database": { "ok": true }`
+- `/admin/jobs` should show the worker draining the queue
+- Run one real audit end to end and download the PDF
+
+## Notes
+
+- **No local disk dependency.** PDFs are rendered with PDFKit and cached as bytes in
+  PostgreSQL, so a container replacement loses nothing and no volume is needed.
+- **No headless browser.** Nothing in the runtime needs Chromium — Playwright is a
+  dev dependency only.
+- **Scaling.** The worker can run more than one replica; job claiming is a conditional
+  UPDATE, so two workers cannot take the same job. Stale locks are reclaimed after a
+  timeout in case a container dies mid-job.
+- **Rollback.** Migrations are additive. Redeploy the previous image from the Railway
+  deployment history; no migration rollback is required for the current schema.

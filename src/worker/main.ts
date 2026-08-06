@@ -5,12 +5,7 @@ import { AuditStatus } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getEnv } from '@/lib/env';
 import { runAudit } from '@/lib/audit/engine';
-import {
-  claimNextJob,
-  completeJob,
-  failJob,
-  updateJobProgress,
-} from '@/lib/queue';
+import { claimNextJob, completeJob, failJob, updateJobProgress } from '@/lib/queue';
 import { pruneRateLimitEvents } from '@/lib/rate-limit';
 import { sendAuditCompleteEmail } from '@/lib/email';
 import { trackEvent } from '@/lib/analytics';
@@ -32,19 +27,13 @@ import { trackEvent } from '@/lib/analytics';
  */
 
 const env = getEnv();
-const workerId =
-  env.WORKER_ID ?? `worker-${process.pid}-${Math.random().toString(36).slice(2, 8)}`;
+const workerId = env.WORKER_ID ?? `worker-${process.pid}-${Math.random().toString(36).slice(2, 8)}`;
 
 let shuttingDown = false;
 let activeJobs = 0;
 
 /** Failure codes that are worth retrying — transient network conditions. */
-const RETRYABLE_CODES = new Set([
-  'TIMEOUT',
-  'CONNECTION_FAILED',
-  'HTTP_ERROR',
-  'UNKNOWN',
-]);
+const RETRYABLE_CODES = new Set(['TIMEOUT', 'CONNECTION_FAILED', 'HTTP_ERROR', 'UNKNOWN']);
 
 /** Failures where nothing useful was analyzed, so the credit must be restored. */
 const REFUNDABLE_CODES = new Set([
@@ -73,7 +62,11 @@ const REFUNDABLE_CODES = new Set([
   'UNKNOWN',
 ]);
 
-function log(level: 'info' | 'warn' | 'error', message: string, extra: Record<string, unknown> = {}) {
+function log(
+  level: 'info' | 'warn' | 'error',
+  message: string,
+  extra: Record<string, unknown> = {},
+) {
   // Structured single-line logs so Railway's log viewer stays readable.
   const payload = {
     ts: new Date().toISOString(),
@@ -89,7 +82,12 @@ function log(level: 'info' | 'warn' | 'error', message: string, extra: Record<st
   else console.log(line);
 }
 
-async function processJob(job: { jobId: string; auditId: string; attempts: number; maxAttempts: number }) {
+async function processJob(job: {
+  jobId: string;
+  auditId: string;
+  attempts: number;
+  maxAttempts: number;
+}) {
   activeJobs += 1;
   const started = Date.now();
 

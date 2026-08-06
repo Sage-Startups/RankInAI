@@ -59,12 +59,22 @@ export async function runFreePreview(rawUrl: string): Promise<PreviewResult> {
 
   const validated = validateAuditUrl(rawUrl);
   if (!validated.ok) {
-    return { ok: false, code: validated.code, message: validated.message, durationMs: Date.now() - started };
+    return {
+      ok: false,
+      code: validated.code,
+      message: validated.message,
+      durationMs: Date.now() - started,
+    };
   }
 
   const result = await safeFetch(validated.normalized, { timeoutMs: 12_000, maxBytes: 2_000_000 });
   if (!result.ok) {
-    return { ok: false, code: result.code, message: result.message, durationMs: Date.now() - started };
+    return {
+      ok: false,
+      code: result.code,
+      message: result.message,
+      durationMs: Date.now() - started,
+    };
   }
 
   const signals = analyzeHtml({
@@ -140,7 +150,9 @@ export async function runFreePreview(rawUrl: string): Promise<PreviewResult> {
     {
       category: AuditCategory.STRUCTURED_DATA,
       title: 'Organization or LocalBusiness schema declared',
-      passed: signals.schemaTypes.some((t) => ['Organization', 'LocalBusiness', 'Corporation'].includes(t)),
+      passed: signals.schemaTypes.some((t) =>
+        ['Organization', 'LocalBusiness', 'Corporation'].includes(t),
+      ),
       weight: 12,
       severity: Severity.HIGH,
       detail: signals.schemaTypes.length
@@ -192,7 +204,8 @@ export async function runFreePreview(rawUrl: string): Promise<PreviewResult> {
     {
       category: AuditCategory.TRUST_AND_EVIDENCE,
       title: 'Contact details are published',
-      passed: signals.phones.length > 0 || signals.emails.length > 0 || signals.addressSignals.length > 0,
+      passed:
+        signals.phones.length > 0 || signals.emails.length > 0 || signals.addressSignals.length > 0,
       weight: 8,
       severity: Severity.MEDIUM,
       detail:

@@ -19,7 +19,9 @@ test.describe('Journey 2: registration and authentication', () => {
     await expect(page).toHaveURL(/\/onboarding/);
 
     // 2. Complete onboarding.
-    await expect(page.getByRole('heading', { name: /Tell us a little about your work/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Tell us a little about your work/i }),
+    ).toBeVisible();
     await page.getByLabel(/^Company name/).fill('Journey Two Ltd');
     await page.getByLabel(/^Company website/).fill('journeytwo.example.com');
     await completeOnboarding(page);
@@ -50,7 +52,9 @@ test.describe('Journey 2: registration and authentication', () => {
     await expect(page.getByRole('heading', { name: /Welcome back, Skipper/i })).toBeVisible();
   });
 
-  test('a duplicate email address is rejected without revealing anything else', async ({ page }) => {
+  test('a duplicate email address is rejected without revealing anything else', async ({
+    page,
+  }) => {
     const email = uniqueEmail('duplicate');
     await signUp(page, { email });
     await page.getByRole('button', { name: 'Skip for now' }).click();
@@ -67,7 +71,9 @@ test.describe('Journey 2: registration and authentication', () => {
     await page.getByRole('checkbox').check();
     await page.getByRole('button', { name: 'Create account' }).click();
 
-    await expect(page.getByText(/An account already exists for that email address/i).first()).toBeVisible();
+    await expect(
+      page.getByText(/An account already exists for that email address/i).first(),
+    ).toBeVisible();
   });
 
   test('weak passwords are rejected with specific guidance', async ({ page }) => {

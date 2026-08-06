@@ -1,9 +1,13 @@
 import http from 'node:http';
 import https from 'node:https';
-import type { LookupAddress } from 'node:dns';
+import type { LookupAddress, lookup as DnsLookup } from 'node:dns';
 
 import { getEnv } from '@/lib/env';
-import { classifyBlockedAddress, isTestFixtureHost, validateAuditUrl } from '@/lib/audit/url-safety';
+import {
+  classifyBlockedAddress,
+  isTestFixtureHost,
+  validateAuditUrl,
+} from '@/lib/audit/url-safety';
 import { resolveHostSafely } from '@/lib/audit/dns-safety';
 
 /**
@@ -89,7 +93,8 @@ export const FETCH_ERROR_MESSAGES: Record<FetchErrorCode, string> = {
   BLOCKED: 'That address points at a private or reserved network and cannot be audited.',
   DNS_FAILURE: 'We could not find that domain name. Check the spelling of the address.',
   TIMEOUT: 'The website took too long to respond.',
-  CONNECTION_FAILED: 'We could not connect to the website. It may be offline or blocking automated visitors.',
+  CONNECTION_FAILED:
+    'We could not connect to the website. It may be offline or blocking automated visitors.',
   TOO_MANY_REDIRECTS: 'The website redirected too many times.',
   REDIRECT_LOOP: 'The website is stuck in a redirect loop.',
   RESPONSE_TOO_LARGE: 'The page is too large for RankInAI to analyze.',
@@ -123,10 +128,14 @@ function requestOnce(
   return new Promise((resolve, reject) => {
     // Pin the connection to the address we already validated. This is the step
     // that prevents a rebinding attack from swapping in 127.0.0.1 after checks.
-    const lookup: typeof import('node:dns').lookup = ((
+    const lookup: typeof DnsLookup = ((
       _hostname: string,
       opts: unknown,
-      callback: (err: NodeJS.ErrnoException | null, address: string | LookupAddress[], family?: number) => void,
+      callback: (
+        err: NodeJS.ErrnoException | null,
+        address: string | LookupAddress[],
+        family?: number,
+      ) => void,
     ) => {
       const cb = typeof opts === 'function' ? (opts as typeof callback) : callback;
       const all = typeof opts === 'object' && opts !== null && (opts as { all?: boolean }).all;
@@ -135,7 +144,7 @@ function requestOnce(
       } else {
         cb(null, pinned.address, pinned.family);
       }
-    }) as unknown as typeof import('node:dns').lookup;
+    }) as unknown as typeof DnsLookup;
 
     const req = transport.request(
       {
@@ -149,7 +158,8 @@ function requestOnce(
         headers: {
           Host: target.host,
           'User-Agent': env.CRAWL_USER_AGENT,
-          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5',
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5',
           'Accept-Language': 'en-US,en;q=0.9',
           'Accept-Encoding': 'identity',
           Connection: 'close',
@@ -238,7 +248,8 @@ export async function safeFetch(rawUrl: string, options: FetchOptions = {}): Pro
       return {
         ok: false,
         url: rawUrl,
-        code: validated.code === 'MALFORMED' || validated.code === 'EMPTY' ? 'INVALID_URL' : 'BLOCKED',
+        code:
+          validated.code === 'MALFORMED' || validated.code === 'EMPTY' ? 'INVALID_URL' : 'BLOCKED',
         message: validated.message,
         durationMs: Date.now() - started,
         redirectChain,
@@ -263,7 +274,10 @@ export async function safeFetch(rawUrl: string, options: FetchOptions = {}): Pro
       return {
         ok: false,
         url: rawUrl,
-        code: resolution.code === 'DNS_FAILURE' || resolution.code === 'NO_ADDRESSES' ? 'DNS_FAILURE' : 'BLOCKED',
+        code:
+          resolution.code === 'DNS_FAILURE' || resolution.code === 'NO_ADDRESSES'
+            ? 'DNS_FAILURE'
+            : 'BLOCKED',
         message: resolution.message,
         durationMs: Date.now() - started,
         redirectChain,

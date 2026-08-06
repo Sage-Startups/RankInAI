@@ -73,7 +73,7 @@ export function InstantDemo({
   return (
     <Card
       className={cn(
-        'overflow-hidden border-white/12 bg-ink-900/70 text-slate-100 backdrop-blur',
+        'bg-ink-900/70 overflow-hidden border-white/12 text-slate-100 backdrop-blur',
         size === 'full' && 'shadow-2xl shadow-violet-900/20',
       )}
     >
@@ -84,9 +84,7 @@ export function InstantDemo({
             <span className="size-2.5 rounded-full bg-amber-400/70" />
             <span className="size-2.5 rounded-full bg-emerald-400/70" />
           </span>
-          <p className="text-sm font-medium text-slate-200">
-            {DEMO_MINI_REPORT.business.name}
-          </p>
+          <p className="text-sm font-medium text-slate-200">{DEMO_MINI_REPORT.business.name}</p>
         </div>
         <Badge tone="demo">{DEMO_LABEL}</Badge>
       </div>
@@ -101,7 +99,7 @@ export function InstantDemo({
         )}
       </div>
 
-      <p className="border-t border-white/10 bg-ink-950/60 px-5 py-3 text-[0.6875rem] leading-relaxed text-slate-400">
+      <p className="bg-ink-950/60 border-t border-white/10 px-5 py-3 text-[0.6875rem] leading-relaxed text-slate-400">
         {DEMO_DISCLAIMER}
       </p>
     </Card>
@@ -192,7 +190,7 @@ function MiniReport({ size, onReplay }: { size: 'compact' | 'full'; onReplay: ()
           className="shrink-0"
         />
         <div className="min-w-0 flex-1 text-center sm:text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-300">
+          <p className="text-xs font-semibold tracking-[0.14em] text-violet-300 uppercase">
             Overall AI Visibility Score
           </p>
           <h3 className="mt-1 text-lg font-semibold text-white">
@@ -214,7 +212,7 @@ function MiniReport({ size, onReplay }: { size: 'compact' | 'full'; onReplay: ()
           <div key={category.category}>
             <div className="mb-1.5 flex items-baseline justify-between gap-3">
               <span className="truncate text-[0.8125rem] text-slate-300">{category.label}</span>
-              <span className="shrink-0 text-[0.8125rem] font-semibold tabular-nums text-white">
+              <span className="shrink-0 text-[0.8125rem] font-semibold text-white tabular-nums">
                 {category.score}
               </span>
             </div>
@@ -270,11 +268,7 @@ function MiniReport({ size, onReplay }: { size: 'compact' | 'full'; onReplay: ()
           <Badge tone="demo">{DEMO_LABEL}</Badge>
         </div>
         <div className="mt-3 space-y-3">
-          <ComparisonRow
-            label={report.business.name}
-            score={report.overallScore}
-            highlight
-          />
+          <ComparisonRow label={report.business.name} score={report.overallScore} highlight />
           <ComparisonRow label={report.competitor.name} score={report.competitor.overallScore} />
         </div>
         <p className="mt-3 text-xs leading-relaxed text-slate-400">
@@ -331,7 +325,7 @@ function ComparisonRow({
         >
           {label}
         </span>
-        <span className="shrink-0 text-[0.8125rem] font-semibold tabular-nums text-white">
+        <span className="shrink-0 text-[0.8125rem] font-semibold text-white tabular-nums">
           {score}
         </span>
       </div>

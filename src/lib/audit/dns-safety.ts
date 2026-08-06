@@ -82,7 +82,8 @@ export async function resolveHostSafely(hostname: string): Promise<HostResolutio
       return {
         ok: false,
         code: blocked,
-        message: 'That domain resolves to a private or reserved network address and cannot be audited.',
+        message:
+          'That domain resolves to a private or reserved network address and cannot be audited.',
       };
     }
   }

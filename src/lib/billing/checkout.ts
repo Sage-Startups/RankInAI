@@ -1,4 +1,4 @@
-import { PaymentKind, PaymentStatus, PlanTier, SubscriptionStatus } from '@prisma/client';
+import { PaymentKind, PaymentStatus, type PlanTier, SubscriptionStatus } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
 import { getEnv } from '@/lib/env';
@@ -127,7 +127,8 @@ export async function createCheckoutSession(params: {
         userId: params.userId,
         stripeCheckoutSessionId: session.id,
         stripeCustomerId: customerId,
-        kind: product.interval === 'one_time' ? PaymentKind.ONE_TIME_AUDIT : PaymentKind.SUBSCRIPTION,
+        kind:
+          product.interval === 'one_time' ? PaymentKind.ONE_TIME_AUDIT : PaymentKind.SUBSCRIPTION,
         status: PaymentStatus.PENDING,
         amountCents: product.priceCents,
         currency: 'usd',
@@ -173,7 +174,8 @@ export async function fulfillSimulatedCheckout(params: {
       create: {
         userId: params.userId,
         stripeCheckoutSessionId: params.sessionId,
-        kind: product.interval === 'one_time' ? PaymentKind.ONE_TIME_AUDIT : PaymentKind.SUBSCRIPTION,
+        kind:
+          product.interval === 'one_time' ? PaymentKind.ONE_TIME_AUDIT : PaymentKind.SUBSCRIPTION,
         status: PaymentStatus.SUCCEEDED,
         amountCents: product.priceCents,
         currency: 'usd',

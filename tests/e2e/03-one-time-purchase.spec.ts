@@ -21,7 +21,10 @@ test.describe('Journey 3: one-time audit purchase and full audit', () => {
     // 1. Select the $49 audit from pricing, which carries the plan through
     //    registration.
     await page.goto('/pricing');
-    await page.getByRole('link', { name: /Buy one audit/i }).first().click();
+    await page
+      .getByRole('link', { name: /Buy one audit/i })
+      .first()
+      .click();
     await page.waitForURL(/\/signup\?plan=ONE_TIME_AUDIT/);
     await expect(page.getByText(/One-Time Full Audit — \$49 once/)).toBeVisible();
 
@@ -118,9 +121,7 @@ test.describe('Journey 3: one-time audit purchase and full audit', () => {
     await page.getByLabel(/I confirm I own this website/).check();
     await page.getByRole('button', { name: 'Start audit' }).click();
 
-    await expect(
-      page.getByText(/private or reserved network/i).first(),
-    ).toBeVisible();
+    await expect(page.getByText(/private or reserved network/i).first()).toBeVisible();
 
     // No audit was created and the credit was not consumed.
     await page.goto('/dashboard/audits');

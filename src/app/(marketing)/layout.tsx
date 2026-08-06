@@ -9,7 +9,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
   return (
     // `dark`: the marketing shell is dark in every theme, so the tokens and the
     // `dark:` utilities inside it must both resolve to their dark values.
-    <div className="dark flex min-h-dvh flex-col bg-ink-950 text-[var(--foreground)]">
+    <div className="dark bg-ink-950 flex min-h-dvh flex-col text-[var(--foreground)]">
       <SiteHeader signedIn={Boolean(user)} />
       <main id="main" className="flex-1">
         {children}

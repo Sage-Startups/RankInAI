@@ -2,7 +2,7 @@
 
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { AccountStatus, ContactStatus, CreditReason, Role } from '@prisma/client';
+import { AccountStatus, type ContactStatus, CreditReason, Role } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/guards';

@@ -20,7 +20,13 @@ import { submitContactForm } from '@/app/(marketing)/contact/actions';
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" size="lg" loading={pending} loadingText="Sending…" className="w-full sm:w-auto">
+    <Button
+      type="submit"
+      size="lg"
+      loading={pending}
+      loadingText="Sending…"
+      className="w-full sm:w-auto"
+    >
       Send message
     </Button>
   );
@@ -66,7 +72,9 @@ export function ContactForm() {
             required
             maxLength={120}
             aria-invalid={firstError(state?.fieldErrors, 'name') ? true : undefined}
-            aria-describedby={firstError(state?.fieldErrors, 'name') ? 'contact-name-error' : undefined}
+            aria-describedby={
+              firstError(state?.fieldErrors, 'name') ? 'contact-name-error' : undefined
+            }
             className="mt-2 border-white/20 bg-white/[0.06] text-white"
           />
           <FieldError id="contact-name-error" message={firstError(state?.fieldErrors, 'name')} />
@@ -84,7 +92,9 @@ export function ContactForm() {
             required
             maxLength={200}
             aria-invalid={firstError(state?.fieldErrors, 'email') ? true : undefined}
-            aria-describedby={firstError(state?.fieldErrors, 'email') ? 'contact-email-error' : undefined}
+            aria-describedby={
+              firstError(state?.fieldErrors, 'email') ? 'contact-email-error' : undefined
+            }
             className="mt-2 border-white/20 bg-white/[0.06] text-white"
           />
           <FieldError id="contact-email-error" message={firstError(state?.fieldErrors, 'email')} />
@@ -122,7 +132,10 @@ export function ContactForm() {
               </option>
             ))}
           </Select>
-          <FieldError id="contact-subject-error" message={firstError(state?.fieldErrors, 'subject')} />
+          <FieldError
+            id="contact-subject-error"
+            message={firstError(state?.fieldErrors, 'subject')}
+          />
         </div>
       </div>
 

@@ -96,7 +96,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-16 lg:py-20">
           <SectionHeading
             eyebrow="Compare"
@@ -119,7 +119,7 @@ export default function PricingPage() {
           <FaqAccordion items={PRICING_FAQS} />
         </div>
 
-        <Card className="mx-auto mt-8 max-w-3xl border-white/12 bg-ink-900/60 p-6">
+        <Card className="bg-ink-900/60 mx-auto mt-8 max-w-3xl border-white/12 p-6">
           <h2 className="text-sm font-semibold text-white">Billing terms</h2>
           <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-400">
             <li>
@@ -174,7 +174,7 @@ function BillingNote({
   body: string;
 }) {
   return (
-    <Card className="border-white/12 bg-ink-900/60 p-5">
+    <Card className="bg-ink-900/60 border-white/12 p-5">
       <span className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
         <Icon className="size-4.5" aria-hidden />
       </span>

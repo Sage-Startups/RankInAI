@@ -12,7 +12,13 @@ import {
 } from '@/app/(admin)/admin/actions';
 import { firstError, type ActionResult } from '@/lib/validation';
 
-function Submit({ label, variant = 'primary' }: { label: string; variant?: 'primary' | 'danger' | 'secondary' }) {
+function Submit({
+  label,
+  variant = 'primary',
+}: {
+  label: string;
+  variant?: 'primary' | 'danger' | 'secondary';
+}) {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" variant={variant} loading={pending} loadingText="Working…">
@@ -81,13 +87,7 @@ export function CreditAdjustForm({ userId }: { userId: string }) {
   );
 }
 
-export function SuspensionForm({
-  userId,
-  suspended,
-}: {
-  userId: string;
-  suspended: boolean;
-}) {
+export function SuspensionForm({ userId, suspended }: { userId: string; suspended: boolean }) {
   const [state, action] = useActionState<ActionResult | null, FormData>(setSuspensionAction, null);
 
   return (

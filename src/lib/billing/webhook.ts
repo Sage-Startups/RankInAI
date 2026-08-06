@@ -63,10 +63,7 @@ export async function processStripeEvent(event: Stripe.Event): Promise<WebhookPr
       },
     });
   } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    ) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return { handled: false, duplicate: true, message: 'Event already processed.' };
     }
     throw error;
@@ -155,7 +152,8 @@ function resolveProductKey(value: unknown): ProductKey | null {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promise<string> {
-  const customerId = typeof session.customer === 'string' ? session.customer : session.customer?.id ?? null;
+  const customerId =
+    typeof session.customer === 'string' ? session.customer : (session.customer?.id ?? null);
 
   const userId = await resolveUserId({
     metadataUserId: session.metadata?.rankinaiUserId,
@@ -185,7 +183,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
       userId,
       stripeCheckoutSessionId: session.id,
       stripePaymentIntentId:
-        typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
+        typeof session.payment_intent === 'string'
+          ? session.payment_intent
+          : session.payment_intent?.id,
       stripeCustomerId: customerId,
       kind: isSubscription ? PaymentKind.SUBSCRIPTION : PaymentKind.ONE_TIME_AUDIT,
       status: session.payment_status === 'paid' ? PaymentStatus.SUCCEEDED : PaymentStatus.PENDING,
@@ -199,7 +199,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
     update: {
       status: session.payment_status === 'paid' ? PaymentStatus.SUCCEEDED : PaymentStatus.PENDING,
       stripePaymentIntentId:
-        typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
+        typeof session.payment_intent === 'string'
+          ? session.payment_intent
+          : session.payment_intent?.id,
       stripeCustomerId: customerId,
       amountCents,
       paidAt: session.payment_status === 'paid' ? new Date() : null,
@@ -249,7 +251,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
 }
 
 async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<string> {
-  const customerId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer?.id ?? null;
+  const customerId =
+    typeof invoice.customer === 'string' ? invoice.customer : (invoice.customer?.id ?? null);
   const userId = await resolveUserId({ customerId });
   if (!userId) return 'No matching RankInAI user for this invoice.';
 
@@ -314,7 +317,8 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<string> {
 }
 
 async function handleInvoiceFailed(invoice: Stripe.Invoice): Promise<string> {
-  const customerId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer?.id ?? null;
+  const customerId =
+    typeof invoice.customer === 'string' ? invoice.customer : (invoice.customer?.id ?? null);
   const userId = await resolveUserId({ customerId });
   if (!userId) return 'No matching RankInAI user for this invoice.';
 
@@ -349,7 +353,9 @@ async function handleInvoiceFailed(invoice: Stripe.Invoice): Promise<string> {
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Promise<string> {
   const customerId =
-    typeof subscription.customer === 'string' ? subscription.customer : subscription.customer?.id ?? null;
+    typeof subscription.customer === 'string'
+      ? subscription.customer
+      : (subscription.customer?.id ?? null);
 
   const userId = await resolveUserId({
     metadataUserId: subscription.metadata?.rankinaiUserId,
@@ -365,7 +371,9 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
 
   const status = STATUS_MAP[subscription.status] ?? SubscriptionStatus.INCOMPLETE;
   const item = subscription.items?.data?.[0];
-  const periodStart = item?.current_period_start ? new Date(item.current_period_start * 1000) : null;
+  const periodStart = item?.current_period_start
+    ? new Date(item.current_period_start * 1000)
+    : null;
   const periodEnd = item?.current_period_end ? new Date(item.current_period_end * 1000) : null;
 
   const existing = await prisma.subscription.findUnique({

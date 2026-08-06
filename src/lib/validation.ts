@@ -242,7 +242,12 @@ export const freePreviewSchema = z.object({
 
 export const adminCreditSchema = z.object({
   userId: z.string().min(1),
-  amount: z.coerce.number().int().min(-100).max(100).refine((n) => n !== 0, 'Enter a non-zero amount'),
+  amount: z.coerce
+    .number()
+    .int()
+    .min(-100)
+    .max(100)
+    .refine((n) => n !== 0, 'Enter a non-zero amount'),
   reason: trimmed(300).min(3, 'A reason is required for the audit trail'),
 });
 

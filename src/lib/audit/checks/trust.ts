@@ -29,7 +29,9 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
   const emails = [...new Set(pages.flatMap((p) => p.emails))];
   const phones = [...new Set(pages.flatMap((p) => p.phones))];
   const addresses = [...new Set(pages.flatMap((p) => p.addressSignals))].filter(Boolean);
-  const contactSignals = [emails.length > 0, phones.length > 0, addresses.length > 0].filter(Boolean).length;
+  const contactSignals = [emails.length > 0, phones.length > 0, addresses.length > 0].filter(
+    Boolean,
+  ).length;
   const contactRatio = contactSignals / 3;
 
   checks.push(
@@ -85,17 +87,26 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
   const authorNames = [...new Set(pages.flatMap((p) => p.authors))].filter((a) => a.length > 2);
   const bylinePages = pages.filter((p) => p.authors.length > 0 || p.hasBylineText).length;
   const contentPages = pages.filter(
-    (p) => p.role === PageRole.ARTICLE || p.role === PageRole.BLOG_INDEX || p.role === PageRole.CASE_STUDY,
+    (p) =>
+      p.role === PageRole.ARTICLE ||
+      p.role === PageRole.BLOG_INDEX ||
+      p.role === PageRole.CASE_STUDY,
   ).length;
   const authorRatio =
-    contentPages === 0 ? (authorNames.length > 0 ? 1 : 0.3) : Math.min(1, bylinePages / Math.max(1, contentPages));
+    contentPages === 0
+      ? authorNames.length > 0
+        ? 1
+        : 0.3
+      : Math.min(1, bylinePages / Math.max(1, contentPages));
 
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'trust.author-attribution',
       title: 'Content is attributed to named people',
       status:
-        authorNames.length === 0 ? Status.FAIL : statusFromRatio(authorRatio, { passAt: 0.7, warnAt: 0.3 }),
+        authorNames.length === 0
+          ? Status.FAIL
+          : statusFromRatio(authorRatio, { passAt: 0.7, warnAt: 0.3 }),
       ratio: authorRatio,
       maxPoints: 8,
       evidence: {
@@ -120,7 +131,9 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
     /\b(certified|licensed|accredited|years of experience|degree|qualified|member of|board[- ]certified|master|journeyman|registered)\b/i.test(
       allText,
     );
-  const expertiseScore = [Boolean(authorPage), credentialLanguage, authorNames.length > 0].filter(Boolean).length;
+  const expertiseScore = [Boolean(authorPage), credentialLanguage, authorNames.length > 0].filter(
+    Boolean,
+  ).length;
   const expertiseRatio = expertiseScore / 3;
 
   checks.push(
@@ -176,7 +189,9 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Source transparency ---------------------------------------------------
   const transparency =
-    /\b(according to|source:|sources:|data from|published by|as reported by|per the|based on data)\b/i.test(allText);
+    /\b(according to|source:|sources:|data from|published by|as reported by|per the|based on data)\b/i.test(
+      allText,
+    );
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'trust.source-transparency',
@@ -196,9 +211,10 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
   );
 
   // --- Customer proof --------------------------------------------------------
-  const proofLanguage = /\b(testimonial|what our (clients|customers) say|case stud|success stor|reviewed us|★|rated \d(\.\d)? out of)\b/i.test(
-    allText,
-  );
+  const proofLanguage =
+    /\b(testimonial|what our (clients|customers) say|case stud|success stor|reviewed us|★|rated \d(\.\d)? out of)\b/i.test(
+      allText,
+    );
   const caseStudyPages = pages.filter((p) => p.role === PageRole.CASE_STUDY).length;
   const reviewSchema = pages.some(
     (p) => p.schemaTypes.includes('Review') || p.schemaTypes.includes('AggregateRating'),
@@ -231,10 +247,14 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Business legitimacy markers -------------------------------------------
   const legitimacy = {
-    privacyPolicy: pages.some((p) => /privacy/i.test(`${p.finalUrl} ${p.title ?? ''}`)) ||
+    privacyPolicy:
+      pages.some((p) => /privacy/i.test(`${p.finalUrl} ${p.title ?? ''}`)) ||
       pages.some((p) => p.links.some((l) => /privacy/i.test(l.href))),
     termsPage: pages.some((p) => p.links.some((l) => /terms|conditions/i.test(l.href))),
-    licenseNumber: /\b(license\s*#?\s*\d|lic\.?\s*#?\s*\d|ein\s*[:#]?\s*\d|registration\s*(number|#))/i.test(allText),
+    licenseNumber:
+      /\b(license\s*#?\s*\d|lic\.?\s*#?\s*\d|ein\s*[:#]?\s*\d|registration\s*(number|#))/i.test(
+        allText,
+      ),
     foundingDate: /\b(since|established|founded (in )?)\s*(19|20)\d{2}\b/i.test(allText),
   };
   const legitCount = Object.values(legitimacy).filter(Boolean).length;
@@ -270,14 +290,17 @@ export function runTrustChecks(ctx: AuditContext): CheckResult[] {
   const orgSchemaPresent = pages.some((p) =>
     p.schemaTypes.some((t) => ['Organization', 'LocalBusiness', 'Corporation'].includes(t)),
   );
-  const attributionScore = [footerBrandPresent, orgSchemaPresent, emails.length > 0].filter(Boolean).length;
+  const attributionScore = [footerBrandPresent, orgSchemaPresent, emails.length > 0].filter(
+    Boolean,
+  ).length;
   const attributionRatio = attributionScore / 3;
 
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'trust.attribution-clarity',
       title: 'Content is clearly attributable to the business',
-      status: attributionScore >= 2 ? Status.PASS : attributionScore === 1 ? Status.WARN : Status.FAIL,
+      status:
+        attributionScore >= 2 ? Status.PASS : attributionScore === 1 ? Status.WARN : Status.FAIL,
       ratio: attributionRatio,
       maxPoints: 5,
       evidence: {

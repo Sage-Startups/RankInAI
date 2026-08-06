@@ -11,9 +11,7 @@ test.describe('Journey 1: landing-page demo', () => {
     // 1. Visit the home page.
     await page.goto('/');
     await expect(page).toHaveTitle(/RankInAI/);
-    await expect(
-      page.getByRole('heading', { name: /Find out whether AI can/i }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Find out whether AI can/i })).toBeVisible();
 
     // The primary and secondary CTAs are both present.
     await expect(page.getByRole('link', { name: 'Run the Free Demo' })).toBeVisible();
@@ -32,9 +30,7 @@ test.describe('Journey 1: landing-page demo', () => {
 
     // 5. Demo labels are visible on the result.
     await expect(demoPanel.getByText('Demo data').first()).toBeVisible();
-    await expect(
-      demoPanel.getByText(/fictional demonstration data/i),
-    ).toBeVisible();
+    await expect(demoPanel.getByText(/fictional demonstration data/i)).toBeVisible();
 
     // The mini report contains the required sections.
     await expect(demoPanel.getByText('Three strengths')).toBeVisible();
@@ -96,7 +92,10 @@ test.describe('Journey 1: landing-page demo', () => {
     await expect(page.getByText('Most Popular')).toBeVisible();
 
     // Selecting a plan sends the visitor to sign-up with the plan preserved.
-    await page.getByRole('link', { name: /Choose Growth/i }).first().click();
+    await page
+      .getByRole('link', { name: /Choose Growth/i })
+      .first()
+      .click();
     await page.waitForURL(/\/signup\?plan=GROWTH_MONTHLY/);
     await expect(page.getByText(/Growth — \$79\/month/)).toBeVisible();
   });

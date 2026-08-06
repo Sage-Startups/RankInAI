@@ -89,7 +89,8 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
 
       {user.deletionRequestedAt ? (
         <Alert tone="warning" title="Account deletion requested">
-          The account holder requested deletion on {formatDate(user.deletionRequestedAt, 'datetime')}.
+          The account holder requested deletion on{' '}
+          {formatDate(user.deletionRequestedAt, 'datetime')}.
         </Alert>
       ) : null}
 
@@ -191,14 +192,21 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
         ) : (
           <ul className="divide-y divide-[var(--border)]">
             {user.subscriptions.map((subscription) => (
-              <li key={subscription.id} className="flex flex-wrap items-center justify-between gap-3 p-5">
+              <li
+                key={subscription.id}
+                className="flex flex-wrap items-center justify-between gap-3 p-5"
+              >
                 <div>
                   <p className="text-sm font-medium">
                     {planLabel(subscription.plan)}{' '}
                     <Badge tone={subscription.status === 'ACTIVE' ? 'success' : 'neutral'}>
                       {subscription.status.replace(/_/g, ' ').toLowerCase()}
                     </Badge>
-                    {subscription.isDemo ? <Badge tone="demo" className="ml-2">Demo</Badge> : null}
+                    {subscription.isDemo ? (
+                      <Badge tone="demo" className="ml-2">
+                        Demo
+                      </Badge>
+                    ) : null}
                   </p>
                   <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
                     {subscription.stripeSubscriptionId ?? 'No Stripe subscription ID'} ·{' '}
@@ -262,7 +270,10 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
           ) : (
             <ul className="divide-y divide-[var(--border)]">
               {user.payments.map((payment) => (
-                <li key={payment.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
+                <li
+                  key={payment.id}
+                  className="flex items-center justify-between gap-3 px-5 py-3.5"
+                >
                   <div className="min-w-0">
                     <p className="truncate text-sm">{payment.description ?? payment.kind}</p>
                     <p className="text-xs text-[var(--muted-foreground)]">

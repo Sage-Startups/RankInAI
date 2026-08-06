@@ -64,8 +64,8 @@ export default async function AdminOverviewPage({
       {includeDemo ? (
         <Alert tone="warning" title="Demo data is included in these figures">
           Seeded demonstration records are being counted. These numbers do not represent verified
-          revenue or actual historical performance and must never be presented to a buyer as
-          genuine financial results.
+          revenue or actual historical performance and must never be presented to a buyer as genuine
+          financial results.
         </Alert>
       ) : null}
 
@@ -85,7 +85,7 @@ export default async function AdminOverviewPage({
 
       {/* Revenue */}
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+        <h2 className="mb-3 text-sm font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
           Revenue
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -122,7 +122,7 @@ export default async function AdminOverviewPage({
 
       {/* Users and audits */}
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+        <h2 className="mb-3 text-sm font-semibold tracking-wide text-[var(--muted-foreground)] uppercase">
           Users and audits
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -141,7 +141,9 @@ export default async function AdminOverviewPage({
           <Stat
             icon={Gauge}
             label="Average score"
-            value={overview.audits.averageScore != null ? String(overview.audits.averageScore) : '—'}
+            value={
+              overview.audits.averageScore != null ? String(overview.audits.averageScore) : '—'
+            }
             detail="Across completed audits"
           />
           <Stat
@@ -178,9 +180,14 @@ export default async function AdminOverviewPage({
               ['Audits completed', overview.funnel.auditCompleted],
               ['Reports downloaded', overview.funnel.reportDownloaded],
             ].map(([label, value]) => (
-              <div key={String(label)} className="flex items-baseline justify-between gap-3 px-5 py-2.5">
+              <div
+                key={String(label)}
+                className="flex items-baseline justify-between gap-3 px-5 py-2.5"
+              >
                 <dt className="text-sm text-[var(--muted-foreground)]">{label}</dt>
-                <dd className="text-sm font-semibold tabular-nums">{formatNumber(Number(value))}</dd>
+                <dd className="text-sm font-semibold tabular-nums">
+                  {formatNumber(Number(value))}
+                </dd>
               </div>
             ))}
           </dl>
@@ -202,7 +209,11 @@ export default async function AdminOverviewPage({
               <QueueStat label="Queued" value={jobs.queued} />
               <QueueStat label="Running" value={jobs.running} />
               <QueueStat label="Completed" value={jobs.completed} />
-              <QueueStat label="Failed" value={jobs.failed} tone={jobs.failed > 0 ? 'danger' : 'neutral'} />
+              <QueueStat
+                label="Failed"
+                value={jobs.failed}
+                tone={jobs.failed > 0 ? 'danger' : 'neutral'}
+              />
             </dl>
             {jobs.oldestQueuedAt ? (
               <p className="border-t border-[var(--border)] px-5 py-3 text-xs text-[var(--muted-foreground)]">
@@ -246,11 +257,16 @@ export default async function AdminOverviewPage({
           </p>
         </div>
         {recentActivity.length === 0 ? (
-          <p className="p-5 text-sm text-[var(--muted-foreground)]">No admin actions recorded yet.</p>
+          <p className="p-5 text-sm text-[var(--muted-foreground)]">
+            No admin actions recorded yet.
+          </p>
         ) : (
           <ul className="divide-y divide-[var(--border)]">
             {recentActivity.map((entry) => (
-              <li key={entry.id} className="flex flex-wrap items-baseline justify-between gap-3 px-5 py-3.5">
+              <li
+                key={entry.id}
+                className="flex flex-wrap items-baseline justify-between gap-3 px-5 py-3.5"
+              >
                 <div className="min-w-0">
                   <p className="text-sm">
                     <Badge tone="neutral" className="mr-2">
@@ -291,7 +307,7 @@ function Stat({
     <Card className={tone === 'warning' ? 'border-amber-500/40 p-5' : 'p-5'}>
       <div className="flex items-center gap-2.5">
         <Icon className="size-4 text-[var(--muted-foreground)]" aria-hidden />
-        <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+        <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
           {label}
         </p>
       </div>
@@ -312,11 +328,11 @@ function QueueStat({
 }) {
   return (
     <div className="bg-[var(--surface)] px-5 py-4">
-      <dt className="text-xs uppercase tracking-wide text-[var(--muted-foreground)]">{label}</dt>
+      <dt className="text-xs tracking-wide text-[var(--muted-foreground)] uppercase">{label}</dt>
       <dd
         className={
           tone === 'danger'
-            ? 'mt-1 text-xl font-bold tabular-nums text-red-600 dark:text-red-400'
+            ? 'mt-1 text-xl font-bold text-red-600 tabular-nums dark:text-red-400'
             : 'mt-1 text-xl font-bold tabular-nums'
         }
       >

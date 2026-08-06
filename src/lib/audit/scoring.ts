@@ -49,9 +49,7 @@ export function rebalanceWeights(
   }
 
   for (const category of CATEGORY_ORDER) {
-    result[category] = availability[category]
-      ? CATEGORY_WEIGHTS[category] / availableTotal
-      : 0;
+    result[category] = availability[category] ? CATEGORY_WEIGHTS[category] / availableTotal : 0;
   }
 
   return result;

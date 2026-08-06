@@ -63,7 +63,11 @@ async function sendViaResend(message: EmailMessage): Promise<SendResult> {
 
     if (!response.ok) {
       const detail = await response.text().catch(() => '');
-      return { ok: false, provider: 'resend', error: `HTTP ${response.status}: ${detail.slice(0, 200)}` };
+      return {
+        ok: false,
+        provider: 'resend',
+        error: `HTTP ${response.status}: ${detail.slice(0, 200)}`,
+      };
     }
     return { ok: true, provider: 'resend', error: null };
   } catch (error) {

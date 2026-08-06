@@ -67,7 +67,7 @@ export function ScoreRing({
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className={cn('font-bold leading-none tabular-nums', colors.text)}
+            className={cn('leading-none font-bold tabular-nums', colors.text)}
             style={{ fontSize: size * 0.28 }}
           >
             {clamped}

@@ -1,8 +1,8 @@
 import {
-  AuditCategory,
+  type AuditCategory,
   EffortLevel,
   EvidenceSource,
-  ImpactLevel,
+  type ImpactLevel,
   RecommendationHorizon,
   Severity,
 } from '@prisma/client';
@@ -124,7 +124,13 @@ function expectedImpactText(check: CheckResult): string {
   const category = CATEGORY_LABELS[check.category];
   const shortfall = check.maxPoints - check.points;
   const magnitude =
-    shortfall >= 7 ? 'a large' : shortfall >= 4 ? 'a meaningful' : shortfall >= 2 ? 'a modest' : 'a small';
+    shortfall >= 7
+      ? 'a large'
+      : shortfall >= 4
+        ? 'a meaningful'
+        : shortfall >= 2
+          ? 'a modest'
+          : 'a small';
   return `Closing this gap contributes ${magnitude} improvement to your ${category} score (${shortfall.toFixed(1)} of ${check.maxPoints} points currently unearned).`;
 }
 

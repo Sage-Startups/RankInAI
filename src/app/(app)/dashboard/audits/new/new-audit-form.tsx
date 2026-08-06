@@ -119,8 +119,8 @@ export function NewAuditForm({
       <Card className="p-6">
         <h2 className="text-base font-semibold">Business context</h2>
         <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-          Optional, but it makes several checks far more useful — particularly terminology
-          alignment and geographic clarity.
+          Optional, but it makes several checks far more useful — particularly terminology alignment
+          and geographic clarity.
         </p>
 
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -301,10 +301,9 @@ export function NewAuditForm({
       <Card className="p-6">
         <div className="flex gap-3">
           <Checkbox id="consentConfirmed" name="consentConfirmed" value="on" required />
-          <Label htmlFor="consentConfirmed" className="text-sm font-normal leading-relaxed">
-            I confirm I own this website, operate it, or am authorized to have it audited.
-            RankInAI will request only public pages, honor robots.txt, and never submit a form or
-            sign in.
+          <Label htmlFor="consentConfirmed" className="text-sm leading-relaxed font-normal">
+            I confirm I own this website, operate it, or am authorized to have it audited. RankInAI
+            will request only public pages, honor robots.txt, and never submit a form or sign in.
           </Label>
         </div>
         <FieldError message={firstError(state?.fieldErrors, 'consentConfirmed')} />

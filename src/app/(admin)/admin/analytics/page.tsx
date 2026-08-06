@@ -188,7 +188,7 @@ export default async function AdminAnalyticsPage({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <Card className="p-5">
-      <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+      <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
         {label}
       </p>
       <p className="mt-2 text-2xl font-bold tabular-nums">{value}</p>

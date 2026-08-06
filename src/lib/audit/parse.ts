@@ -186,7 +186,12 @@ function collectTypes(node: unknown, out: Set<string>, depth = 0): void {
   }
 }
 
-function collectStringValues(node: unknown, keys: string[], out: Record<string, string>, depth = 0): void {
+function collectStringValues(
+  node: unknown,
+  keys: string[],
+  out: Record<string, string>,
+  depth = 0,
+): void {
   if (depth > 6 || node == null) return;
   if (Array.isArray(node)) {
     for (const item of node) collectStringValues(item, keys, out, depth + 1);
@@ -308,9 +313,11 @@ function classifyRole(url: string, title: string | null, h1: string[]): PageRole
     return PageRole.FAQ;
   }
   if (/\/(pricing|plans|packages|rates)\b/.test(pathname)) return PageRole.PRICING;
-  if (/\/(case-stud|success-stor|portfolio|our-work|projects)/.test(pathname)) return PageRole.CASE_STUDY;
+  if (/\/(case-stud|success-stor|portfolio|our-work|projects)/.test(pathname))
+    return PageRole.CASE_STUDY;
   if (/\/(author|team|staff|people)\//.test(pathname)) return PageRole.AUTHOR;
-  if (/^\/(blog|news|articles|insights|resources|guides)\/?$/.test(pathname)) return PageRole.BLOG_INDEX;
+  if (/^\/(blog|news|articles|insights|resources|guides)\/?$/.test(pathname))
+    return PageRole.BLOG_INDEX;
   if (/^\/(blog|news|articles|insights|resources|guides)\//.test(pathname)) return PageRole.ARTICLE;
   if (/\/(services?|solutions?|what-we-do)\b/.test(pathname)) return PageRole.SERVICE;
   if (/\/(products?|shop|store)\b/.test(pathname)) return PageRole.PRODUCT;
@@ -379,7 +386,10 @@ export function analyzeHtml(input: {
 
   const headings: HeadingNode[] = [];
   $('h1, h2, h3, h4, h5, h6').each((_, el) => {
-    const tag = (el as unknown as { tagName?: string; name?: string }).tagName ?? (el as { name?: string }).name ?? '';
+    const tag =
+      (el as unknown as { tagName?: string; name?: string }).tagName ??
+      (el as { name?: string }).name ??
+      '';
     const level = Number(tag.replace(/[^\d]/g, '')) || 0;
     const text = $(el).text().replace(/\s+/g, ' ').trim();
     if (level > 0 && text) headings.push({ level, text: text.slice(0, 300) });
@@ -503,7 +513,8 @@ export function analyzeHtml(input: {
 
   const faqFromSchema = schemaTypes.includes('FAQPage') || schemaTypes.includes('Question');
   const faqQuestionCount = questionHeadings.length;
-  const hasFaqSignals = faqFromSchema || faqQuestionCount >= 3 || /frequently asked questions/i.test(bodyText);
+  const hasFaqSignals =
+    faqFromSchema || faqQuestionCount >= 3 || /frequently asked questions/i.test(bodyText);
 
   const publishedDate =
     attrOf($, 'meta[property="article:published_time"]', 'content') ??
@@ -564,7 +575,9 @@ export function analyzeHtml(input: {
 
   // Numbers, years, percentages and measurements act as a specificity proxy.
   const factualDataPoints = (
-    bodyText.match(/\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\s?(?:%|percent|years?|customers?|projects?|clients?|homes?|sq\.?\s?ft|miles?|hours?|days?|\$)/gi) ?? []
+    bodyText.match(
+      /\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\s?(?:%|percent|years?|customers?|projects?|clients?|homes?|sq\.?\s?ft|miles?|hours?|days?|\$)/gi,
+    ) ?? []
   ).length;
 
   return {
@@ -590,7 +603,8 @@ export function analyzeHtml(input: {
     viewport: attrOf($, 'meta[name="viewport"]', 'content'),
     charset:
       attrOf($, 'meta[charset]', 'charset') ??
-      (attrOf($, 'meta[http-equiv="Content-Type"]', 'content')?.match(/charset=([\w-]+)/i)?.[1] ?? null),
+      attrOf($, 'meta[http-equiv="Content-Type"]', 'content')?.match(/charset=([\w-]+)/i)?.[1] ??
+      null,
 
     h1,
     headings,

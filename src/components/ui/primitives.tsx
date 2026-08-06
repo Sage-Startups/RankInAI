@@ -24,10 +24,13 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('text-base font-semibold leading-tight', className)} {...props} />;
+  return <h3 className={cn('text-base leading-tight font-semibold', className)} {...props} />;
 }
 
-export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+export function CardDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p className={cn('text-sm text-[var(--muted-foreground)]', className)} {...props} />;
 }
 
@@ -38,7 +41,10 @@ export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDi
 export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center gap-3 border-t border-[var(--border)] p-5 sm:p-6', className)}
+      className={cn(
+        'flex items-center gap-3 border-t border-[var(--border)] p-5 sm:p-6',
+        className,
+      )}
       {...props}
     />
   );
@@ -78,22 +84,23 @@ export function Badge({ className, tone, ...props }: BadgeProps) {
 /* Form controls                                                               */
 /* -------------------------------------------------------------------------- */
 
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, ...props }, ref) => (
-    <input
-      ref={ref}
-      className={cn(
-        'h-10 w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 text-sm text-[var(--foreground)] transition-colors',
-        'placeholder:text-[var(--muted-foreground)] placeholder:opacity-70',
-        'focus-visible:border-[var(--ring)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--ring)]',
-        'disabled:cursor-not-allowed disabled:opacity-60',
-        'aria-[invalid=true]:border-red-500',
-        className,
-      )}
-      {...props}
-    />
-  ),
-);
+export const Input = React.forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>(({ className, ...props }, ref) => (
+  <input
+    ref={ref}
+    className={cn(
+      'h-10 w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 text-sm text-[var(--foreground)] transition-colors',
+      'placeholder:text-[var(--muted-foreground)] placeholder:opacity-70',
+      'focus-visible:border-[var(--ring)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--ring)]',
+      'disabled:cursor-not-allowed disabled:opacity-60',
+      'aria-[invalid=true]:border-red-500',
+      className,
+    )}
+    {...props}
+  />
+));
 Input.displayName = 'Input';
 
 export const Textarea = React.forwardRef<
@@ -139,7 +146,10 @@ export function Label({
   ...props
 }: React.LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean }) {
   return (
-    <label className={cn('block text-sm font-medium text-[var(--foreground)]', className)} {...props}>
+    <label
+      className={cn('block text-sm font-medium text-[var(--foreground)]', className)}
+      {...props}
+    >
       {children}
       {required ? (
         <span className="ml-0.5 text-red-500" aria-hidden="true">
@@ -167,10 +177,7 @@ export function FieldHint({ id, children }: { id?: string; children: React.React
   );
 }
 
-export function Checkbox({
-  className,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+export function Checkbox({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       type="checkbox"
@@ -282,7 +289,7 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? (
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-300">
+        <p className="mb-3 text-xs font-semibold tracking-[0.14em] text-violet-600 uppercase dark:text-violet-300">
           {eyebrow}
         </p>
       ) : null}

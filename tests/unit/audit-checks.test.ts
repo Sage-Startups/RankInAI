@@ -32,7 +32,9 @@ function analyze(html: string, url = `${ORIGIN}/`) {
 }
 
 function context(overrides: Partial<AuditContext> = {}): AuditContext {
-  const homepage = overrides.homepage ?? analyze('<html lang="en"><head><title>T</title></head><body><h1>H</h1></body></html>');
+  const homepage =
+    overrides.homepage ??
+    analyze('<html lang="en"><head><title>T</title></head><body><h1>H</h1></body></html>');
   return {
     auditId: 'test-audit',
     siteOrigin: ORIGIN,
@@ -58,7 +60,13 @@ function context(overrides: Partial<AuditContext> = {}): AuditContext {
       raw: null,
       error: null,
     },
-    sitemap: { found: true, url: `${ORIGIN}/sitemap.xml`, urlCount: 10, isIndex: false, error: null },
+    sitemap: {
+      found: true,
+      url: `${ORIGIN}/sitemap.xml`,
+      urlCount: 10,
+      isIndex: false,
+      error: null,
+    },
     llmsTxt: { found: false, url: null, bytes: 0, mentionsSections: false },
     competitors: [],
     competitorsRequested: 0,
@@ -365,10 +373,12 @@ describe('runAllChecks', () => {
     const rich = analyze(FIXTURE_PAGES[0]!.body.replace(new RegExp(FIXTURE_ORIGIN, 'g'), ORIGIN));
     const bare = analyze('<html><head></head><body><p>hi</p></body></html>');
 
-    const richScore = aggregateScores(runAllChecks(context({ homepage: rich, pages: [rich] })))
-      .overallScore;
-    const bareScore = aggregateScores(runAllChecks(context({ homepage: bare, pages: [bare] })))
-      .overallScore;
+    const richScore = aggregateScores(
+      runAllChecks(context({ homepage: rich, pages: [rich] })),
+    ).overallScore;
+    const bareScore = aggregateScores(
+      runAllChecks(context({ homepage: bare, pages: [bare] })),
+    ).overallScore;
 
     expect(richScore).toBeGreaterThan(bareScore);
   });

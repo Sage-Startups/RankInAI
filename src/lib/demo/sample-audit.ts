@@ -281,7 +281,8 @@ export const DEMO_FINDINGS: DemoFinding[] = [
     },
     explanation:
       'A verifiable phone number, email and postal address are among the strongest signals that a site represents a real operating business.',
-    recommendedAction: 'No action needed — keep the details identical across the site and directories.',
+    recommendedAction:
+      'No action needed — keep the details identical across the site and directories.',
     effort: EffortLevel.LOW,
     impact: ImpactLevel.HIGH,
     pageUrl: 'https://www.atlasroofingexteriors.example/contact',

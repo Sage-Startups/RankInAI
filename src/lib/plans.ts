@@ -7,11 +7,7 @@ import { PlanTier } from '@prisma/client';
  * here — so the same build works against test and live Stripe accounts.
  */
 
-export type ProductKey =
-  | 'ONE_TIME_AUDIT'
-  | 'STARTER_MONTHLY'
-  | 'GROWTH_MONTHLY'
-  | 'AGENCY_MONTHLY';
+export type ProductKey = 'ONE_TIME_AUDIT' | 'STARTER_MONTHLY' | 'GROWTH_MONTHLY' | 'AGENCY_MONTHLY';
 
 export interface PlanEntitlements {
   /** Audits included per monthly billing period. 0 for the one-time product. */
@@ -184,10 +180,7 @@ export const SUBSCRIPTION_PRODUCTS: PricedProduct[] = [
   PRODUCTS.AGENCY_MONTHLY,
 ];
 
-export const ALL_PRODUCTS: PricedProduct[] = [
-  PRODUCTS.ONE_TIME_AUDIT,
-  ...SUBSCRIPTION_PRODUCTS,
-];
+export const ALL_PRODUCTS: PricedProduct[] = [PRODUCTS.ONE_TIME_AUDIT, ...SUBSCRIPTION_PRODUCTS];
 
 const PLAN_TO_PRODUCT: Record<PlanTier, ProductKey | null> = {
   [PlanTier.FREE]: null,
@@ -262,19 +255,43 @@ export interface ComparisonRow {
 
 export const COMPARISON_ROWS: ComparisonRow[] = [
   { label: 'Price', oneTime: '$49 once', starter: '$29/mo', growth: '$79/mo', agency: '$199/mo' },
-  { label: 'Audits included', oneTime: '1 audit', starter: '3 / month', growth: '15 / month', agency: '60 / month' },
+  {
+    label: 'Audits included',
+    oneTime: '1 audit',
+    starter: '3 / month',
+    growth: '15 / month',
+    agency: '60 / month',
+  },
   { label: 'Pages crawled per audit', oneTime: '10', starter: '10', growth: '25', agency: '50' },
   { label: 'Competitors per audit', oneTime: '1', starter: '1', growth: '3', agency: '5' },
-  { label: 'Overall AI Visibility Score', oneTime: true, starter: true, growth: true, agency: true },
+  {
+    label: 'Overall AI Visibility Score',
+    oneTime: true,
+    starter: true,
+    growth: true,
+    agency: true,
+  },
   { label: 'All seven audit categories', oneTime: true, starter: true, growth: true, agency: true },
   { label: 'Prioritized action plan', oneTime: true, starter: true, growth: true, agency: true },
   { label: 'PDF report', oneTime: true, starter: true, growth: true, agency: true },
   { label: 'Saved audit history', oneTime: true, starter: true, growth: true, agency: true },
   { label: 'Advanced recommendations', oneTime: false, starter: false, growth: true, agency: true },
-  { label: 'Historical score tracking', oneTime: false, starter: false, growth: true, agency: true },
+  {
+    label: 'Historical score tracking',
+    oneTime: false,
+    starter: false,
+    growth: true,
+    agency: true,
+  },
   { label: 'CSV export', oneTime: false, starter: false, growth: true, agency: true },
   { label: 'White-label PDF reports', oneTime: false, starter: false, growth: false, agency: true },
-  { label: 'Client name and logo branding', oneTime: false, starter: false, growth: false, agency: true },
+  {
+    label: 'Client name and logo branding',
+    oneTime: false,
+    starter: false,
+    growth: false,
+    agency: true,
+  },
   { label: 'Priority audit queue', oneTime: false, starter: false, growth: false, agency: true },
   { label: 'Support', oneTime: 'Email', starter: 'Email', growth: 'Priority', agency: 'Priority' },
 ];

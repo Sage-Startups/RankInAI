@@ -444,7 +444,10 @@ describe('Stripe webhook processing', () => {
     });
 
     it('marks unhandled event types as ignored', async () => {
-      const stripeEvent = event('customer.created', { id: 'cus_itest_ignored', object: 'customer' });
+      const stripeEvent = event('customer.created', {
+        id: 'cus_itest_ignored',
+        object: 'customer',
+      });
       const result = await processStripeEvent(stripeEvent);
 
       expect(result.handled).toBe(false);
@@ -463,7 +466,11 @@ describe('Stripe webhook processing', () => {
         payment_status: 'paid',
         amount_total: 4900,
         client_reference_id: user.id,
-        customer_details: { email: 'buyer@example.com', name: 'A Buyer', address: { line1: '1 Main St' } },
+        customer_details: {
+          email: 'buyer@example.com',
+          name: 'A Buyer',
+          address: { line1: '1 Main St' },
+        },
         metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
       });
 

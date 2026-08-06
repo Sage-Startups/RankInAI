@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { JobStatus, Prisma } from '@prisma/client';
+import { JobStatus, type Prisma } from '@prisma/client';
 
-import { Alert, Badge, Card, EmptyState, Progress, Select, Skeleton } from '@/components/ui/primitives';
+import {
+  Alert,
+  Badge,
+  Card,
+  EmptyState,
+  Progress,
+  Select,
+  Skeleton,
+} from '@/components/ui/primitives';
 import { Button } from '@/components/ui/button';
 import { JobActions } from '@/components/admin/job-actions';
 import { DemoToggle } from '@/components/admin/demo-toggle';
@@ -81,7 +89,11 @@ export default async function AdminJobsPage({
         <Stat label="Queued" value={health.queued} />
         <Stat label="Running" value={health.running} />
         <Stat label="Completed" value={health.completed} />
-        <Stat label="Failed" value={health.failed} tone={health.failed > 0 ? 'danger' : 'neutral'} />
+        <Stat
+          label="Failed"
+          value={health.failed}
+          tone={health.failed > 0 ? 'danger' : 'neutral'}
+        />
       </div>
 
       {health.queued > 0 && health.running === 0 && health.oldestQueuedAt ? (
@@ -155,7 +167,10 @@ export default async function AdminJobsPage({
                     ) : null}
 
                     {job.lastError ? (
-                      <pre tabIndex={0} className="mt-3 max-w-2xl overflow-x-auto rounded bg-[var(--surface-muted)] p-3 text-xs">
+                      <pre
+                        tabIndex={0}
+                        className="mt-3 max-w-2xl overflow-x-auto rounded bg-[var(--surface-muted)] p-3 text-xs"
+                      >
                         {job.lastError}
                       </pre>
                     ) : null}
@@ -193,13 +208,13 @@ function Stat({
 }) {
   return (
     <Card className="p-5">
-      <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+      <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
         {label}
       </p>
       <p
         className={
           tone === 'danger'
-            ? 'mt-2 text-2xl font-bold tabular-nums text-red-600 dark:text-red-400'
+            ? 'mt-2 text-2xl font-bold text-red-600 tabular-nums dark:text-red-400'
             : 'mt-2 text-2xl font-bold tabular-nums'
         }
       >

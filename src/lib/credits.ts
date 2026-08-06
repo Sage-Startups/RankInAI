@@ -1,4 +1,4 @@
-import { CreditReason, Prisma, SubscriptionStatus, PlanTier } from '@prisma/client';
+import { CreditReason, type Prisma, SubscriptionStatus, PlanTier } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
 import { entitlementsForPlan, type PlanEntitlements } from '@/lib/plans';
@@ -60,8 +60,7 @@ export async function getEntitlements(userId: string): Promise<EntitlementSnapsh
 
   // PAST_DUE keeps access until Stripe cancels, but a canceled subscription
   // grants nothing.
-  const subscriptionActive =
-    subscription != null && ACTIVE_STATUSES.includes(subscription.status);
+  const subscriptionActive = subscription != null && ACTIVE_STATUSES.includes(subscription.status);
 
   const used = subscription?.auditsUsedThisPeriod ?? 0;
   const allowance = subscriptionActive ? entitlements.auditsPerPeriod : 0;
@@ -106,7 +105,10 @@ export function effectiveAuditLimits(snapshot: EntitlementSnapshot): {
   // Spending a one-time credit: 10 pages / 1 competitor, unless the user also
   // holds a higher subscription tier.
   return {
-    pageLimit: Math.max(10, snapshot.subscriptionActive ? snapshot.entitlements.pageLimit : oneTime.pageLimit),
+    pageLimit: Math.max(
+      10,
+      snapshot.subscriptionActive ? snapshot.entitlements.pageLimit : oneTime.pageLimit,
+    ),
     competitorLimit: Math.max(
       1,
       snapshot.subscriptionActive ? snapshot.entitlements.competitorLimit : 1,

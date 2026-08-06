@@ -189,20 +189,15 @@ export function AuditsChart({ data, title }: { data: DailyPoint[]; title: string
 }
 
 /** Simple funnel bars — proportional widths, no chart library needed. */
-export function ConversionFunnel({
-  steps,
-}: {
-  steps: Array<{ label: string; value: number }>;
-}) {
+export function ConversionFunnel({ steps }: { steps: Array<{ label: string; value: number }> }) {
   const max = Math.max(1, ...steps.map((step) => step.value));
 
   return (
     <ol className="space-y-3">
       {steps.map((step, index) => {
         const width = Math.max(2, (step.value / max) * 100);
-        const previous = index > 0 ? steps[index - 1]?.value ?? 0 : null;
-        const rate =
-          previous && previous > 0 ? Math.round((step.value / previous) * 100) : null;
+        const previous = index > 0 ? (steps[index - 1]?.value ?? 0) : null;
+        const rate = previous && previous > 0 ? Math.round((step.value / previous) * 100) : null;
 
         return (
           <li key={step.label}>

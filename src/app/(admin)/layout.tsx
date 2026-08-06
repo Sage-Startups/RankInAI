@@ -10,7 +10,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-dvh bg-[var(--surface-muted)]">
-      <div className="bg-ink-950 px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.12em] text-cyan-300">
+      <div className="bg-ink-950 px-4 py-2 text-center text-xs font-semibold tracking-[0.12em] text-cyan-300 uppercase">
         Super-admin area — signed in as {admin.email}
       </div>
 

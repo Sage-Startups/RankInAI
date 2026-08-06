@@ -88,9 +88,7 @@ export function BillingPortalButton({ disabled, reason }: { disabled: boolean; r
           <ExternalLink aria-hidden="true" />
           Open billing portal
         </Button>
-        {reason ? (
-          <p className="mt-2 text-xs text-[var(--muted-foreground)]">{reason}</p>
-        ) : null}
+        {reason ? <p className="mt-2 text-xs text-[var(--muted-foreground)]">{reason}</p> : null}
       </div>
     );
   }

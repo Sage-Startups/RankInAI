@@ -1,13 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { PaymentStatus, SubscriptionStatus } from '@prisma/client';
+import { type PaymentStatus, type SubscriptionStatus } from '@prisma/client';
 import { Check } from 'lucide-react';
 
 import { Alert, Badge, Card, EmptyState, Progress } from '@/components/ui/primitives';
-import {
-  BillingPortalButton,
-  CheckoutButton,
-} from '@/app/(app)/dashboard/billing/billing-buttons';
+import { BillingPortalButton, CheckoutButton } from '@/app/(app)/dashboard/billing/billing-buttons';
 import { requireUser } from '@/lib/auth/guards';
 import { prisma } from '@/lib/db';
 import { getEntitlements } from '@/lib/credits';
@@ -20,7 +17,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const SUBSCRIPTION_STATUS_TONE: Record<SubscriptionStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
+const SUBSCRIPTION_STATUS_TONE: Record<
+  SubscriptionStatus,
+  'success' | 'warning' | 'danger' | 'neutral'
+> = {
   ACTIVE: 'success',
   TRIALING: 'success',
   PAST_DUE: 'warning',
@@ -84,7 +84,7 @@ export default async function BillingPage() {
         <Card className="p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+              <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
                 Current plan
               </p>
               <h2 className="mt-1 text-xl font-bold">{planLabel(entitlements.plan)}</h2>
@@ -265,16 +265,27 @@ export default async function BillingPage() {
               <caption className="sr-only">Your payment history</caption>
               <thead>
                 <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                  <th scope="col" className="px-5 py-3 font-semibold">Date</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Description</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Amount</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Status</th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Date
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Description
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Amount
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {payments.map((payment) => (
                   <tr key={payment.id} className="border-b border-[var(--border)] last:border-0">
-                    <th scope="row" className="px-5 py-3 font-normal text-[var(--muted-foreground)]">
+                    <th
+                      scope="row"
+                      className="px-5 py-3 font-normal text-[var(--muted-foreground)]"
+                    >
                       {formatDate(payment.paidAt ?? payment.createdAt)}
                     </th>
                     <td className="px-5 py-3">
@@ -313,7 +324,9 @@ export default async function BillingPage() {
             {creditLedger.map((entry) => (
               <li key={entry.id} className="flex items-center justify-between gap-4 px-5 py-3.5">
                 <div className="min-w-0">
-                  <p className="text-sm">{entry.note ?? entry.reason.replace(/_/g, ' ').toLowerCase()}</p>
+                  <p className="text-sm">
+                    {entry.note ?? entry.reason.replace(/_/g, ' ').toLowerCase()}
+                  </p>
                   <p className="text-xs text-[var(--muted-foreground)]">
                     {formatDate(entry.createdAt, 'datetime')}
                   </p>

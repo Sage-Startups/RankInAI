@@ -35,14 +35,12 @@ export default async function AdminSystemPage() {
       prisma.analyticsEvent.count(),
       prisma.rateLimitEvent.count(),
     ]),
-    prisma
-      .$queryRaw<Array<{ migration_name: string; finished_at: Date | null }>>`
+    prisma.$queryRaw<Array<{ migration_name: string; finished_at: Date | null }>>`
         SELECT migration_name, finished_at
         FROM _prisma_migrations
         ORDER BY finished_at DESC NULLS LAST
         LIMIT 1
-      `
-      .catch(() => []),
+      `.catch(() => []),
   ]);
 
   const [userCount, auditCount, paymentCount, reportCount, eventCount, rateLimitCount] = counts;

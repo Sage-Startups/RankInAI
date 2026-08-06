@@ -16,7 +16,16 @@ export { canUseAdminArea, canUsePlatform, isActive, isAdmin, isSuspended } from 
 
 export type SessionUser = Pick<
   User,
-  'id' | 'email' | 'name' | 'role' | 'status' | 'image' | 'oneTimeCredits' | 'stripeCustomerId' | 'emailVerified' | 'createdAt'
+  | 'id'
+  | 'email'
+  | 'name'
+  | 'role'
+  | 'status'
+  | 'image'
+  | 'oneTimeCredits'
+  | 'stripeCustomerId'
+  | 'emailVerified'
+  | 'createdAt'
 >;
 
 const SESSION_USER_SELECT = {

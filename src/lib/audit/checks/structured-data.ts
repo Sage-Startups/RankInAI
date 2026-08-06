@@ -64,7 +64,10 @@ export function runStructuredDataChecks(ctx: AuditContext): CheckResult[] {
         pagesWithJsonLd: pagesWithSchema,
         totalPages: pages.length,
         typesFound: allTypes,
-        pagesWithoutSchema: pages.filter((p) => p.jsonLd.length === 0).map((p) => p.finalUrl).slice(0, 5),
+        pagesWithoutSchema: pages
+          .filter((p) => p.jsonLd.length === 0)
+          .map((p) => p.finalUrl)
+          .slice(0, 5),
       },
       explanation:
         'JSON-LD is the most direct way to tell a machine what a page is about without relying on it to infer meaning from prose.',
@@ -95,7 +98,9 @@ export function runStructuredDataChecks(ctx: AuditContext): CheckResult[] {
       evidence: {
         totalBlocks: allBlocks.length,
         invalidBlocks: invalidBlocks.length,
-        errors: invalidBlocks.slice(0, 3).map((b) => ({ error: b.parseError, excerpt: b.excerpt.slice(0, 200) })),
+        errors: invalidBlocks
+          .slice(0, 3)
+          .map((b) => ({ error: b.parseError, excerpt: b.excerpt.slice(0, 200) })),
       },
       explanation:
         'A JSON-LD block that fails to parse is silently discarded by every consumer. Malformed markup provides no benefit at all.',
@@ -244,7 +249,12 @@ export function runStructuredDataChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'schema.content-types',
       title: 'Page-level content schema is used',
-      status: contentTypesFound.length >= 2 ? Status.PASS : contentTypesFound.length === 1 ? Status.WARN : Status.FAIL,
+      status:
+        contentTypesFound.length >= 2
+          ? Status.PASS
+          : contentTypesFound.length === 1
+            ? Status.WARN
+            : Status.FAIL,
       ratio: contentRatio,
       maxPoints: 6,
       evidence: {
@@ -301,7 +311,10 @@ export function runStructuredDataChecks(ctx: AuditContext): CheckResult[] {
       evidence: {
         personSchemaPresent: allTypes.includes('Person'),
         authorPropertyPresent: allBlocks.some((b) => b.values.author),
-        authorValues: allBlocks.map((b) => b.values.author).filter(Boolean).slice(0, 5),
+        authorValues: allBlocks
+          .map((b) => b.values.author)
+          .filter(Boolean)
+          .slice(0, 5),
       },
       explanation:
         'Naming a real author in structured data attaches expertise to content. Anonymous content is harder to weigh for reliability.',

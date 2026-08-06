@@ -31,8 +31,8 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
       className={cn(
         'sticky top-0 z-50 border-b transition-colors',
         scrolled
-          ? 'border-white/10 bg-ink-950/85 backdrop-blur-md'
-          : 'border-transparent bg-ink-950/60 backdrop-blur-sm',
+          ? 'bg-ink-950/85 border-white/10 backdrop-blur-md'
+          : 'bg-ink-950/60 border-transparent backdrop-blur-sm',
       )}
     >
       <nav className="rk-container flex h-16 items-center justify-between gap-4" aria-label="Main">
@@ -65,7 +65,12 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
             </Button>
           ) : (
             <>
-              <Button asChild size="sm" variant="ghost" className="text-slate-200 hover:bg-white/10 hover:text-white">
+              <Button
+                asChild
+                size="sm"
+                variant="ghost"
+                className="text-slate-200 hover:bg-white/10 hover:text-white"
+              >
                 <Link href="/signin">Sign in</Link>
               </Button>
               <Button asChild size="sm">
@@ -88,7 +93,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
       </nav>
 
       {open ? (
-        <div id="mobile-nav" className="border-t border-white/10 bg-ink-950 lg:hidden">
+        <div id="mobile-nav" className="bg-ink-950 border-t border-white/10 lg:hidden">
           <ul className="rk-container flex flex-col py-3">
             {MAIN_NAV.map((item) => (
               <li key={item.href}>
@@ -108,7 +113,11 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
               </Button>
             ) : (
               <>
-                <Button asChild variant="outline" className="border-white/25 text-white hover:bg-white/10">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-white/25 text-white hover:bg-white/10"
+                >
                   <Link href="/signin">Sign in</Link>
                 </Button>
                 <Button asChild>

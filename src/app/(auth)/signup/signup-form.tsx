@@ -65,7 +65,9 @@ export function SignUpForm({ plan }: { plan: string | null }) {
           maxLength={120}
           className="mt-2"
           aria-invalid={firstError(state?.fieldErrors, 'name') ? true : undefined}
-          aria-describedby={firstError(state?.fieldErrors, 'name') ? 'signup-name-error' : undefined}
+          aria-describedby={
+            firstError(state?.fieldErrors, 'name') ? 'signup-name-error' : undefined
+          }
         />
         <FieldError id="signup-name-error" message={firstError(state?.fieldErrors, 'name')} />
       </div>
@@ -83,7 +85,9 @@ export function SignUpForm({ plan }: { plan: string | null }) {
           maxLength={200}
           className="mt-2"
           aria-invalid={firstError(state?.fieldErrors, 'email') ? true : undefined}
-          aria-describedby={firstError(state?.fieldErrors, 'email') ? 'signup-email-error' : undefined}
+          aria-describedby={
+            firstError(state?.fieldErrors, 'email') ? 'signup-email-error' : undefined
+          }
         />
         <FieldError id="signup-email-error" message={firstError(state?.fieldErrors, 'email')} />
       </div>
@@ -156,7 +160,7 @@ export function SignUpForm({ plan }: { plan: string | null }) {
 
       <div className="flex gap-3">
         <Checkbox id="signup-terms" name="acceptTerms" value="on" required />
-        <Label htmlFor="signup-terms" className="text-sm font-normal leading-relaxed">
+        <Label htmlFor="signup-terms" className="text-sm leading-relaxed font-normal">
           I agree to the{' '}
           <Link href="/legal/terms" className="text-[var(--accent)] underline underline-offset-4">
             Terms of Service

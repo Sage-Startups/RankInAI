@@ -9,13 +9,7 @@ import { buildReportData } from '@/lib/report/build';
 import { generateReportPdf } from '@/lib/report/pdf';
 import { runFreePreview } from '@/lib/audit/preview';
 import { CATEGORY_ORDER } from '@/lib/audit/scoring';
-import {
-  cleanupTestData,
-  createTestUser,
-  disconnect,
-  prisma,
-  useTestScope,
-} from '../helpers/db';
+import { cleanupTestData, createTestUser, disconnect, prisma, useTestScope } from '../helpers/db';
 import { FIXTURE_ORIGIN, FIXTURE_EXPECTED_SCORE_RANGE } from '../fixtures/site';
 import { startFixtureServer, stopFixtureServer } from '../fixtures/server';
 

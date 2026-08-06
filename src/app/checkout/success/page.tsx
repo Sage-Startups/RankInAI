@@ -111,10 +111,7 @@ export default async function CheckoutSuccessPage({
             <dl className="mt-7 grid gap-3 rounded-lg bg-[var(--surface-muted)] p-5 text-left text-sm">
               <Row label="Current plan" value={planLabel(entitlements.plan)} />
               <Row label="One-time credits" value={String(entitlements.oneTimeCredits)} />
-              <Row
-                label="Audits available now"
-                value={String(entitlements.totalAuditsAvailable)}
-              />
+              <Row label="Audits available now" value={String(entitlements.totalAuditsAvailable)} />
               {entitlements.periodEnd ? (
                 <Row label="Renews" value={formatDate(entitlements.periodEnd)} />
               ) : null}

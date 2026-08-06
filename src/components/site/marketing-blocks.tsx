@@ -42,8 +42,9 @@ export function PricingCard({
   return (
     <Card
       className={cn(
-        'relative flex flex-col border-white/12 bg-ink-900/60 text-slate-200',
-        highlight && 'border-violet-500/50 shadow-lg shadow-violet-900/30 ring-1 ring-violet-500/30',
+        'bg-ink-900/60 relative flex flex-col border-white/12 text-slate-200',
+        highlight &&
+          'border-violet-500/50 shadow-lg ring-1 shadow-violet-900/30 ring-violet-500/30',
       )}
     >
       {highlight ? (
@@ -80,7 +81,10 @@ export function PricingCard({
       <div className="mt-auto border-t border-white/10 p-6">
         <ul className="space-y-2.5">
           {product.features.map((feature) => (
-            <li key={feature} className="flex gap-2.5 text-[0.8125rem] leading-relaxed text-slate-300">
+            <li
+              key={feature}
+              className="flex gap-2.5 text-[0.8125rem] leading-relaxed text-slate-300"
+            >
               <Check className="mt-0.5 size-4 shrink-0 text-violet-400" aria-hidden="true" />
               {feature}
             </li>
@@ -162,7 +166,7 @@ export function Testimonials() {
     <div>
       <div className="grid gap-5 md:grid-cols-3">
         {SAMPLE_TESTIMONIALS.map((testimonial) => (
-          <Card key={testimonial.quote} className="border-white/12 bg-ink-900/60 p-6">
+          <Card key={testimonial.quote} className="bg-ink-900/60 border-white/12 p-6">
             <Badge tone="demo" className="mb-4">
               Sample
             </Badge>
@@ -191,7 +195,12 @@ export function FaqAccordion({
   className?: string;
 }) {
   return (
-    <div className={cn('mx-auto max-w-3xl divide-y divide-white/10 rounded-xl border border-white/12', className)}>
+    <div
+      className={cn(
+        'mx-auto max-w-3xl divide-y divide-white/10 rounded-xl border border-white/12',
+        className,
+      )}
+    >
       {items.map((item) => (
         <details key={item.question} className="group px-5 py-4 sm:px-6">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[0.9375rem] font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ring)]">
@@ -236,7 +245,12 @@ export function CtaBand({
           <Button asChild size="lg">
             <Link href={primaryHref}>{primaryLabel}</Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="border-white/25 text-white hover:bg-white/10">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="border-white/25 text-white hover:bg-white/10"
+          >
             <Link href={secondaryHref}>{secondaryLabel}</Link>
           </Button>
         </div>

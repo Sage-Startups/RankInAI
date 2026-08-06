@@ -178,10 +178,13 @@ export default async function HomePage() {
         <div className="rk-container relative py-16 lg:py-24">
           <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
             <div>
-              <Badge tone="accent" className="border-violet-400/40 bg-violet-500/15 text-violet-200">
+              <Badge
+                tone="accent"
+                className="border-violet-400/40 bg-violet-500/15 text-violet-200"
+              >
                 AI visibility &amp; GEO audits
               </Badge>
-              <h1 className="mt-5 text-[2.125rem] font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-[3.25rem]">
+              <h1 className="mt-5 text-[2.125rem] leading-[1.1] font-bold tracking-tight text-white sm:text-5xl lg:text-[3.25rem]">
                 Find out whether AI can{' '}
                 <span className="rk-gradient-text">understand and recommend</span> your business.
               </h1>
@@ -228,7 +231,7 @@ export default async function HomePage() {
               {settings.demoModeEnabled ? (
                 <InstantDemo />
               ) : (
-                <Card className="border-white/12 bg-ink-900/70 p-8 text-center text-slate-300">
+                <Card className="bg-ink-900/70 border-white/12 p-8 text-center text-slate-300">
                   <p>The interactive demo is temporarily unavailable.</p>
                   <Button asChild className="mt-5">
                     <Link href="/sample-report">View the sample report instead</Link>
@@ -241,7 +244,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. Trust / value statement */}
-      <section className="border-y border-white/10 bg-ink-900/50">
+      <section className="bg-ink-900/50 border-y border-white/10">
         <div className="rk-container py-12">
           <div className="grid gap-8 md:grid-cols-3">
             <ValueStat
@@ -289,8 +292,8 @@ export default async function HomePage() {
             </ul>
           </div>
 
-          <Card className="border-white/12 bg-ink-900/60 p-6 sm:p-8">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-violet-300">
+          <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
+            <h3 className="text-sm font-semibold tracking-[0.12em] text-violet-300 uppercase">
               How the overall score is built
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -313,7 +316,7 @@ export default async function HomePage() {
                         style={{ width: `${CATEGORY_WEIGHTS[category] * 100 * 5}%` }}
                       />
                     </span>
-                    <span className="w-9 shrink-0 text-right text-[0.8125rem] font-semibold tabular-nums text-white">
+                    <span className="w-9 shrink-0 text-right text-[0.8125rem] font-semibold text-white tabular-nums">
                       {Math.round(CATEGORY_WEIGHTS[category] * 100)}%
                     </span>
                   </dd>
@@ -332,7 +335,7 @@ export default async function HomePage() {
       </section>
 
       {/* 7. Workflow */}
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-20 lg:py-24">
           <SectionHeading
             eyebrow="Product workflow"
@@ -344,12 +347,12 @@ export default async function HomePage() {
               const Icon = step.icon;
               return (
                 <li key={step.title}>
-                  <Card className="h-full border-white/12 bg-ink-900/60 p-5">
+                  <Card className="bg-ink-900/60 h-full border-white/12 p-5">
                     <div className="flex items-center gap-3">
                       <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
                         <Icon className="size-4.5" aria-hidden="true" />
                       </span>
-                      <span className="text-xs font-semibold tabular-nums text-slate-400">
+                      <span className="text-xs font-semibold text-slate-400 tabular-nums">
                         Step {index + 1}
                       </span>
                     </div>
@@ -376,12 +379,12 @@ export default async function HomePage() {
           {CATEGORY_ORDER.map((category) => {
             const Icon = CATEGORY_ICONS[category];
             return (
-              <Card key={category} className="border-white/12 bg-ink-900/60 p-6">
+              <Card key={category} className="bg-ink-900/60 border-white/12 p-6">
                 <div className="flex items-start justify-between gap-3">
                   <span className="flex size-10 items-center justify-center rounded-lg bg-cyan-500/12 text-cyan-300">
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
-                  <span className="rounded-full border border-white/12 px-2 py-0.5 text-xs tabular-nums text-slate-400">
+                  <span className="rounded-full border border-white/12 px-2 py-0.5 text-xs text-slate-400 tabular-nums">
                     {Math.round(CATEGORY_WEIGHTS[category] * 100)}% weight
                   </span>
                 </div>
@@ -398,7 +401,7 @@ export default async function HomePage() {
       </section>
 
       {/* 9. Dashboard preview + 10. Report preview */}
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-20 lg:py-24">
           <SectionHeading
             eyebrow="Inside the product"
@@ -424,15 +427,17 @@ export default async function HomePage() {
           {settings.freePreviewEnabled ? (
             <LivePreview />
           ) : (
-            <Card className="mx-auto max-w-3xl border-white/12 bg-ink-900/60 p-8 text-center text-slate-300">
-              <p>The free preview is temporarily unavailable. The instant demo is still available.</p>
+            <Card className="bg-ink-900/60 mx-auto max-w-3xl border-white/12 p-8 text-center text-slate-300">
+              <p>
+                The free preview is temporarily unavailable. The instant demo is still available.
+              </p>
             </Card>
           )}
         </div>
       </section>
 
       {/* 11. Feature comparison */}
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-20 lg:py-24">
           <SectionHeading
             eyebrow="Compare plans"
@@ -465,7 +470,7 @@ export default async function HomePage() {
       </section>
 
       {/* 13. Testimonials */}
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-20 lg:py-24">
           <SectionHeading
             eyebrow="Feedback"
@@ -514,7 +519,7 @@ function ValueStat({ value, label, body }: { value: string; label: string; body:
 function DashboardPreview() {
   const report = DEMO_MINI_REPORT;
   return (
-    <Card className="overflow-hidden border-white/12 bg-ink-900/60">
+    <Card className="bg-ink-900/60 overflow-hidden border-white/12">
       <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
         <p className="text-sm font-medium text-slate-200">Dashboard overview</p>
         <Badge tone="demo">{DEMO_LABEL}</Badge>
@@ -532,7 +537,7 @@ function DashboardPreview() {
             <div key={category.category}>
               <div className="mb-1.5 flex items-baseline justify-between gap-3">
                 <span className="truncate text-[0.8125rem] text-slate-300">{category.label}</span>
-                <span className="shrink-0 text-[0.8125rem] font-semibold tabular-nums text-white">
+                <span className="shrink-0 text-[0.8125rem] font-semibold text-white tabular-nums">
                   {category.score}
                 </span>
               </div>
@@ -542,7 +547,7 @@ function DashboardPreview() {
         </div>
 
         <div className="mt-6 rounded-lg border border-white/10 bg-white/[0.03] p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+          <p className="text-xs font-semibold tracking-[0.12em] text-slate-400 uppercase">
             Recent audits
           </p>
           <ul className="mt-3 space-y-2.5 text-[0.8125rem]">
@@ -555,7 +560,7 @@ function DashboardPreview() {
                 <span className="truncate text-slate-300">{row.site}</span>
                 <span className="flex shrink-0 items-center gap-3">
                   <span className="text-slate-400">{row.when}</span>
-                  <span className="font-semibold tabular-nums text-white">{row.score}</span>
+                  <span className="font-semibold text-white tabular-nums">{row.score}</span>
                 </span>
               </li>
             ))}
@@ -568,7 +573,7 @@ function DashboardPreview() {
 
 function ReportPreview() {
   return (
-    <Card className="overflow-hidden border-white/12 bg-ink-900/60">
+    <Card className="bg-ink-900/60 overflow-hidden border-white/12">
       <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
         <p className="text-sm font-medium text-slate-200">Report preview</p>
         <Badge tone="demo">{DEMO_LABEL}</Badge>
@@ -577,9 +582,7 @@ function ReportPreview() {
         <div className="flex flex-col items-center gap-5 sm:flex-row">
           <ScoreRing score={72} size={116} showLabel={false} className="shrink-0" />
           <div className="min-w-0 text-center sm:text-left">
-            <h3 className="text-base font-semibold text-white">
-              Atlas Roofing &amp; Exteriors
-            </h3>
+            <h3 className="text-base font-semibold text-white">Atlas Roofing &amp; Exteriors</h3>
             <p className="mt-1 text-xs text-slate-400">
               Denver, Colorado · 10 pages analyzed · April 2026
             </p>
@@ -617,11 +620,14 @@ function ReportPreview() {
         </div>
 
         <div className="mt-6 rounded-lg border border-white/10 bg-white/[0.03] p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+          <p className="text-xs font-semibold tracking-[0.12em] text-slate-400 uppercase">
             Evidence sample
           </p>
-          <pre tabIndex={0} className="mt-3 overflow-x-auto rounded bg-ink-950/70 p-3 text-[0.6875rem] leading-relaxed text-slate-300">
-{`{
+          <pre
+            tabIndex={0}
+            className="bg-ink-950/70 mt-3 overflow-x-auto rounded p-3 text-[0.6875rem] leading-relaxed text-slate-300"
+          >
+            {`{
   "checkId": "schema.organization-completeness",
   "propertiesPresent": ["name", "url", "telephone", "address"],
   "valuableMissing": ["logo", "description", "sameAs", "areaServed"],
@@ -641,10 +647,18 @@ function ReportPreview() {
   );
 }
 
-function MiniStat({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
+function MiniStat({
+  label,
+  value,
+  accent = false,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
   return (
     <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
-      <p className="text-[0.6875rem] uppercase tracking-wide text-slate-400">{label}</p>
+      <p className="text-[0.6875rem] tracking-wide text-slate-400 uppercase">{label}</p>
       <p
         className={`mt-1 text-lg font-semibold tabular-nums ${accent ? 'text-cyan-300' : 'text-white'}`}
       >

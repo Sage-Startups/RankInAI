@@ -33,7 +33,14 @@ export default function robots(): MetadataRoute.Robots {
       },
       // Named AI crawlers are explicitly welcome on the public marketing pages.
       {
-        userAgent: ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot', 'Google-Extended'],
+        userAgent: [
+          'GPTBot',
+          'OAI-SearchBot',
+          'ChatGPT-User',
+          'PerplexityBot',
+          'ClaudeBot',
+          'Google-Extended',
+        ],
         allow: '/',
         disallow,
       },

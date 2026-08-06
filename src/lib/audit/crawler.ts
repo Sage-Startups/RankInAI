@@ -130,7 +130,7 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
       fatalError: {
         code: 'ROBOTS_BLOCKED',
         message:
-          'This website\'s robots.txt disallows all automated crawling, so RankInAI cannot analyze it. Update robots.txt to allow the RankInAI-Auditor agent and run the audit again.',
+          "This website's robots.txt disallows all automated crawling, so RankInAI cannot analyze it. Update robots.txt to allow the RankInAI-Auditor agent and run the audit again.",
       },
     };
   }
@@ -142,7 +142,9 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
     return {
       homepage: null,
       pages: [],
-      failedPages: [{ url: validated.normalized, code: homeResult.code, message: homeResult.message }],
+      failedPages: [
+        { url: validated.normalized, code: homeResult.code, message: homeResult.message },
+      ],
       robots,
       sitemap: { found: false, url: null, urlCount: 0, isIndex: false, error: null },
       llmsTxt: { found: false, url: null, bytes: 0, mentionsSections: false },
@@ -170,7 +172,10 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
   const visited = new Set<string>([normalizeKey(homeResult.finalUrl)]);
 
   await report(22, 'Reading structured data and site files');
-  const [sitemap, llmsTxt] = await Promise.all([fetchSitemap(siteOrigin, robots), fetchLlmsTxt(siteOrigin)]);
+  const [sitemap, llmsTxt] = await Promise.all([
+    fetchSitemap(siteOrigin, robots),
+    fetchLlmsTxt(siteOrigin),
+  ]);
 
   // Build the crawl queue from homepage links, ranked by GEO usefulness.
   const queue = extractCrawlCandidates(homepage, siteOrigin)
@@ -200,7 +205,10 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
     await crawlDelay();
 
     const progress = 22 + Math.round(((crawled + 1) / Math.max(1, remaining)) * 33);
-    await report(Math.min(55, progress), `Analyzing page ${crawled + 2} of up to ${options.pageLimit}`);
+    await report(
+      Math.min(55, progress),
+      `Analyzing page ${crawled + 2} of up to ${options.pageLimit}`,
+    );
 
     const result = await safeFetch(candidate);
     if (!result.ok) {
@@ -230,7 +238,9 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
       const discovered = extractCrawlCandidates(signals, siteOrigin).filter(
         (url) => !visited.has(normalizeKey(url)) && !queue.includes(url),
       );
-      for (const url of discovered.sort((a, b) => crawlPriority(a) - crawlPriority(b)).slice(0, 5)) {
+      for (const url of discovered
+        .sort((a, b) => crawlPriority(a) - crawlPriority(b))
+        .slice(0, 5)) {
         queue.push(url);
       }
     }
@@ -238,7 +248,11 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
 
   // --- Broken internal link sampling --------------------------------------
   await report(58, 'Checking internal links');
-  const brokenInternalLinks = await checkInternalLinks(pages, visited, options.linkCheckBudget ?? 8);
+  const brokenInternalLinks = await checkInternalLinks(
+    pages,
+    visited,
+    options.linkCheckBudget ?? 8,
+  );
 
   return {
     homepage,

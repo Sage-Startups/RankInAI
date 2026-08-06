@@ -31,7 +31,7 @@ export default async function ContactPage() {
 
       <section className="rk-container py-16 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:gap-14">
-          <Card className="border-white/12 bg-ink-900/60 p-6 sm:p-8">
+          <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
             <h2 className="text-lg font-semibold text-white">Send a message</h2>
             <p className="mt-2 text-sm text-slate-400">
               Required fields are marked with an asterisk.
@@ -42,7 +42,7 @@ export default async function ContactPage() {
           </Card>
 
           <div className="space-y-5">
-            <Card className="border-white/12 bg-ink-900/60 p-6">
+            <Card className="bg-ink-900/60 border-white/12 p-6">
               <span className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
                 <Mail className="size-4.5" aria-hidden="true" />
               </span>
@@ -57,7 +57,7 @@ export default async function ContactPage() {
               </p>
             </Card>
 
-            <Card className="border-white/12 bg-ink-900/60 p-6">
+            <Card className="bg-ink-900/60 border-white/12 p-6">
               <span className="flex size-9 items-center justify-center rounded-lg bg-cyan-500/12 text-cyan-300">
                 <Clock className="size-4.5" aria-hidden="true" />
               </span>
@@ -68,7 +68,7 @@ export default async function ContactPage() {
               </p>
             </Card>
 
-            <Card className="border-white/12 bg-ink-900/60 p-6">
+            <Card className="bg-ink-900/60 border-white/12 p-6">
               <span className="flex size-9 items-center justify-center rounded-lg bg-amber-500/12 text-amber-300">
                 <Wrench className="size-4.5" aria-hidden="true" />
               </span>
@@ -79,7 +79,7 @@ export default async function ContactPage() {
               </p>
             </Card>
 
-            <Card className="border-white/12 bg-ink-900/60 p-6">
+            <Card className="bg-ink-900/60 border-white/12 p-6">
               <span className="flex size-9 items-center justify-center rounded-lg bg-emerald-500/12 text-emerald-300">
                 <LifeBuoy className="size-4.5" aria-hidden="true" />
               </span>

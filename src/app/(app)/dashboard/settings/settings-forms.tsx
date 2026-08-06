@@ -318,9 +318,7 @@ export function VerifyEmailButton({ verified }: { verified: boolean }) {
   );
 
   if (verified) {
-    return (
-      <Alert tone="success">Your email address is verified.</Alert>
-    );
+    return <Alert tone="success">Your email address is verified.</Alert>;
   }
 
   return (

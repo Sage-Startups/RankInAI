@@ -55,9 +55,9 @@ test.describe('Journey 7: free live preview', () => {
 
     // http://127.0.0.1:4321 is the one allow-listed test fixture origin. Any
     // other port on loopback — the database here — must still be refused.
-    await expect(
-      page.getByText(/private or reserved network/i).first(),
-    ).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/private or reserved network/i).first()).toBeVisible({
+      timeout: 30_000,
+    });
     await expect(page.getByText('Limited preview score')).toHaveCount(0);
   });
 

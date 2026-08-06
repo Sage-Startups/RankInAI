@@ -6,10 +6,7 @@ import { Archive, ArchiveRestore, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import {
-  archiveAuditAction,
-  rerunAuditAction,
-} from '@/app/(app)/dashboard/audits/actions';
+import { archiveAuditAction, rerunAuditAction } from '@/app/(app)/dashboard/audits/actions';
 
 export function AuditDetailActions({
   auditId,

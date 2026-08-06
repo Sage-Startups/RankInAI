@@ -75,9 +75,7 @@ export default function AboutPage() {
               stand alone, and specific enough to be worth quoting. Most business websites were not
               built that way, and most audit tools do not check for it.
             </p>
-            <p>
-              RankInAI checks for exactly that, and tells you what to change.
-            </p>
+            <p>RankInAI checks for exactly that, and tells you what to change.</p>
 
             <h2 className="text-white">What RankInAI is</h2>
             <p>
@@ -116,7 +114,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-ink-900/40">
+      <section className="bg-ink-900/40 border-y border-white/10">
         <div className="rk-container py-16 lg:py-20">
           <SectionHeading
             eyebrow="Principles"
@@ -125,7 +123,7 @@ export default function AboutPage() {
           />
           <div className="mt-12 grid gap-5 sm:grid-cols-2">
             {PRINCIPLES.map((principle) => (
-              <Card key={principle.title} className="border-white/12 bg-ink-900/60 p-6">
+              <Card key={principle.title} className="bg-ink-900/60 border-white/12 p-6">
                 <h3 className="text-sm font-semibold text-white">{principle.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{principle.body}</p>
               </Card>

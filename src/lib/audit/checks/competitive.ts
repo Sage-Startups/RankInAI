@@ -53,8 +53,7 @@ export function runCompetitiveChecks(ctx: AuditContext): CheckResult[] {
   const bestCompetitor = analyzed.reduce((best, c) =>
     (c.quickScore ?? 0) > (best.quickScore ?? 0) ? c : best,
   );
-  const avgCompetitor =
-    analyzed.reduce((sum, c) => sum + (c.quickScore ?? 0), 0) / analyzed.length;
+  const avgCompetitor = analyzed.reduce((sum, c) => sum + (c.quickScore ?? 0), 0) / analyzed.length;
 
   // --- Overall signal comparison --------------------------------------------
   const gap = ourScore - avgCompetitor;
@@ -93,12 +92,21 @@ export function runCompetitiveChecks(ctx: AuditContext): CheckResult[] {
   const compSchemaAvg =
     analyzed.reduce((sum, c) => sum + (c.signals?.schemaTypes.length ?? 0), 0) / analyzed.length;
   const schemaRatio =
-    compSchemaAvg === 0 ? (ourSchemaCount > 0 ? 1 : 0.5) : Math.max(0, Math.min(1, ourSchemaCount / Math.max(1, compSchemaAvg)));
+    compSchemaAvg === 0
+      ? ourSchemaCount > 0
+        ? 1
+        : 0.5
+      : Math.max(0, Math.min(1, ourSchemaCount / Math.max(1, compSchemaAvg)));
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'competitive.structured-data',
       title: 'Structured data coverage versus competitors',
-      status: ourSchemaCount >= compSchemaAvg ? Status.PASS : ourSchemaCount > 0 ? Status.WARN : Status.FAIL,
+      status:
+        ourSchemaCount >= compSchemaAvg
+          ? Status.PASS
+          : ourSchemaCount > 0
+            ? Status.WARN
+            : Status.FAIL,
       ratio: schemaRatio,
       maxPoints: 6,
       evidence: {
@@ -114,12 +122,12 @@ export function runCompetitiveChecks(ctx: AuditContext): CheckResult[] {
       recommendedAction:
         ourSchemaCount >= compSchemaAvg
           ? 'No action needed.'
-          : `Add the schema types your competitors use but you do not: ${[
-              ...new Set(analyzed.flatMap((c) => c.signals?.schemaTypes ?? [])),
-            ]
-              .filter((t) => !(home?.schemaTypes ?? []).includes(t))
-              .slice(0, 6)
-              .join(', ') || 'none identified'}.`,
+          : `Add the schema types your competitors use but you do not: ${
+              [...new Set(analyzed.flatMap((c) => c.signals?.schemaTypes ?? []))]
+                .filter((t) => !(home?.schemaTypes ?? []).includes(t))
+                .slice(0, 6)
+                .join(', ') || 'none identified'
+            }.`,
       effort: Effort.MEDIUM,
       impact: Impact.MEDIUM,
     }),
@@ -129,12 +137,18 @@ export function runCompetitiveChecks(ctx: AuditContext): CheckResult[] {
   const ourWords = home?.wordCount ?? 0;
   const compWordAvg =
     analyzed.reduce((sum, c) => sum + (c.signals?.wordCount ?? 0), 0) / analyzed.length;
-  const wordRatio = compWordAvg === 0 ? 1 : Math.max(0, Math.min(1, ourWords / Math.max(1, compWordAvg)));
+  const wordRatio =
+    compWordAvg === 0 ? 1 : Math.max(0, Math.min(1, ourWords / Math.max(1, compWordAvg)));
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'competitive.content-depth',
       title: 'Homepage content depth versus competitors',
-      status: ourWords >= compWordAvg * 0.9 ? Status.PASS : ourWords >= compWordAvg * 0.5 ? Status.WARN : Status.FAIL,
+      status:
+        ourWords >= compWordAvg * 0.9
+          ? Status.PASS
+          : ourWords >= compWordAvg * 0.5
+            ? Status.WARN
+            : Status.FAIL,
       ratio: wordRatio,
       maxPoints: 6,
       evidence: {
@@ -159,15 +173,24 @@ export function runCompetitiveChecks(ctx: AuditContext): CheckResult[] {
   // --- Answer-readiness comparison --------------------------------------------
   const ourQuestions = home?.questionHeadings.length ?? 0;
   const compQuestionAvg =
-    analyzed.reduce((sum, c) => sum + (c.signals?.questionHeadings.length ?? 0), 0) / analyzed.length;
+    analyzed.reduce((sum, c) => sum + (c.signals?.questionHeadings.length ?? 0), 0) /
+    analyzed.length;
   const questionRatio =
-    compQuestionAvg === 0 ? (ourQuestions > 0 ? 1 : 0.5) : Math.max(0, Math.min(1, ourQuestions / Math.max(1, compQuestionAvg)));
+    compQuestionAvg === 0
+      ? ourQuestions > 0
+        ? 1
+        : 0.5
+      : Math.max(0, Math.min(1, ourQuestions / Math.max(1, compQuestionAvg)));
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'competitive.answer-readiness',
       title: 'Answer-ready structure versus competitors',
       status:
-        ourQuestions >= compQuestionAvg ? Status.PASS : ourQuestions > 0 ? Status.WARN : Status.FAIL,
+        ourQuestions >= compQuestionAvg
+          ? Status.PASS
+          : ourQuestions > 0
+            ? Status.WARN
+            : Status.FAIL,
       ratio: questionRatio,
       maxPoints: 6,
       evidence: {

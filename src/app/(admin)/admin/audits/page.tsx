@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { AuditStatus, Prisma } from '@prisma/client';
+import { AuditStatus, type Prisma } from '@prisma/client';
 import { Search } from 'lucide-react';
 
 import { Badge, Card, EmptyState, Input, Select, Skeleton } from '@/components/ui/primitives';
@@ -86,7 +86,7 @@ export default async function AdminAuditsPage({
             </label>
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--muted-foreground)]"
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--muted-foreground)]"
                 aria-hidden="true"
               />
               <Input
@@ -131,12 +131,24 @@ export default async function AdminAuditsPage({
             <caption className="sr-only">All audits</caption>
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
-                <th scope="col" className="px-5 py-3 font-semibold">Audit</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Customer</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Status</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Score</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Attempts</th>
-                <th scope="col" className="px-5 py-3 font-semibold">Created</th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Audit
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Customer
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Score
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Attempts
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Created
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -172,7 +184,7 @@ export default async function AdminAuditsPage({
                   <td className="px-5 py-3.5 tabular-nums">
                     {audit.overallScore ?? (audit.job ? `${audit.job.progress}%` : '—')}
                   </td>
-                  <td className="px-5 py-3.5 tabular-nums text-[var(--muted-foreground)]">
+                  <td className="px-5 py-3.5 text-[var(--muted-foreground)] tabular-nums">
                     {audit.job?.attempts ?? 0}
                   </td>
                   <td className="px-5 py-3.5 text-[var(--muted-foreground)]">
@@ -204,10 +216,7 @@ export default async function AdminAuditsPage({
   );
 }
 
-function href(
-  params: { q?: string; status?: string; demo?: string },
-  page: number,
-): string {
+function href(params: { q?: string; status?: string; demo?: string }, page: number): string {
   const search = new URLSearchParams();
   if (params.q) search.set('q', params.q);
   if (params.status) search.set('status', params.status);

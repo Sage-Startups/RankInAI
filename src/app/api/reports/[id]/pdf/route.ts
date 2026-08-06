@@ -21,10 +21,7 @@ export const maxDuration = 60;
  * The generated PDF is cached in the database (no local disk dependency) and
  * regenerated only when the stored copy is missing.
  */
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireApiUser();
   if (!auth.ok) {
     return NextResponse.json({ error: auth.message }, { status: auth.status });
@@ -103,7 +100,9 @@ export async function GET(
     const buffer = await generateReportPdf(data, { footerNote: settings.defaultReportFooter });
     // Normalize to a plain Uint8Array backed by a non-shared ArrayBuffer so it
     // satisfies both the Prisma Bytes field and the Response body type.
-    const bytes = new Uint8Array(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer);
+    const bytes = new Uint8Array(
+      buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer,
+    );
 
     await prisma.report.upsert({
       where: { auditId_version: { auditId: audit.id, version: 1 } },

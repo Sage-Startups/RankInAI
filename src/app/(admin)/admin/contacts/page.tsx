@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ContactStatus, Prisma } from '@prisma/client';
+import { ContactStatus, type Prisma } from '@prisma/client';
 
 import { Badge, Card, EmptyState, Select } from '@/components/ui/primitives';
 import { Button } from '@/components/ui/button';
@@ -30,9 +30,7 @@ export default async function AdminContactsPage({
   const params = await searchParams;
 
   const status =
-    params.status && params.status in ContactStatus
-      ? (params.status as ContactStatus)
-      : undefined;
+    params.status && params.status in ContactStatus ? (params.status as ContactStatus) : undefined;
 
   const where: Prisma.ContactSubmissionWhereInput = status ? { status } : {};
 
@@ -118,7 +116,7 @@ export default async function AdminContactsPage({
                   </span>
                 </div>
 
-                <p className="mt-4 whitespace-pre-line rounded-lg bg-[var(--surface-muted)] p-4 text-sm leading-relaxed">
+                <p className="mt-4 rounded-lg bg-[var(--surface-muted)] p-4 text-sm leading-relaxed whitespace-pre-line">
                   {submission.message}
                 </p>
 

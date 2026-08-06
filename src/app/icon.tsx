@@ -20,8 +20,12 @@ export default function Icon() {
           borderRadius: 14,
         }}
       >
-        <div style={{ width: 9, height: 16, background: 'rgba(255,255,255,0.62)', borderRadius: 3 }} />
-        <div style={{ width: 9, height: 26, background: 'rgba(255,255,255,0.82)', borderRadius: 3 }} />
+        <div
+          style={{ width: 9, height: 16, background: 'rgba(255,255,255,0.62)', borderRadius: 3 }}
+        />
+        <div
+          style={{ width: 9, height: 26, background: 'rgba(255,255,255,0.82)', borderRadius: 3 }}
+        />
         <div style={{ width: 9, height: 36, background: '#ffffff', borderRadius: 3 }} />
       </div>
     ),

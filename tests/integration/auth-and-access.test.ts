@@ -4,7 +4,12 @@ import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { hashPassword, normalizeEmail, verifyPassword } from '@/lib/auth/password';
 import { canUseAdminArea, canUsePlatform } from '@/lib/auth/roles';
 import { generateToken, hashIdentifier, hashToken, safeCompare } from '@/lib/crypto';
-import { RATE_LIMITS, consumeRateLimit, clearRateLimit, pruneRateLimitEvents } from '@/lib/rate-limit';
+import {
+  RATE_LIMITS,
+  consumeRateLimit,
+  clearRateLimit,
+  pruneRateLimitEvents,
+} from '@/lib/rate-limit';
 import { clearCapturedEmails, lastEmailTo, sendPasswordResetEmail } from '@/lib/email';
 import {
   cleanupTestData,

@@ -2,7 +2,7 @@ import {
   AuditStatus,
   JobStatus,
   PaymentStatus,
-  Prisma,
+  type Prisma,
   SubscriptionStatus,
 } from '@prisma/client';
 
@@ -271,7 +271,14 @@ export async function getJobHealth(includeDemo = false) {
     }),
   ]);
 
-  return { queued, running, failed, completed, oldestQueuedAt: oldest?.scheduledAt ?? null, recentFailures };
+  return {
+    queued,
+    running,
+    failed,
+    completed,
+    oldestQueuedAt: oldest?.scheduledAt ?? null,
+    recentFailures,
+  };
 }
 
 export type UserSearchResult = Prisma.UserGetPayload<{

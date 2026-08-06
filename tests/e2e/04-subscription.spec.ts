@@ -41,7 +41,9 @@ test.describe('Journey 4: subscription purchase and allowance', () => {
 
     // 4. The subscription is active with the full period allowance.
     await page.goto('/dashboard/billing');
-    await expect(page.getByRole('heading', { name: 'Growth', exact: true, level: 2 })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Growth', exact: true, level: 2 }),
+    ).toBeVisible();
     await expect(page.getByText('active', { exact: true })).toBeVisible();
     await expect(page.getByText('0 / 15')).toBeVisible();
 
@@ -65,9 +67,7 @@ test.describe('Journey 4: subscription purchase and allowance', () => {
     expect(outcome.status).toBe('COMPLETED');
 
     await page.goto(`/dashboard/audits/${auditId}`);
-    await expect(
-      page.getByRole('heading', { name: /Overall AI Visibility Score/i }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Overall AI Visibility Score/i })).toBeVisible();
     // A competitor was supplied, so Competitive Visibility is scored rather
     // than excluded.
     await expect(page.getByText(/No competitor was supplied for this audit/i)).toHaveCount(0);
@@ -92,7 +92,9 @@ test.describe('Journey 4: subscription purchase and allowance', () => {
     await page.waitForURL(/\/checkout\/success/, { timeout: 45_000 });
 
     await page.goto('/dashboard/billing');
-    await expect(page.getByRole('heading', { name: 'Starter', exact: true, level: 2 })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Starter', exact: true, level: 2 }),
+    ).toBeVisible();
     await expect(page.getByText('0 / 3')).toBeVisible();
 
     // The current plan offers no "choose" button, only the other two do.
@@ -104,7 +106,9 @@ test.describe('Journey 4: subscription purchase and allowance', () => {
     await page.waitForURL(/\/checkout\/success/, { timeout: 45_000 });
 
     await page.goto('/dashboard/billing');
-    await expect(page.getByRole('heading', { name: 'Agency', exact: true, level: 2 })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Agency', exact: true, level: 2 }),
+    ).toBeVisible();
     await expect(page.getByText('0 / 60')).toBeVisible();
 
     // Exactly one subscription payment row per purchase, both recorded.

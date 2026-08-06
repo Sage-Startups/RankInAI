@@ -41,8 +41,22 @@ export default function OpengraphImage() {
               borderRadius: 18,
             }}
           >
-            <div style={{ width: 10, height: 16, background: 'rgba(255,255,255,0.62)', borderRadius: 3 }} />
-            <div style={{ width: 10, height: 26, background: 'rgba(255,255,255,0.82)', borderRadius: 3 }} />
+            <div
+              style={{
+                width: 10,
+                height: 16,
+                background: 'rgba(255,255,255,0.62)',
+                borderRadius: 3,
+              }}
+            />
+            <div
+              style={{
+                width: 10,
+                height: 26,
+                background: 'rgba(255,255,255,0.82)',
+                borderRadius: 3,
+              }}
+            />
             <div style={{ width: 10, height: 36, background: '#ffffff', borderRadius: 3 }} />
           </div>
           <div style={{ display: 'flex', fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
@@ -81,7 +95,9 @@ export default function OpengraphImage() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 22, color: '#67e8f9' }}>
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 22, color: '#67e8f9' }}
+        >
           <span>7 scored categories</span>
           <span style={{ color: '#33406e' }}>·</span>
           <span>~70 deterministic checks</span>

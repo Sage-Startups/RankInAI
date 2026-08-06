@@ -24,14 +24,18 @@ export function createFixtureServer(): http.Server {
     // Deliberate 404 so the broken-internal-link check has something to find.
     if (path === '/booking-calendar') {
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end('<!doctype html><html lang="en"><head><title>Not found</title></head><body><h1>Not found</h1></body></html>');
+      res.end(
+        '<!doctype html><html lang="en"><head><title>Not found</title></head><body><h1>Not found</h1></body></html>',
+      );
       return;
     }
 
     const page = routes.get(path);
     if (!page) {
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end('<!doctype html><html lang="en"><head><title>Not found</title></head><body><h1>Not found</h1></body></html>');
+      res.end(
+        '<!doctype html><html lang="en"><head><title>Not found</title></head><body><h1>Not found</h1></body></html>',
+      );
       return;
     }
 

@@ -9,7 +9,7 @@ import {
   PaymentKind,
   PaymentStatus,
   PlanTier,
-  Prisma,
+  type Prisma,
   PrismaClient,
   Role,
 } from '@prisma/client';

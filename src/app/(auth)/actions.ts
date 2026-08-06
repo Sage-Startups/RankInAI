@@ -44,7 +44,10 @@ export async function signUpAction(
 ): Promise<ActionResult> {
   const settings = await getSettings();
   if (!settings.signupsEnabled) {
-    return { ok: false, message: 'New registrations are temporarily closed. Please check back soon.' };
+    return {
+      ok: false,
+      message: 'New registrations are temporarily closed. Please check back soon.',
+    };
   }
 
   const parsed = signUpSchema.safeParse({
@@ -106,7 +109,11 @@ export async function signUpAction(
   });
 
   await Promise.all([
-    trackEvent({ name: 'signup_completed', userId: user.id, properties: { plan: parsed.data.plan } }),
+    trackEvent({
+      name: 'signup_completed',
+      userId: user.id,
+      properties: { plan: parsed.data.plan },
+    }),
     sendWelcomeEmail(user.email, user.name),
   ]);
 
@@ -208,10 +215,7 @@ export async function requestPasswordResetAction(
   }
 
   const headerList = await headers();
-  const limit = await consumeRateLimit(
-    RATE_LIMITS.passwordResetRequest,
-    clientIp(headerList),
-  );
+  const limit = await consumeRateLimit(RATE_LIMITS.passwordResetRequest, clientIp(headerList));
   if (!limit.allowed) {
     return { ok: false, message: rateLimitMessage(limit) };
   }
@@ -267,10 +271,7 @@ export async function resetPasswordAction(
   }
 
   const headerList = await headers();
-  const limit = await consumeRateLimit(
-    RATE_LIMITS.passwordResetConfirm,
-    clientIp(headerList),
-  );
+  const limit = await consumeRateLimit(RATE_LIMITS.passwordResetConfirm, clientIp(headerList));
   if (!limit.allowed) {
     return { ok: false, message: rateLimitMessage(limit) };
   }

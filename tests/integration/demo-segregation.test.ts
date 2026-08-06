@@ -1,7 +1,18 @@
-import { AuditStatus, PaymentKind, PaymentStatus, PlanTier, SubscriptionStatus } from '@prisma/client';
+import {
+  AuditStatus,
+  PaymentKind,
+  PaymentStatus,
+  PlanTier,
+  SubscriptionStatus,
+} from '@prisma/client';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { getAdminOverview, getDailySeries, getDemoSnapshotTotals, searchUsers } from '@/lib/admin/metrics';
+import {
+  getAdminOverview,
+  getDailySeries,
+  getDemoSnapshotTotals,
+  searchUsers,
+} from '@/lib/admin/metrics';
 import { getFunnelCounts, trackEvent } from '@/lib/analytics';
 import {
   APRIL_2026_WINDOW,

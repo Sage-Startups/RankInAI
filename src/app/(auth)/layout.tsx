@@ -42,14 +42,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </footer>
       </div>
 
-      <aside className="relative hidden overflow-hidden bg-ink-950 lg:block">
+      <aside className="bg-ink-950 relative hidden overflow-hidden lg:block">
         <div className="rk-hero-wash absolute inset-0" aria-hidden="true" />
         <div className="rk-grid-lines absolute inset-0" aria-hidden="true" />
         <div className="relative flex h-full flex-col justify-center px-12 xl:px-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-violet-300">
+          <p className="text-xs font-semibold tracking-[0.16em] text-violet-300 uppercase">
             AI visibility &amp; GEO audits
           </p>
-          <h2 className="mt-5 max-w-md text-3xl font-bold leading-tight text-white">
+          <h2 className="mt-5 max-w-md text-3xl leading-tight font-bold text-white">
             {SITE.tagline}
           </h2>
           <p className="mt-5 max-w-md text-[0.9375rem] leading-relaxed text-slate-400">

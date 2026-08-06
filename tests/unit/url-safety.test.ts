@@ -31,9 +31,7 @@ describe('validateAuditUrl — accepted input', () => {
   });
 
   it('strips tracking parameters and fragments', () => {
-    const result = validateAuditUrl(
-      'https://example.com/page?utm_source=x&gclid=y&keep=1#section',
-    );
+    const result = validateAuditUrl('https://example.com/page?utm_source=x&gclid=y&keep=1#section');
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.normalized).toContain('keep=1');
@@ -244,11 +242,7 @@ describe('production safety', () => {
 
       // …but nothing else on the loopback interface is. Opening the whole host
       // would expose the database, the app itself and any other local service.
-      for (const url of [
-        'http://127.0.0.1:5432/',
-        'http://127.0.0.1:3000/',
-        'http://127.0.0.1/',
-      ]) {
+      for (const url of ['http://127.0.0.1:5432/', 'http://127.0.0.1:3000/', 'http://127.0.0.1/']) {
         const result = validateAuditUrl(url);
         expect(result.ok, `${url} must be refused`).toBe(false);
         if (!result.ok) expect(result.code).toBe('LOOPBACK_ADDRESS');

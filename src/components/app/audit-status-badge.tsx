@@ -1,8 +1,11 @@
-import { AuditStatus } from '@prisma/client';
+import { type AuditStatus } from '@prisma/client';
 
 import { Badge } from '@/components/ui/primitives';
 
-const CONFIG: Record<AuditStatus, { label: string; tone: 'neutral' | 'info' | 'success' | 'danger' | 'warning' }> = {
+const CONFIG: Record<
+  AuditStatus,
+  { label: string; tone: 'neutral' | 'info' | 'success' | 'danger' | 'warning' }
+> = {
   DRAFT: { label: 'Draft', tone: 'neutral' },
   QUEUED: { label: 'Queued', tone: 'info' },
   RUNNING: { label: 'Running', tone: 'info' },

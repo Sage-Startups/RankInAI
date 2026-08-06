@@ -112,7 +112,9 @@ export function parseRobotsTxt(text: string): {
 
 /** Select the group that applies to a given agent token. */
 function selectGroup(groups: ParsedGroup[], agentToken: string): ParsedGroup | null {
-  const specific = groups.filter((g) => g.agents.some((a) => a === agentToken || agentToken.startsWith(a)));
+  const specific = groups.filter((g) =>
+    g.agents.some((a) => a === agentToken || agentToken.startsWith(a)),
+  );
   if (specific.length > 0) {
     return specific.reduce<ParsedGroup>(
       (acc, g) => ({

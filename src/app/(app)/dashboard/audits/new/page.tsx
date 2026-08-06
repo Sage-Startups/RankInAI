@@ -42,7 +42,7 @@ export default async function NewAuditPage() {
       <Card className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+            <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
               Audits available
             </p>
             <p className="mt-1 text-lg font-bold tabular-nums">
@@ -65,8 +65,7 @@ export default async function NewAuditPage() {
           <div className="flex flex-wrap gap-2">
             <Badge tone="neutral">{pageLimit} pages per audit</Badge>
             <Badge tone="neutral">
-              {limits.competitorLimit}{' '}
-              {limits.competitorLimit === 1 ? 'competitor' : 'competitors'}
+              {limits.competitorLimit} {limits.competitorLimit === 1 ? 'competitor' : 'competitors'}
             </Badge>
             {limits.whiteLabel ? <Badge tone="accent">White-label</Badge> : null}
           </div>

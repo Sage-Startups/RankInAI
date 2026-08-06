@@ -68,7 +68,10 @@ export async function generateReportPdf(
     autoFirstPage: false,
     info: {
       Title: `AI Visibility Audit — ${data.businessName}`,
-      Author: data.branding.whiteLabel && data.branding.companyName ? data.branding.companyName : 'RankInAI',
+      Author:
+        data.branding.whiteLabel && data.branding.companyName
+          ? data.branding.companyName
+          : 'RankInAI',
       Subject: 'AI Visibility and Generative Engine Optimization audit report',
       Creator: 'RankInAI',
       Keywords: 'AI visibility, GEO, generative engine optimization, audit',
@@ -155,7 +158,10 @@ function paragraph(
 ) {
   const size = opts.size ?? 9.5;
   const width = CONTENT_WIDTH - (opts.indent ?? 0);
-  const height = doc.font(opts.font ?? 'Helvetica').fontSize(size).heightOfString(text, { width });
+  const height = doc
+    .font(opts.font ?? 'Helvetica')
+    .fontSize(size)
+    .heightOfString(text, { width });
 
   ensureSpace(doc, height + 6);
 
@@ -166,11 +172,6 @@ function paragraph(
     .text(text, MARGIN.left + (opts.indent ?? 0), doc.y, { width, align: 'left' });
 
   doc.y += opts.gap ?? 8;
-}
-
-function labelValue(doc: Doc, label: string, value: string, x: number, y: number, width: number) {
-  doc.font('Helvetica').fontSize(7.5).fillColor(COLORS.muted).text(label.toUpperCase(), x, y, { width });
-  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.ink).text(value, x, y + 11, { width });
 }
 
 /** Horizontal score bar. */
@@ -187,9 +188,12 @@ function scoreBar(doc: Doc, x: number, y: number, width: number, score: number, 
 
 function bulletList(doc: Doc, items: string[], opts: { color?: string } = {}) {
   for (const item of items) {
-    const height = doc.font('Helvetica').fontSize(9.5).heightOfString(item, {
-      width: CONTENT_WIDTH - 14,
-    });
+    const height = doc
+      .font('Helvetica')
+      .fontSize(9.5)
+      .heightOfString(item, {
+        width: CONTENT_WIDTH - 14,
+      });
     ensureSpace(doc, height + 8);
 
     doc
@@ -261,10 +265,14 @@ function renderCover({ doc, data, brandName }: RenderContext) {
   ];
   meta.forEach(([label, value], index) => {
     const x = MARGIN.left + colWidth * index;
-    doc.font('Helvetica').fontSize(7).fillColor('#8792AE').text(label.toUpperCase(), x, metaY, {
-      width: colWidth - 8,
-      characterSpacing: 0.8,
-    });
+    doc
+      .font('Helvetica')
+      .fontSize(7)
+      .fillColor('#8792AE')
+      .text(label.toUpperCase(), x, metaY, {
+        width: colWidth - 8,
+        characterSpacing: 0.8,
+      });
     doc
       .font('Helvetica-Bold')
       .fontSize(9.5)
@@ -382,7 +390,11 @@ function renderCover({ doc, data, brandName }: RenderContext) {
   doc.y = Math.max(doc.y, 480);
 
   // Contents.
-  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.ink).text('Contents', MARGIN.left, doc.y);
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(10)
+    .fillColor(COLORS.ink)
+    .text('Contents', MARGIN.left, doc.y);
   doc.y += 8;
   const contents = [
     '1. Executive summary',
@@ -396,7 +408,11 @@ function renderCover({ doc, data, brandName }: RenderContext) {
     '9. Limitations and disclaimer',
   ];
   for (const line of contents) {
-    doc.font('Helvetica').fontSize(9).fillColor(COLORS.body).text(line, MARGIN.left + 6, doc.y);
+    doc
+      .font('Helvetica')
+      .fontSize(9)
+      .fillColor(COLORS.body)
+      .text(line, MARGIN.left + 6, doc.y);
     doc.y += 3;
   }
 }
@@ -432,13 +448,20 @@ function renderExecutiveSummary(ctx: RenderContext) {
 
   ensureSpace(doc, rows.length * 18 + 20);
   const tableY = doc.y;
-  doc.roundedRect(MARGIN.left, tableY, CONTENT_WIDTH, rows.length * 18 + 12, 6).fillColor(COLORS.surface).fill();
+  doc
+    .roundedRect(MARGIN.left, tableY, CONTENT_WIDTH, rows.length * 18 + 12, 6)
+    .fillColor(COLORS.surface)
+    .fill();
 
   rows.forEach(([label, value], index) => {
     const y = tableY + 8 + index * 18;
-    doc.font('Helvetica').fontSize(9).fillColor(COLORS.muted).text(label, MARGIN.left + 12, y, {
-      width: 150,
-    });
+    doc
+      .font('Helvetica')
+      .fontSize(9)
+      .fillColor(COLORS.muted)
+      .text(label, MARGIN.left + 12, y, {
+        width: 150,
+      });
     doc
       .font('Helvetica-Bold')
       .fontSize(9)
@@ -458,9 +481,12 @@ function renderCategoryScores(ctx: RenderContext) {
   sectionHeading(doc, '2. Category scores');
 
   for (const category of data.categories) {
-    const summaryHeight = doc.font('Helvetica').fontSize(8.5).heightOfString(category.summary, {
-      width: CONTENT_WIDTH - 24,
-    });
+    const summaryHeight = doc
+      .font('Helvetica')
+      .fontSize(8.5)
+      .heightOfString(category.summary, {
+        width: CONTENT_WIDTH - 24,
+      });
     const blockHeight = 46 + summaryHeight;
     ensureSpace(doc, blockHeight + 10);
 
@@ -519,7 +545,11 @@ function renderStrengthsWeaknesses(ctx: RenderContext) {
   const { doc, data } = ctx;
   sectionHeading(doc, '3. Key strengths and critical weaknesses');
 
-  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.excellent).text('Key strengths', MARGIN.left, doc.y);
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(10)
+    .fillColor(COLORS.excellent)
+    .text('Key strengths', MARGIN.left, doc.y);
   doc.y += 6;
   bulletList(
     doc,
@@ -576,22 +606,31 @@ function renderFindings(ctx: RenderContext) {
 function renderFinding(ctx: RenderContext, finding: ReportData['findings'][number]) {
   const { doc } = ctx;
 
-  const explanationHeight = doc.font('Helvetica').fontSize(8.5).heightOfString(finding.explanation, {
-    width: CONTENT_WIDTH - 20,
-  });
+  const explanationHeight = doc
+    .font('Helvetica')
+    .fontSize(8.5)
+    .heightOfString(finding.explanation, {
+      width: CONTENT_WIDTH - 20,
+    });
   const actionHeight =
     finding.status === 'PASS'
       ? 0
-      : doc.font('Helvetica').fontSize(8.5).heightOfString(finding.recommendedAction, {
-          width: CONTENT_WIDTH - 20,
-        }) + 18;
+      : doc
+          .font('Helvetica')
+          .fontSize(8.5)
+          .heightOfString(finding.recommendedAction, {
+            width: CONTENT_WIDTH - 20,
+          }) + 18;
 
   const evidenceLines = evidenceSummary(finding.evidence);
   const evidenceHeight =
     evidenceLines.length > 0
-      ? doc.font('Helvetica').fontSize(7.5).heightOfString(evidenceLines.join('\n'), {
-          width: CONTENT_WIDTH - 20,
-        }) + 14
+      ? doc
+          .font('Helvetica')
+          .fontSize(7.5)
+          .heightOfString(evidenceLines.join('\n'), {
+            width: CONTENT_WIDTH - 20,
+          }) + 14
       : 0;
 
   const total = 34 + explanationHeight + actionHeight + evidenceHeight;
@@ -768,7 +807,11 @@ function renderCompetitors(ctx: RenderContext) {
       .fontSize(10)
       .fillColor(COLORS.ink)
       .text(competitor.name ?? 'Competitor', MARGIN.left, doc.y, { width: CONTENT_WIDTH });
-    doc.font('Helvetica').fontSize(8).fillColor(COLORS.muted).text(competitor.url, MARGIN.left, doc.y + 1);
+    doc
+      .font('Helvetica')
+      .fontSize(8)
+      .fillColor(COLORS.muted)
+      .text(competitor.url, MARGIN.left, doc.y + 1);
     doc.y += 8;
 
     if (competitor.error) {
@@ -874,9 +917,12 @@ function renderRecommendation(ctx: RenderContext, rec: ReportData['recommendatio
   fieldBlock(doc, 'EXACT RECOMMENDED CHANGE', rec.recommendedChange);
 
   if (rec.exampleImplementation) {
-    const height = doc.font('Courier').fontSize(7.5).heightOfString(rec.exampleImplementation, {
-      width: CONTENT_WIDTH - 20,
-    });
+    const height = doc
+      .font('Courier')
+      .fontSize(7.5)
+      .heightOfString(rec.exampleImplementation, {
+        width: CONTENT_WIDTH - 20,
+      });
     ensureSpace(doc, height + 26);
 
     doc
@@ -887,7 +933,10 @@ function renderRecommendation(ctx: RenderContext, rec: ReportData['recommendatio
     doc.y += 8;
 
     const boxY = doc.y;
-    doc.roundedRect(MARGIN.left, boxY, CONTENT_WIDTH, height + 14, 4).fillColor(COLORS.surface).fill();
+    doc
+      .roundedRect(MARGIN.left, boxY, CONTENT_WIDTH, height + 14, 4)
+      .fillColor(COLORS.surface)
+      .fill();
     doc
       .font('Courier')
       .fontSize(7.5)
@@ -909,7 +958,10 @@ function renderRecommendation(ctx: RenderContext, rec: ReportData['recommendatio
 }
 
 function fieldBlock(doc: Doc, label: string, value: string) {
-  const height = doc.font('Helvetica').fontSize(8.5).heightOfString(value, { width: CONTENT_WIDTH });
+  const height = doc
+    .font('Helvetica')
+    .fontSize(8.5)
+    .heightOfString(value, { width: CONTENT_WIDTH });
   ensureSpace(doc, height + 18);
 
   doc
@@ -945,10 +997,14 @@ function renderPages(ctx: RenderContext) {
     doc.rect(MARGIN.left, y, CONTENT_WIDTH, 20).fillColor(COLORS.surface).fill();
     let x = MARGIN.left + 8;
     for (const column of columns) {
-      doc.font('Helvetica-Bold').fontSize(7.5).fillColor(COLORS.muted).text(column.label.toUpperCase(), x, y + 6, {
-        width: column.width - 8,
-        characterSpacing: 0.5,
-      });
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(7.5)
+        .fillColor(COLORS.muted)
+        .text(column.label.toUpperCase(), x, y + 6, {
+          width: column.width - 8,
+          characterSpacing: 0.5,
+        });
       x += column.width;
     }
     doc.y = y + 24;
@@ -984,9 +1040,13 @@ function renderPages(ctx: RenderContext) {
       .text(page.statusCode != null ? String(page.statusCode) : '—', x, y, { width: 38 });
     x += columns[1]!.width;
 
-    doc.font('Helvetica').fontSize(8).fillColor(COLORS.body).text(page.wordCount ? String(page.wordCount) : '—', x, y, {
-      width: 38,
-    });
+    doc
+      .font('Helvetica')
+      .fontSize(8)
+      .fillColor(COLORS.body)
+      .text(page.wordCount ? String(page.wordCount) : '—', x, y, {
+        width: 38,
+      });
     x += columns[2]!.width;
 
     doc
@@ -1016,7 +1076,11 @@ function renderPages(ctx: RenderContext) {
   if (data.robotsSummary) {
     doc.y += 12;
     ensureSpace(doc, 80);
-    doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.ink).text('Site-level files', MARGIN.left, doc.y);
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(10)
+      .fillColor(COLORS.ink)
+      .text('Site-level files', MARGIN.left, doc.y);
     doc.y += 8;
     bulletList(doc, [
       `robots.txt: ${data.robotsSummary.found ? 'found' : 'not found'}`,
@@ -1045,7 +1109,11 @@ function renderMethodology(ctx: RenderContext) {
 
   for (const item of METHODOLOGY_SUMMARY) {
     ensureSpace(doc, 50);
-    doc.font('Helvetica-Bold').fontSize(9.5).fillColor(COLORS.ink).text(item.heading, MARGIN.left, doc.y);
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(9.5)
+      .fillColor(COLORS.ink)
+      .text(item.heading, MARGIN.left, doc.y);
     doc.y += 4;
     paragraph(doc, item.body, { size: 8.5, gap: 10 });
   }
@@ -1121,11 +1189,16 @@ function paintPageFurniture({ doc, data, brandName, footerNote }: RenderContext)
       .font('Helvetica')
       .fontSize(7)
       .fillColor(COLORS.muted)
-      .text(`Page ${i - range.start + 1} of ${range.count}`, MARGIN.left + CONTENT_WIDTH - 70, footerY, {
-        width: 70,
-        align: 'right',
-        lineBreak: false,
-      });
+      .text(
+        `Page ${i - range.start + 1} of ${range.count}`,
+        MARGIN.left + CONTENT_WIDTH - 70,
+        footerY,
+        {
+          width: 70,
+          align: 'right',
+          lineBreak: false,
+        },
+      );
   }
 
   // Leave the cursor on the last page so nothing is appended accidentally.

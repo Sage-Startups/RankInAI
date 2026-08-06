@@ -15,13 +15,7 @@ const OPTIONS: Array<{ status: ContactStatus; label: string }> = [
   { status: ContactStatus.SPAM, label: 'Mark spam' },
 ];
 
-export function ContactStatusButtons({
-  id,
-  current,
-}: {
-  id: string;
-  current: ContactStatus;
-}) {
+export function ContactStatusButtons({ id, current }: { id: string; current: ContactStatus }) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 

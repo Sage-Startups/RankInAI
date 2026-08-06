@@ -21,9 +21,7 @@ export function hashToken(token: string): string {
 
 /** One-way, peppered hash used for IPs and rate-limit identifiers. */
 export function hashIdentifier(value: string): string {
-  return createHash('sha256')
-    .update(`${pepper()}:id:${value.trim().toLowerCase()}`)
-    .digest('hex');
+  return createHash('sha256').update(`${pepper()}:id:${value.trim().toLowerCase()}`).digest('hex');
 }
 
 /** URL-safe random token for password reset / email verification links. */

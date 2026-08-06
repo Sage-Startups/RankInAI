@@ -72,8 +72,8 @@ export type UrlValidationResult = UrlValidationSuccess | UrlValidationFailure;
 
 /** Ports commonly used by internal services that a website audit never needs. */
 const BLOCKED_PORTS = new Set([
-  22, 23, 25, 53, 110, 143, 445, 465, 587, 993, 995, 1433, 1521, 2049, 2375, 2376, 3306, 3389,
-  5432, 5601, 5672, 5900, 6379, 8020, 8086, 9000, 9042, 9200, 9300, 11211, 27017,
+  22, 23, 25, 53, 110, 143, 445, 465, 587, 993, 995, 1433, 1521, 2049, 2375, 2376, 3306, 3389, 5432,
+  5601, 5672, 5900, 6379, 8020, 8086, 9000, 9042, 9200, 9300, 11211, 27017,
 ]);
 
 /** Hostnames that always refer to the local machine or an internal service. */
@@ -167,7 +167,12 @@ const BLOCKED_V4_CIDRS: Array<{ cidr: string; code: UrlRejectionCode }> = [
 ];
 
 function normalizeV6(ip: string): string {
-  return ip.toLowerCase().replace(/^\[|\]$/g, '').split('%')[0] ?? '';
+  return (
+    ip
+      .toLowerCase()
+      .replace(/^\[|\]$/g, '')
+      .split('%')[0] ?? ''
+  );
 }
 
 /**
@@ -196,7 +201,12 @@ export function classifyBlockedAddress(address: string): UrlRejectionCode | null
     const embedded = v6.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
     if (embedded?.[1] && v6.startsWith('::')) return classifyBlockedAddress(embedded[1]);
 
-    if (v6.startsWith('fe80') || v6.startsWith('fe9') || v6.startsWith('fea') || v6.startsWith('feb')) {
+    if (
+      v6.startsWith('fe80') ||
+      v6.startsWith('fe9') ||
+      v6.startsWith('fea') ||
+      v6.startsWith('feb')
+    ) {
       return 'LINK_LOCAL_ADDRESS';
     }
     // fc00::/7 unique local addresses
@@ -352,7 +362,8 @@ export function validateAuditUrl(input: string): UrlValidationResult {
     return {
       ok: false,
       code: 'CREDENTIALS_IN_URL',
-      message: 'Remove the username and password from the address. RankInAI never signs in to a website.',
+      message:
+        'Remove the username and password from the address. RankInAI never signs in to a website.',
     };
   }
 

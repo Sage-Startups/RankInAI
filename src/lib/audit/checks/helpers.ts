@@ -1,5 +1,5 @@
 import {
-  AuditCategory,
+  type AuditCategory,
   EffortLevel,
   EvidenceSource,
   FindingStatus,
@@ -77,7 +77,10 @@ export function makeCheck(category: AuditCategory, input: CheckInput): CheckResu
 }
 
 /** Convenience: choose a status from a 0-1 ratio using standard thresholds. */
-export function statusFromRatio(ratio: number, opts: { passAt?: number; warnAt?: number } = {}): FindingStatus {
+export function statusFromRatio(
+  ratio: number,
+  opts: { passAt?: number; warnAt?: number } = {},
+): FindingStatus {
   const passAt = opts.passAt ?? 0.85;
   const warnAt = opts.warnAt ?? 0.4;
   if (ratio >= passAt) return FindingStatus.PASS;

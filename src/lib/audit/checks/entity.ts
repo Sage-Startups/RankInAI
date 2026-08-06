@@ -14,7 +14,8 @@ import {
 const CATEGORY = AuditCategory.ENTITY_CLARITY;
 
 /** Words that signal a concrete description rather than filler. */
-const DESCRIPTOR_HINT = /\b(we|our team|the company|provides?|offers?|specializ|serves?|helps?|installs?|repairs?|designs?|builds?|manufactures?|sells?)\b/i;
+const DESCRIPTOR_HINT =
+  /\b(we|our team|the company|provides?|offers?|specializ|serves?|helps?|installs?|repairs?|designs?|builds?|manufactures?|sells?)\b/i;
 
 /**
  * Entity Clarity — can a model state, without guessing, who this business is,
@@ -26,7 +27,10 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
   const checks: CheckResult[] = [];
   const { homepage, pages, businessName } = ctx;
 
-  const allText = pages.map((p) => p.mainTextExcerpt).join(' ').toLowerCase();
+  const allText = pages
+    .map((p) => p.mainTextExcerpt)
+    .join(' ')
+    .toLowerCase();
   const homeText = (homepage?.mainTextExcerpt ?? '').toLowerCase();
   const brandTokens = businessName
     .toLowerCase()
@@ -37,7 +41,8 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
   const nameInTitle = homepage?.title
     ? brandTokens.some((t) => homepage.title!.toLowerCase().includes(t))
     : false;
-  const nameInH1 = homepage?.h1.some((h) => brandTokens.some((t) => h.toLowerCase().includes(t))) ?? false;
+  const nameInH1 =
+    homepage?.h1.some((h) => brandTokens.some((t) => h.toLowerCase().includes(t))) ?? false;
   const nameInBody = brandTokens.length > 0 && brandTokens.every((t) => homeText.includes(t));
   const nameSignals = [nameInTitle, nameInH1, nameInBody].filter(Boolean).length;
   const nameRatio = brandTokens.length === 0 ? 0 : nameSignals / 3;
@@ -70,12 +75,11 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Clear statement of what the business does -------------------------
   const descriptionSource =
-    homepage?.metaDescription ??
-    homepage?.mainTextExcerpt.slice(0, 400) ??
-    '';
+    homepage?.metaDescription ?? homepage?.mainTextExcerpt.slice(0, 400) ?? '';
   const hasDescriptor = DESCRIPTOR_HINT.test(descriptionSource);
   const descriptorLongEnough = descriptionSource.trim().length >= 80;
-  const descriptorRatio = hasDescriptor && descriptorLongEnough ? 1 : hasDescriptor || descriptorLongEnough ? 0.5 : 0;
+  const descriptorRatio =
+    hasDescriptor && descriptorLongEnough ? 1 : hasDescriptor || descriptorLongEnough ? 0.5 : 0;
 
   checks.push(
     makeCheck(CATEGORY, {
@@ -129,7 +133,12 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
     makeCheck(CATEGORY, {
       checkId: 'entity.audience-definition',
       title: 'Site names the customers it serves',
-      status: audienceHits.length >= 2 ? Status.PASS : audienceHits.length === 1 ? Status.WARN : Status.FAIL,
+      status:
+        audienceHits.length >= 2
+          ? Status.PASS
+          : audienceHits.length === 1
+            ? Status.WARN
+            : Status.FAIL,
       ratio: audienceRatio,
       maxPoints: 6,
       evidence: {
@@ -149,9 +158,12 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Service / product specificity ------------------------------------
   const servicePages = pages.filter(
-    (p) => p.role === PageRole.SERVICE || p.role === PageRole.PRODUCT || p.role === PageRole.CATEGORY,
+    (p) =>
+      p.role === PageRole.SERVICE || p.role === PageRole.PRODUCT || p.role === PageRole.CATEGORY,
   );
-  const serviceHeadings = pages.flatMap((p) => p.headings.filter((h) => h.level === 2 || h.level === 3));
+  const serviceHeadings = pages.flatMap((p) =>
+    p.headings.filter((h) => h.level === 2 || h.level === 3),
+  );
   const specificityRatio = Math.max(
     scaleToTarget(servicePages.length, 3),
     scaleToTarget(serviceHeadings.length, 12) * 0.7,
@@ -182,9 +194,10 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Geographic relevance ---------------------------------------------
   const geoSignals = pages.flatMap((p) => p.addressSignals);
-  const stateMentioned = /\b(alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|new york|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|washington|west virginia|wisconsin|wyoming)\b/i.test(
-    allText,
-  );
+  const stateMentioned =
+    /\b(alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|new york|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|washington|west virginia|wisconsin|wyoming)\b/i.test(
+      allText,
+    );
   const areaServedSchema = pages.some((p) => p.jsonLd.some((b) => b.values.areaServed));
   const geoScore = [geoSignals.length > 0, stateMentioned, areaServedSchema].filter(Boolean).length;
   const geoRatio = geoScore / 3;
@@ -236,7 +249,9 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
         aboutPageUrl: aboutPage?.finalUrl ?? null,
         wordCount: aboutWordCount,
         mentionsFoundingOrHistory: aboutPage
-          ? /\b(founded|established|since \d{4}|started in|began in)\b/i.test(aboutPage.mainTextExcerpt)
+          ? /\b(founded|established|since \d{4}|started in|began in)\b/i.test(
+              aboutPage.mainTextExcerpt,
+            )
           : false,
       },
       explanation:
@@ -254,7 +269,9 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
 
   // --- Entity consistency across pages -----------------------------------
   const titles = pages.map((p) => p.title ?? '').filter(Boolean);
-  const brandInTitles = titles.filter((t) => brandTokens.some((tok) => t.toLowerCase().includes(tok))).length;
+  const brandInTitles = titles.filter((t) =>
+    brandTokens.some((tok) => t.toLowerCase().includes(tok)),
+  ).length;
   const consistencyRatio = titles.length > 0 ? brandInTitles / titles.length : 0;
 
   checks.push(
@@ -294,8 +311,14 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
       evidence: {
         wellSizedTitles: goodTitles,
         totalPages: pages.length,
-        missingTitles: pages.filter((p) => !p.title).map((p) => p.finalUrl).slice(0, 5),
-        tooShort: pages.filter((p) => p.title && p.titleLength < 25).map((p) => p.title).slice(0, 5),
+        missingTitles: pages
+          .filter((p) => !p.title)
+          .map((p) => p.finalUrl)
+          .slice(0, 5),
+        tooShort: pages
+          .filter((p) => p.title && p.titleLength < 25)
+          .map((p) => p.title)
+          .slice(0, 5),
       },
       explanation:
         'The title tag is the strongest short summary a crawler receives for a page. Titles under about 25 characters rarely say enough to place the page in a topic.',
@@ -322,7 +345,10 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
       evidence: {
         pagesWithDescription: withDescription,
         totalPages: pages.length,
-        missing: pages.filter((p) => !p.metaDescription).map((p) => p.finalUrl).slice(0, 5),
+        missing: pages
+          .filter((p) => !p.metaDescription)
+          .map((p) => p.finalUrl)
+          .slice(0, 5),
       },
       explanation:
         'Meta descriptions act as a short abstract of the page. They are frequently reused verbatim in generated summaries.',
@@ -376,7 +402,9 @@ export function runEntityChecks(ctx: AuditContext): CheckResult[] {
   );
 
   // --- Open Graph metadata ----------------------------------------------
-  const ogRatio = proportion(pages, (p) => Boolean(p.openGraph['og:title'] && p.openGraph['og:description']));
+  const ogRatio = proportion(pages, (p) =>
+    Boolean(p.openGraph['og:title'] && p.openGraph['og:description']),
+  );
   checks.push(
     makeCheck(CATEGORY, {
       checkId: 'entity.open-graph',

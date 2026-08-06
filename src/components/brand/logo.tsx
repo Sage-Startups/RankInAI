@@ -31,11 +31,25 @@ export function LogoMark({
     >
       {title ? <title>{title}</title> : null}
       <defs>
-        <linearGradient id="rk-mark-bg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="rk-mark-bg"
+          x1="0"
+          y1="0"
+          x2="40"
+          y2="40"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#5844D8" />
           <stop offset="1" stopColor="#0E7490" />
         </linearGradient>
-        <linearGradient id="rk-mark-beam" x1="8" y1="30" x2="32" y2="10" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="rk-mark-beam"
+          x1="8"
+          y1="30"
+          x2="32"
+          y2="10"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#67E8F9" />
           <stop offset="1" stopColor="#CFC7FF" />
         </linearGradient>
@@ -70,21 +84,14 @@ export function Logo({
   tone?: 'auto' | 'light' | 'dark';
 }) {
   const textColor =
-    tone === 'light'
-      ? 'text-white'
-      : tone === 'dark'
-        ? 'text-ink-900'
-        : 'text-[var(--foreground)]';
+    tone === 'light' ? 'text-white' : tone === 'dark' ? 'text-ink-900' : 'text-[var(--foreground)]';
 
   const content = (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
       <LogoMark size={size} title="RankInAI" />
       {showWordmark ? (
         <span
-          className={cn(
-            'text-[1.0625rem] font-bold leading-none tracking-[-0.02em]',
-            textColor,
-          )}
+          className={cn('text-[1.0625rem] leading-none font-bold tracking-[-0.02em]', textColor)}
         >
           Rank
           {/*

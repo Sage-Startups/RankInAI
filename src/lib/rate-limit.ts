@@ -86,10 +86,7 @@ export async function consumeRateLimit(
 }
 
 /** Mark the most recent attempt in a bucket as successful (for audit trails). */
-export async function markRateLimitSuccess(
-  rule: RateLimitRule,
-  identifier: string,
-): Promise<void> {
+export async function markRateLimitSuccess(rule: RateLimitRule, identifier: string): Promise<void> {
   const identifierHash = hashIdentifier(`${rule.bucket}:${identifier}`);
   const latest = await prisma.rateLimitEvent.findFirst({
     where: { bucket: rule.bucket, identifierHash },

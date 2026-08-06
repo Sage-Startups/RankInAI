@@ -5,10 +5,7 @@ import { useFormStatus } from 'react-dom';
 
 import { Alert, FieldError, FieldHint, Input, Label, Select } from '@/components/ui/primitives';
 import { Button } from '@/components/ui/button';
-import {
-  completeOnboardingAction,
-  skipOnboardingAction,
-} from '@/app/onboarding/actions';
+import { completeOnboardingAction, skipOnboardingAction } from '@/app/onboarding/actions';
 import { BUSINESS_TYPES, USE_CASES, firstError, type ActionResult } from '@/lib/validation';
 
 function Submit() {
@@ -110,7 +107,12 @@ export function OnboardingForm({
 
         <div>
           <Label htmlFor="onboarding-business-type">What kind of business is it?</Label>
-          <Select id="onboarding-business-type" name="businessType" className="mt-2" defaultValue="">
+          <Select
+            id="onboarding-business-type"
+            name="businessType"
+            className="mt-2"
+            defaultValue=""
+          >
             <option value="">Select an option</option>
             {BUSINESS_TYPES.map((type) => (
               <option key={type} value={type}>

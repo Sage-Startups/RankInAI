@@ -60,7 +60,12 @@ export default async function DashboardPage({
       }),
       prisma.auditRecommendation.findMany({
         where: {
-          audit: { userId: user.id, status: AuditStatus.COMPLETED, deletedAt: null, archivedAt: null },
+          audit: {
+            userId: user.id,
+            status: AuditStatus.COMPLETED,
+            deletedAt: null,
+            archivedAt: null,
+          },
           horizon: 'DO_FIRST',
         },
         orderBy: [{ audit: { completedAt: 'desc' } }, { priority: 'asc' }],
@@ -151,7 +156,8 @@ export default async function DashboardPage({
           {entitlements.entitlements.auditsPerPeriod > 0 ? (
             <Progress
               value={
-                (entitlements.auditsUsedThisPeriod / entitlements.entitlements.auditsPerPeriod) * 100
+                (entitlements.auditsUsedThisPeriod / entitlements.entitlements.auditsPerPeriod) *
+                100
               }
               label="Plan allowance used"
               className="mt-3"
@@ -345,7 +351,7 @@ function StatCard({
     <Card className="p-5">
       <div className="flex items-center gap-2.5">
         <Icon className="size-4 text-[var(--muted-foreground)]" aria-hidden />
-        <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+        <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
           {label}
         </p>
       </div>

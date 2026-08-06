@@ -72,7 +72,12 @@ export default function HowItWorksPage() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
-      { '@type': 'ListItem', position: 2, name: 'How it works', item: absoluteUrl('/how-it-works') },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'How it works',
+        item: absoluteUrl('/how-it-works'),
+      },
     ],
   };
 
@@ -100,19 +105,19 @@ export default function HowItWorksPage() {
             const Icon = step.icon;
             return (
               <li key={step.title}>
-                <Card className="border-white/12 bg-ink-900/60 p-6 sm:p-8">
+                <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
                   <div className="flex flex-col gap-6 sm:flex-row">
                     <div className="flex shrink-0 items-start gap-4">
                       <span className="flex size-12 items-center justify-center rounded-xl bg-violet-500/15 text-violet-300">
                         <Icon className="size-5.5" aria-hidden="true" />
                       </span>
-                      <span className="text-2xl font-bold tabular-nums text-white/15 sm:hidden">
+                      <span className="text-2xl font-bold text-white/15 tabular-nums sm:hidden">
                         {index + 1}
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline gap-3">
-                        <span className="hidden text-xs font-semibold uppercase tracking-[0.14em] text-slate-400 sm:inline">
+                        <span className="hidden text-xs font-semibold tracking-[0.14em] text-slate-400 uppercase sm:inline">
                           Step {index + 1}
                         </span>
                       </div>
@@ -143,7 +148,7 @@ export default function HowItWorksPage() {
         </ol>
       </section>
 
-      <section id="methodology" className="scroll-mt-24 border-y border-white/10 bg-ink-900/40">
+      <section id="methodology" className="bg-ink-900/40 scroll-mt-24 border-y border-white/10">
         <div className="rk-container py-16 lg:py-20">
           <SectionHeading
             eyebrow="Methodology"
@@ -152,22 +157,28 @@ export default function HowItWorksPage() {
           />
 
           <div className="mx-auto mt-10 max-w-3xl">
-            <Card className="border-white/12 bg-ink-900/60 p-6 sm:p-8">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-violet-300">
+            <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
+              <h3 className="text-sm font-semibold tracking-[0.12em] text-violet-300 uppercase">
                 Category score
               </h3>
-              <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg bg-ink-950/70 p-4 text-[0.8125rem] leading-relaxed text-slate-300">
-{`category_score = round(100 × Σ(points_awarded) / Σ(points_possible))
+              <pre
+                tabIndex={0}
+                className="bg-ink-950/70 mt-3 overflow-x-auto rounded-lg p-4 text-[0.8125rem] leading-relaxed text-slate-300"
+              >
+                {`category_score = round(100 × Σ(points_awarded) / Σ(points_possible))
 
   — summed only over checks that apply to this website
   — a check that cannot apply is excluded from both sums`}
               </pre>
 
-              <h3 className="mt-8 text-sm font-semibold uppercase tracking-[0.12em] text-violet-300">
+              <h3 className="mt-8 text-sm font-semibold tracking-[0.12em] text-violet-300 uppercase">
                 Overall score
               </h3>
-              <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg bg-ink-950/70 p-4 text-[0.8125rem] leading-relaxed text-slate-300">
-{`overall = round( Σ category_score × effective_weight )
+              <pre
+                tabIndex={0}
+                className="bg-ink-950/70 mt-3 overflow-x-auto rounded-lg p-4 text-[0.8125rem] leading-relaxed text-slate-300"
+              >
+                {`overall = round( Σ category_score × effective_weight )
 
 effective_weight = base_weight / Σ(base_weight of available categories)`}
               </pre>
@@ -193,7 +204,7 @@ effective_weight = base_weight / Σ(base_weight of available categories)`}
                           {CATEGORY_DESCRIPTIONS[category]}
                         </span>
                       </th>
-                      <td className="py-2.5 text-right align-top font-semibold tabular-nums text-white">
+                      <td className="py-2.5 text-right align-top font-semibold text-white tabular-nums">
                         {Math.round(CATEGORY_WEIGHTS[category] * 100)}%
                       </td>
                     </tr>
