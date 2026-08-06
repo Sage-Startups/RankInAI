@@ -1,0 +1,354 @@
+@import 'tailwindcss';
+
+/*
+  RankInAI design tokens.
+
+  Foundation: dark navy / near-black. Content surfaces: white (light) or
+  elevated navy (dark). Accents: a controlled violet and cyan pair, used
+  sparingly for emphasis and never for large fills.
+*/
+
+@theme {
+  --color-ink-950: #05070f;
+  --color-ink-900: #0b1020;
+  --color-ink-850: #101733;
+  --color-ink-800: #151d3b;
+  --color-ink-700: #1e2950;
+  --color-ink-600: #2c3a66;
+
+  --color-violet-50: #f2f0ff;
+  --color-violet-100: #e6e2ff;
+  --color-violet-200: #cfc7ff;
+  --color-violet-300: #b0a3fb;
+  --color-violet-400: #8f7df5;
+  --color-violet-500: #6d5ef0;
+  --color-violet-600: #5844d8;
+  --color-violet-700: #4634ad;
+  --color-violet-800: #362981;
+  --color-violet-900: #251c58;
+
+  --color-cyan-50: #ecfeff;
+  --color-cyan-100: #cffafe;
+  --color-cyan-200: #a5f3fc;
+  --color-cyan-300: #67e8f9;
+  --color-cyan-400: #22d3ee;
+  --color-cyan-500: #06b6d4;
+  --color-cyan-600: #0891b2;
+  --color-cyan-700: #0e7490;
+
+  --font-sans:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+}
+
+/*
+  Bind the `dark:` variant to the `.dark` class rather than Tailwind's default
+  `prefers-color-scheme`.
+
+  The design tokens below are switched by `.dark`, so leaving the utilities on
+  the media query made the two disagree: on a dark-OS browser
+  `dark:text-violet-300` would fire while `--foreground` stayed near-black.
+  That is how the marketing shell — which is dark in every theme — ended up
+  with headings at a 1.06:1 contrast ratio. One trigger, no drift.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #0b1020;
+    --surface: #ffffff;
+    --surface-muted: #f6f7fb;
+    --surface-raised: #ffffff;
+    --border: #e3e6f0;
+    --border-strong: #cdd3e4;
+    --muted-foreground: #5a6480;
+    --accent: #5844d8;
+    --accent-foreground: #ffffff;
+    --ring: #6d5ef0;
+
+    --success: #0f7b53;
+    --success-bg: #e7f7ef;
+    --warning: #9a6400;
+    --warning-bg: #fdf3e0;
+    --danger: #b42318;
+    --danger-bg: #fdeceb;
+    --info: #0e6f8b;
+    --info-bg: #e6f6fb;
+
+    color-scheme: light;
+  }
+
+  /* Applied by the `.dark` class on the document or on any subtree. */
+  .dark {
+    --background: #05070f;
+    --foreground: #eef1f8;
+    --surface: #0b1020;
+    --surface-muted: #101733;
+    --surface-raised: #151d3b;
+    --border: #222c50;
+    --border-strong: #33406e;
+    --muted-foreground: #a3adc9;
+    --accent: #8f7df5;
+    --accent-foreground: #080b16;
+    --ring: #8f7df5;
+
+    --success: #4ade80;
+    --success-bg: #0d2b1e;
+    --warning: #fbbf24;
+    --warning-bg: #33260a;
+    --danger: #fb7185;
+    --danger-bg: #3a1218;
+    --info: #67e8f9;
+    --info-bg: #0a2833;
+
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, high-contrast focus for keyboard users. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+}
+
+@layer components {
+  .rk-container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 80rem;
+  }
+
+  @media (min-width: 768px) {
+    .rk-container {
+      padding-inline: 2rem;
+    }
+  }
+
+  .rk-surface {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+
+  .rk-muted {
+    color: var(--muted-foreground);
+  }
+
+  /* Sparing gradient wash used behind hero and section headers. */
+  .rk-hero-wash {
+    background-image:
+      radial-gradient(60rem 30rem at 15% -10%, rgba(109, 94, 240, 0.22), transparent 60%),
+      radial-gradient(45rem 26rem at 85% 0%, rgba(34, 211, 238, 0.14), transparent 62%);
+  }
+
+  .rk-grid-lines {
+    background-image:
+      linear-gradient(to right, rgba(148, 163, 205, 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148, 163, 205, 0.09) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  .rk-gradient-text {
+    background-image: linear-gradient(100deg, #a99bff 0%, #67e8f9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .rk-skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--surface-muted) 25%,
+      color-mix(in srgb, var(--surface-muted) 60%, var(--border)) 37%,
+      var(--surface-muted) 63%
+    );
+    background-size: 400% 100%;
+    animation: rk-shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes rk-shimmer {
+    0% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+
+  .rk-prose {
+    max-width: 46rem;
+    line-height: 1.75;
+  }
+
+  .rk-prose h2 {
+    font-size: 1.375rem;
+    font-weight: 650;
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .rk-prose h3 {
+    font-size: 1.075rem;
+    font-weight: 650;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .rk-prose p,
+  .rk-prose ul,
+  .rk-prose ol {
+    margin-bottom: 1rem;
+    color: var(--muted-foreground);
+  }
+
+  .rk-prose ul,
+  .rk-prose ol {
+    padding-left: 1.4rem;
+  }
+
+  .rk-prose ul {
+    list-style: disc;
+  }
+
+  .rk-prose ol {
+    list-style: decimal;
+  }
+
+  .rk-prose li {
+    margin-bottom: 0.4rem;
+  }
+
+  .rk-prose a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .rk-prose strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  /* Skip link for keyboard navigation. */
+  .rk-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+  }
+
+  .rk-skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  .animate-in-up {
+    animation: rk-in-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes rk-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .animate-fade {
+    animation: rk-fade 0.3s ease both;
+  }
+
+  @keyframes rk-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Print styles for the HTML report view. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+    color: #0b1020;
+  }
+
+  .rk-surface {
+    break-inside: avoid;
+    border-color: #d6dbe8;
+  }
+}

@@ -1,0 +1,808 @@
+// RankInAI — data model
+//
+// Conventions used throughout:
+//  * every business table carries `isDemo` so seeded demonstration records can
+//    be excluded from real analytics with a single predicate.
+//  * money is stored as integer cents in USD; never as a float.
+//  * user-facing deletions are soft (`deletedAt` / `archivedAt`) so audit
+//    history and financial records survive.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  USER
+  SUPER_ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_DELETION
+}
+
+enum PlanTier {
+  FREE
+  STARTER
+  GROWTH
+  AGENCY
+}
+
+enum SubscriptionStatus {
+  INCOMPLETE
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+  PAUSED
+}
+
+enum PaymentKind {
+  ONE_TIME_AUDIT
+  SUBSCRIPTION
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum CreditReason {
+  ONE_TIME_PURCHASE
+  ADMIN_GRANT
+  ADMIN_REVOKE
+  AUDIT_RESERVED
+  AUDIT_REFUNDED
+  SEED_DEMO
+}
+
+enum AuditStatus {
+  DRAFT
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+enum AuditCategory {
+  TECHNICAL_ACCESSIBILITY
+  ENTITY_CLARITY
+  CONTENT_AUTHORITY
+  ANSWER_READINESS
+  STRUCTURED_DATA
+  TRUST_AND_EVIDENCE
+  COMPETITIVE_VISIBILITY
+}
+
+enum FindingStatus {
+  PASS
+  WARN
+  FAIL
+  INFO
+  NOT_APPLICABLE
+}
+
+enum Severity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+  PASSED
+  INFORMATIONAL
+}
+
+enum EvidenceSource {
+  OBSERVED
+  AI_ENHANCED
+  SEARCH_OBSERVATION
+  DEMO_DATA
+}
+
+enum EffortLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ImpactLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum RecommendationHorizon {
+  DO_FIRST
+  NEXT_30_DAYS
+  LONGER_TERM
+}
+
+enum CreditSource {
+  ONE_TIME_CREDIT
+  SUBSCRIPTION_ALLOWANCE
+  ADMIN_GRANT
+  DEMO
+}
+
+enum PageRole {
+  HOME
+  ABOUT
+  CONTACT
+  SERVICE
+  PRODUCT
+  CATEGORY
+  BLOG_INDEX
+  ARTICLE
+  AUTHOR
+  FAQ
+  PRICING
+  CASE_STUDY
+  OTHER
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  RESPONDED
+  ARCHIVED
+  SPAM
+}
+
+enum WebhookStatus {
+  RECEIVED
+  PROCESSED
+  IGNORED
+  FAILED
+}
+
+enum CompetitorStatus {
+  PENDING
+  ANALYZED
+  FAILED
+  SKIPPED
+}
+
+// ---------------------------------------------------------------------------
+// Identity
+// ---------------------------------------------------------------------------
+
+model User {
+  id               String        @id @default(cuid())
+  email            String        @unique
+  emailVerified    DateTime?
+  passwordHash     String?
+  name             String?
+  image            String?
+  role             Role          @default(USER)
+  status           AccountStatus @default(ACTIVE)
+  stripeCustomerId String?       @unique
+  oneTimeCredits   Int           @default(0)
+  lastLoginAt      DateTime?
+  suspendedAt      DateTime?
+  suspendedReason  String?
+  isDemo           Boolean       @default(false)
+  deletionRequestedAt DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deletedAt        DateTime?
+
+  profile             UserProfile?
+  accounts            Account[]
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
+  emailTokens         EmailVerificationToken[]
+  subscriptions       Subscription[]
+  payments            Payment[]
+  purchases           Purchase[]
+  creditLedger        AuditCreditLedger[]   @relation("CreditLedgerUser")
+  grantedCredits      AuditCreditLedger[]   @relation("CreditLedgerAdmin")
+  audits              Audit[]
+  adminActivity       AdminActivity[]       @relation("AdminActor")
+  analyticsEvents     AnalyticsEvent[]
+  handledContacts     ContactSubmission[]   @relation("ContactHandler")
+  settingUpdates      SystemSetting[]       @relation("SettingUpdatedBy")
+
+  @@index([role])
+  @@index([status])
+  @@index([isDemo])
+  @@index([createdAt])
+}
+
+/// Auth.js OAuth account linkage. Kept for forward compatibility even though
+/// the launch build only ships credentials sign-in.
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  requestIp String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model UserProfile {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  fullName             String?
+  companyName          String?
+  companyWebsite       String?
+  primaryUseCase       String?
+  businessType         String?
+  auditingOwnWebsite   Boolean?
+  onboardingCompleted  Boolean  @default(false)
+  onboardingSkipped    Boolean  @default(false)
+  pendingPlanSelection String?
+  brandingCompanyName  String?
+  brandingLogoUrl      String?
+  brandingAccentColor  String?
+  emailProductUpdates  Boolean  @default(true)
+  emailAuditComplete   Boolean  @default(true)
+  emailMarketing       Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Billing
+// ---------------------------------------------------------------------------
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String
+  stripeSubscriptionId String?            @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  plan                 PlanTier
+  status               SubscriptionStatus @default(INCOMPLETE)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  auditsUsedThisPeriod Int                @default(0)
+  periodAnchor         DateTime?
+  isDemo               Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([isDemo])
+}
+
+model Payment {
+  id                      String        @id @default(cuid())
+  userId                  String
+  stripeCheckoutSessionId String?       @unique
+  stripePaymentIntentId   String?
+  stripeInvoiceId         String?       @unique
+  stripeCustomerId        String?
+  kind                    PaymentKind
+  status                  PaymentStatus @default(PENDING)
+  amountCents             Int
+  currency                String        @default("usd")
+  description             String?
+  productKey              String?
+  refundedCents           Int           @default(0)
+  isDemo                  Boolean       @default(false)
+  paidAt                  DateTime?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchases Purchase[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([isDemo])
+  @@index([createdAt])
+}
+
+model Purchase {
+  id             String   @id @default(cuid())
+  userId         String
+  paymentId      String?
+  productKey     String
+  creditsGranted Int      @default(0)
+  amountCents    Int
+  currency       String   @default("usd")
+  isDemo         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payment Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([isDemo])
+  @@index([createdAt])
+}
+
+/// Append-only ledger. `balanceAfter` makes reconciliation auditable and the
+/// running `User.oneTimeCredits` value verifiable.
+model AuditCreditLedger {
+  id           String       @id @default(cuid())
+  userId       String
+  delta        Int
+  balanceAfter Int
+  reason       CreditReason
+  note         String?
+  auditId      String?
+  adminUserId  String?
+  isDemo       Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+
+  user  User   @relation("CreditLedgerUser", fields: [userId], references: [id], onDelete: Cascade)
+  admin User?  @relation("CreditLedgerAdmin", fields: [adminUserId], references: [id], onDelete: SetNull)
+  audit Audit? @relation(fields: [auditId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([auditId])
+  @@index([isDemo])
+  @@index([createdAt])
+}
+
+model StripeWebhookEvent {
+  id            String        @id @default(cuid())
+  stripeEventId String        @unique
+  type          String
+  status        WebhookStatus @default(RECEIVED)
+  payload       Json?
+  error         String?
+  receivedAt    DateTime      @default(now())
+  processedAt   DateTime?
+
+  @@index([type])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Audits
+// ---------------------------------------------------------------------------
+
+model Audit {
+  id               String       @id @default(cuid())
+  userId           String
+  websiteUrl       String
+  normalizedDomain String
+  businessName     String
+  industry         String?
+  targetCountry    String       @default("United States")
+  targetAudience   String?
+  primaryServices  String?
+  businessLocation String?
+  status           AuditStatus  @default(DRAFT)
+  planAtCreation   PlanTier     @default(FREE)
+  creditSource     CreditSource @default(SUBSCRIPTION_ALLOWANCE)
+  pageLimit        Int          @default(10)
+  competitorLimit  Int          @default(1)
+  overallScore     Int?
+  previousScore    Int?
+  executiveSummary String?      @db.Text
+  strengths        Json?
+  weaknesses       Json?
+  brandingName     String?
+  brandingLogoUrl  String?
+  whiteLabel       Boolean      @default(false)
+  consentConfirmed Boolean      @default(false)
+  llmEnhanced      Boolean      @default(false)
+  llmModel         String?
+  llmGeneratedAt   DateTime?
+  searchObserved   Boolean      @default(false)
+  searchProvider   String?
+  searchFindings   Json?
+  robotsSummary    Json?
+  failureMessage   String?
+  failureCode      String?
+  isDemo           Boolean      @default(false)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  archivedAt       DateTime?
+  deletedAt        DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job             AuditJob?
+  pages           AuditPage[]
+  findings        AuditFinding[]
+  recommendations AuditRecommendation[]
+  competitors     AuditCompetitor[]
+  scores          AuditScore[]
+  reports         Report[]
+  creditEntries   AuditCreditLedger[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([isDemo])
+  @@index([createdAt])
+  @@index([normalizedDomain])
+}
+
+model AuditJob {
+  id              String    @id @default(cuid())
+  auditId         String    @unique
+  status          JobStatus @default(QUEUED)
+  attempts        Int       @default(0)
+  maxAttempts     Int       @default(3)
+  progress        Int       @default(0)
+  progressMessage String?
+  currentStep     String?
+  lockedAt        DateTime?
+  lockedBy        String?
+  scheduledAt     DateTime  @default(now())
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  lastError       String?   @db.Text
+  creditRestored  Boolean   @default(false)
+  isDemo          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@index([status, scheduledAt])
+  @@index([lockedAt])
+}
+
+model AuditPage {
+  id              String   @id @default(cuid())
+  auditId         String
+  url             String
+  finalUrl        String?
+  role            PageRole @default(OTHER)
+  depth           Int      @default(0)
+  statusCode      Int?
+  redirectChain   Json?
+  contentType     String?
+  title           String?
+  metaDescription String?
+  canonical       String?
+  robotsMeta      String?
+  langAttr        String?
+  viewport        String?
+  h1              Json?
+  headings        Json?
+  wordCount       Int      @default(0)
+  imageCount      Int      @default(0)
+  imagesWithAlt   Int      @default(0)
+  internalLinks   Int      @default(0)
+  externalLinks   Int      @default(0)
+  brokenLinks     Json?
+  schemaTypes     Json?
+  jsonLdSummary   Json?
+  openGraph       Json?
+  twitterCard     Json?
+  hasFaqSignals   Boolean  @default(false)
+  hasQuestionHeadings Boolean @default(false)
+  listCount       Int      @default(0)
+  tableCount      Int      @default(0)
+  publishedDate   String?
+  modifiedDate    String?
+  authors         Json?
+  isHttps         Boolean  @default(false)
+  fetchMs         Int      @default(0)
+  bytes           Int      @default(0)
+  error           String?
+  blockedByRobots Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@unique([auditId, url])
+  @@index([auditId])
+}
+
+model AuditFinding {
+  id                String         @id @default(cuid())
+  auditId           String
+  category          AuditCategory
+  checkId           String
+  title             String
+  status            FindingStatus
+  severity          Severity
+  evidence          Json?
+  explanation       String         @db.Text
+  recommendedAction String         @db.Text
+  effort            EffortLevel    @default(MEDIUM)
+  impact            ImpactLevel    @default(MEDIUM)
+  pageUrl           String?
+  source            EvidenceSource @default(OBSERVED)
+  pointsAwarded     Float          @default(0)
+  pointsPossible    Float          @default(0)
+  sortOrder         Int            @default(0)
+  createdAt         DateTime       @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@unique([auditId, checkId])
+  @@index([auditId, category])
+  @@index([severity])
+}
+
+model AuditRecommendation {
+  id                    String                @id @default(cuid())
+  auditId               String
+  horizon               RecommendationHorizon
+  priority              Int                   @default(0)
+  category              AuditCategory
+  title                 String
+  whyItMatters          String                @db.Text
+  recommendedChange     String                @db.Text
+  exampleImplementation String?               @db.Text
+  expectedImpact        String
+  impact                ImpactLevel           @default(MEDIUM)
+  effort                EffortLevel           @default(MEDIUM)
+  relatedCheckIds       Json?
+  source                EvidenceSource        @default(OBSERVED)
+  createdAt             DateTime              @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@index([auditId, horizon])
+}
+
+model AuditCompetitor {
+  id             String           @id @default(cuid())
+  auditId        String
+  url            String
+  name           String?
+  status         CompetitorStatus @default(PENDING)
+  overallScore   Int?
+  categoryScores Json?
+  highlights     Json?
+  gaps           Json?
+  error          String?
+  createdAt      DateTime         @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@unique([auditId, url])
+  @@index([auditId])
+}
+
+model AuditScore {
+  id             String        @id @default(cuid())
+  auditId        String
+  category       AuditCategory
+  score          Int
+  available      Boolean       @default(true)
+  baseWeight     Float
+  effectiveWeight Float
+  rawPoints      Float         @default(0)
+  maxPoints      Float         @default(0)
+  summary        String?       @db.Text
+  createdAt      DateTime      @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@unique([auditId, category])
+}
+
+model Report {
+  id            String    @id @default(cuid())
+  auditId       String
+  version       Int       @default(1)
+  brandingName  String?
+  whiteLabel    Boolean   @default(false)
+  pdfData       Bytes?
+  pdfBytes      Int       @default(0)
+  pdfError      String?
+  generatedAt   DateTime?
+  downloadCount Int       @default(0)
+  isDemo        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@unique([auditId, version])
+  @@index([auditId])
+}
+
+// ---------------------------------------------------------------------------
+// Site operations
+// ---------------------------------------------------------------------------
+
+model ContactSubmission {
+  id          String        @id @default(cuid())
+  name        String
+  email       String
+  company     String?
+  subject     String
+  message     String        @db.Text
+  status      ContactStatus @default(NEW)
+  ipHash      String?
+  userAgent   String?
+  handledById String?
+  handledAt   DateTime?
+  adminNotes  String?       @db.Text
+  isDemo      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+
+  handledBy User? @relation("ContactHandler", fields: [handledById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+/// Generic rate-limit / login-attempt log. `identifierHash` never stores a raw
+/// email address or IP.
+model RateLimitEvent {
+  id             String   @id @default(cuid())
+  bucket         String
+  identifierHash String
+  success        Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@index([bucket, identifierHash, createdAt])
+  @@index([createdAt])
+}
+
+model AdminActivity {
+  id          String   @id @default(cuid())
+  adminUserId String
+  action      String
+  targetType  String?
+  targetId    String?
+  summary     String
+  detail      Json?
+  ipHash      String?
+  createdAt   DateTime @default(now())
+
+  admin User @relation("AdminActor", fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  key         String   @id
+  value       Json
+  description String?
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  updatedBy User? @relation("SettingUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+}
+
+/// Privacy-conscious internal product analytics. Properties must never contain
+/// raw form values, credentials or payment details.
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  name       String
+  userId     String?
+  sessionKey String?
+  path       String?
+  properties Json?
+  isDemo     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([name, createdAt])
+  @@index([isDemo])
+  @@index([createdAt])
+}
+
+/// Aggregated daily figures backing the /business-snapshot buyer preview.
+/// Every row is fabricated demonstration data — `isDemo` is always true.
+model DemoAnalyticsRecord {
+  id            String   @id @default(cuid())
+  date          DateTime
+  signups       Int      @default(0)
+  oneTimeSales  Int      @default(0)
+  revenueCents  Int      @default(0)
+  auditsCreated Int      @default(0)
+  auditsCompleted Int    @default(0)
+  demoRuns      Int      @default(0)
+  previewRuns   Int      @default(0)
+  isDemo        Boolean  @default(true)
+  note          String?
+  createdAt     DateTime @default(now())
+
+  @@unique([date])
+  @@index([date])
+}
+
+/// Minimal operational metadata for the anonymous free preview. Stores a hashed
+/// domain + hashed client identifier only — no page content is retained.
+model FreePreviewRun {
+  id          String   @id @default(cuid())
+  domainHash  String
+  domain      String
+  ipHash      String
+  score       Int?
+  findingCount Int     @default(0)
+  succeeded   Boolean  @default(false)
+  errorCode   String?
+  durationMs  Int      @default(0)
+  isDemo      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([ipHash, createdAt])
+  @@index([createdAt])
+}
