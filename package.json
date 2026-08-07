@@ -4,7 +4,7 @@
   "private": true,
   "description": "RankInAI — AI visibility and Generative Engine Optimization audit platform.",
   "engines": {
-    "node": ">=20.0.0"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "next dev -p 3000",
