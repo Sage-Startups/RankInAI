@@ -151,10 +151,25 @@ build command contains `npm ci`. Remove it; see the note under the web service a
 than serving traffic. If the build genuinely stops, read the error: it is something
 else.
 
-**Health check fails but the logs show the server started** — `/api/health` returns
-503 when the database is unreachable, which is the correct answer. Almost always
-`DATABASE_URL` is not wired to the Postgres service; set it to
-`${{Postgres.DATABASE_URL}}` rather than pasting a literal connection string.
+**Build ✓, Deploy ✓, `Network > Healthcheck` ✗** — the application is running but
+`/api/health` is not returning 200. It never throws and always says why, so read the
+answer rather than guessing. Open the failed deployment's **Deploy logs** (not Build)
+and look for `"message":"Health check failed"`:
+
+```json
+{ "message": "Health check failed", "configuration": "AUTH_SECRET must be set …", "database": "ok" }
+{ "message": "Health check failed", "configuration": "ok", "database": "Can't reach database server at `…`" }
+```
+
+- A `configuration` message means an environment variable is missing or invalid on
+  the **deployed service**. `AUTH_SECRET` is the usual one: the build succeeds
+  without it by design, the running server refuses every request until it is set.
+- A `database` message means the app cannot reach Postgres. Set `DATABASE_URL` to
+  `${{Postgres.DATABASE_URL}}` — a reference, not a pasted connection string.
+
+Note that a passing pre-deploy step does **not** clear the database: `prisma migrate
+deploy` reads `DATABASE_URL` directly and never loads the application's environment
+schema, so migrations can succeed while the app still fails on a different variable.
 
 **Every request returns 500 with `AUTH_SECRET must be set to at least 32
 characters`** — the variable is missing on the deployed service. The build succeeds
