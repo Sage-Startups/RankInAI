@@ -59,7 +59,9 @@ constraints on it:
 - It names an **exact origin** (`127.0.0.1:4321`), not a host. A host-only entry
   would expose every other service on the loopback interface — the database among
   them — to the crawler.
-- `src/lib/env.ts` **throws on startup** if it is set while `NODE_ENV=production`.
+- `src/lib/env.ts` **throws on every request** if it is set while `NODE_ENV=production`,
+  so the process serves nothing at all. `next build` warns instead, because a build
+  produces an artifact rather than serving traffic.
   The E2E suite therefore runs with `NODE_ENV=test` and works with the guard rather
   than around it.
 
@@ -99,8 +101,8 @@ constraints on it:
   a second guard against double-granting.
 - Entitlements are granted only by the webhook (or, in test mode, by the same
   fulfillment function). The browser can never grant itself anything.
-- `BILLING_TEST_MODE` displays a prominent banner wherever billing appears, and the
-  server refuses to start in production with it on unless
+- `BILLING_TEST_MODE` displays a prominent banner wherever billing appears, and in
+  production the server refuses to serve any request with it on unless
   `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` explicitly acknowledges that no real
   payments are being taken.
 

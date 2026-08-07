@@ -107,28 +107,41 @@ function build(): AppEnv {
   const isProduction = raw.NODE_ENV === 'production';
   const isTest = raw.NODE_ENV === 'test';
 
+  // `next build` runs with NODE_ENV=production but compiles an artifact rather
+  // than serving a request, so the production guards below are scoped to
+  // runtime: a build warns, a running server refuses. Otherwise a perfectly
+  // valid build fails on a variable that is only needed to serve traffic —
+  // which on a platform that builds and runs in separate steps is a deployment
+  // failure with a misleading cause.
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+
   // AUTH_SECRET: mandatory and non-trivial in production.
   let authSecret = raw.AUTH_SECRET ?? '';
   if (isProduction) {
-    if (!authSecret || authSecret.length < 32) {
-      throw new Error(
-        'AUTH_SECRET must be set to at least 32 characters in production. Generate one with: openssl rand -base64 48',
-      );
-    }
-    if (authSecret.startsWith('replace-me')) {
-      throw new Error('AUTH_SECRET still holds the placeholder value from .env.example.');
+    const tooShort = !authSecret || authSecret.length < 32;
+    const isPlaceholder = authSecret.startsWith('replace-me');
+
+    if (tooShort || isPlaceholder) {
+      const problem = tooShort
+        ? 'AUTH_SECRET must be set to at least 32 characters in production. Generate one with: openssl rand -base64 48'
+        : 'AUTH_SECRET still holds the placeholder value from .env.example.';
+
+      if (isBuildPhase) {
+        console.warn(
+          `[rankinai] WARNING: ${problem} The build will continue, but the server will refuse to start until it is set.`,
+        );
+        // Never used to sign anything — nothing is served during a build — but
+        // it keeps downstream initialization from seeing an empty string.
+        authSecret = 'rankinai-build-phase-placeholder-never-used-to-sign-anything';
+      } else {
+        throw new Error(problem);
+      }
     }
   } else if (!authSecret) {
     // Deterministic, clearly-marked development fallback so `next dev` and the
     // test suite work without manual setup. Never reachable in production.
     authSecret = 'rankinai-development-only-secret-do-not-use-in-production';
   }
-
-  // `next build` runs with NODE_ENV=production while still reading the
-  // developer's local .env. The bypass is only dangerous when a request is
-  // actually served, so the hard failure is scoped to runtime — a build is
-  // allowed to proceed with a warning.
-  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
   // The crawler fixture bypass would be an SSRF hole in production.
   if (isProduction && raw.ALLOW_TEST_FIXTURE_HOST) {

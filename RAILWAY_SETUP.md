@@ -18,11 +18,16 @@ Railway reads `railway.json` from the repo root:
 
 | Setting        | Value                        |
 | -------------- | ---------------------------- |
-| Build          | `npm ci && npm run build`    |
+| Build          | `npm run build`              |
 | Pre-deploy     | `npm run db:migrate`         |
 | Start          | `npm run start`              |
 | Health check   | `/api/health`, 120 s timeout |
 | Restart policy | On failure, max 5 retries    |
+
+**Do not add `npm ci` to the build command.** Nixpacks installs dependencies in its
+own phase and mounts `/app/node_modules` as a Docker cache mount. `npm ci` begins by
+removing `node_modules` wholesale, which cannot remove a mount point, so the build
+dies with `EBUSY: resource busy or locked, rmdir '/app/node_modules'`.
 
 Then generate a public domain: **Settings → Networking → Generate Domain**.
 
@@ -38,11 +43,11 @@ Because Railway reads `railway.json` by default, set this service's config path 
 `railway.worker.json` (**Settings → Config-as-code → Railway Config File**), or set
 the commands by hand:
 
-| Setting        | Value                           |
-| -------------- | ------------------------------- |
-| Build          | `npm ci && npm run db:generate` |
-| Start          | `npm run worker`                |
-| Restart policy | Always                          |
+| Setting        | Value                 |
+| -------------- | --------------------- |
+| Build          | `npm run db:generate` |
+| Start          | `npm run worker`      |
+| Restart policy | Always                |
 
 Do **not** generate a domain for the worker. It has no HTTP surface.
 
@@ -94,11 +99,11 @@ Set these on **both** the web and worker services unless noted.
 
 ### Must NOT be set in production
 
-| Variable                    | Why                                                                                                                                    |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `ALLOW_TEST_FIXTURE_HOST`   | Relaxes the crawler's SSRF protection. **The server throws on startup if it is present.**                                              |
-| `BILLING_TEST_MODE`         | Simulates checkout and takes no payment. The server refuses to start unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` acknowledges it. |
-| `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                      |
+| Variable                    | Why                                                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ALLOW_TEST_FIXTURE_HOST`   | Relaxes the crawler's SSRF protection. **The server refuses to serve any request while it is present** — every route returns 500 and the health check fails. |
+| `BILLING_TEST_MODE`         | Simulates checkout and takes no payment. Requests fail the same way unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` acknowledges it.                        |
+| `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                                            |
 
 ## 5. First deploy
 
@@ -134,6 +139,30 @@ curl -sI https://<your-domain>/business-snapshot | grep -i x-robots-tag
 - `/api/health` should return 200 with `"database": { "ok": true }`
 - `/admin/jobs` should show the worker draining the queue
 - Run one real audit end to end and download the PDF
+
+## Troubleshooting
+
+**Build fails with `EBUSY: resource busy or locked, rmdir '/app/node_modules'`** — the
+build command contains `npm ci`. Remove it; see the note under the web service above.
+
+**Build fails on `AUTH_SECRET`** — it should not. The production guards for
+`AUTH_SECRET`, `ALLOW_TEST_FIXTURE_HOST` and `BILLING_TEST_MODE` warn during
+`next build` and only refuse at runtime, because a build produces an artifact rather
+than serving traffic. If the build genuinely stops, read the error: it is something
+else.
+
+**Health check fails but the logs show the server started** — `/api/health` returns
+503 when the database is unreachable, which is the correct answer. Almost always
+`DATABASE_URL` is not wired to the Postgres service; set it to
+`${{Postgres.DATABASE_URL}}` rather than pasting a literal connection string.
+
+**Every request returns 500 with `AUTH_SECRET must be set to at least 32
+characters`** — the variable is missing on the deployed service. The build succeeds
+without it by design; the running server refuses to serve traffic without it, also by
+design.
+
+**Worker builds but processes nothing** — confirm it has the same `DATABASE_URL` as
+the web service. The two communicate only through the database.
 
 ## Notes
 
