@@ -55,8 +55,15 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'off',
-    actionTimeout: 15_000,
-    navigationTimeout: 30_000,
+    // The app under test is `next dev`, which compiles each route the first
+    // time it is requested. On a loaded machine that first compile can take
+    // tens of seconds, and it lands on whichever test happens to touch the
+    // route first — so a tight action timeout produces failures that move
+    // around between runs and look like product bugs. Assertions keep their
+    // own 15s budget above; this only governs how long a request or an
+    // interaction may wait on the server.
+    actionTimeout: 45_000,
+    navigationTimeout: 45_000,
   },
 
   projects: [
