@@ -97,13 +97,13 @@ Set these on **both** the web and worker services unless noted.
 | `WORKER_POLL_INTERVAL_MS`                                                                          | Defaults to 5000                                                                          |
 | `CRAWL_TIMEOUT_MS`, `CRAWL_MAX_BYTES`, `CRAWL_MAX_REDIRECTS`, `CRAWL_DELAY_MS`, `CRAWL_USER_AGENT` | Sensible defaults                                                                         |
 
-### Must NOT be set in production
+### Should not be set in production
 
-| Variable                    | Why                                                                                                                                                          |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ALLOW_TEST_FIXTURE_HOST`   | Relaxes the crawler's SSRF protection. **The server refuses to serve any request while it is present** — every route returns 500 and the health check fails. |
-| `BILLING_TEST_MODE`         | Simulates checkout and takes no payment. Requests fail the same way unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` acknowledges it.                        |
-| `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                                            |
+| Variable                    | Why                                                                                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ALLOW_TEST_FIXTURE_HOST`   | **Ignored in production** — the crawler never relaxes SSRF protection there — but its presence is a mistake, warned about in the logs and `/api/health`. |
+| `BILLING_TEST_MODE`         | **Forced off in production** unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` explicitly acknowledges simulated billing. Warned, never silent.           |
+| `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                                        |
 
 ## 5. First deploy
 
@@ -161,20 +161,20 @@ and look for `"message":"Health check failed"`:
 { "message": "Health check failed", "configuration": "ok", "database": "Can't reach database server at `…`" }
 ```
 
-- A `configuration` message means an environment variable is missing or invalid on
-  the **deployed service**. `AUTH_SECRET` is the usual one: the build succeeds
-  without it by design, the running server refuses every request until it is set.
 - A `database` message means the app cannot reach Postgres. Set `DATABASE_URL` to
-  `${{Postgres.DATABASE_URL}}` — a reference, not a pasted connection string.
+  `${{Postgres.DATABASE_URL}}` — a reference, not a pasted connection string. This
+  is the **only** environment problem that can fail the health check: every other
+  configuration issue degrades gracefully and appears in `/api/health`'s
+  `warnings` array instead.
 
 Note that a passing pre-deploy step does **not** clear the database: `prisma migrate
 deploy` reads `DATABASE_URL` directly and never loads the application's environment
 schema, so migrations can succeed while the app still fails on a different variable.
 
-**Every request returns 500 with `AUTH_SECRET must be set to at least 32
-characters`** — the variable is missing on the deployed service. The build succeeds
-without it by design; the running server refuses to serve traffic without it, also by
-design.
+**`AUTH_SECRET` missing** — the server no longer refuses. It generates an ephemeral
+random secret, logs a warning, and lists the state in `/api/health`'s `warnings`.
+Sign-in works, but every deploy or restart signs everyone out until a real
+`AUTH_SECRET` is set — so set one, just not under time pressure.
 
 **Worker builds but processes nothing** — confirm it has the same `DATABASE_URL` as
 the web service. The two communicate only through the database.

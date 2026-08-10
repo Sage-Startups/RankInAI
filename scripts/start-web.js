@@ -89,6 +89,35 @@ for (const { from, to } of copies) {
 process.env.PORT = process.env.PORT || '3000';
 process.env.HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
+/**
+ * AUTH_SECRET fallback, applied BEFORE the server loads.
+ *
+ * The edge middleware reads process.env.AUTH_SECRET directly on every request,
+ * while Auth.js signs tokens with the value the app's environment module
+ * resolves. Generating the fallback here — rather than lazily on the first
+ * request — guarantees both sides see the same value from the very first
+ * request, with no ordering race.
+ *
+ * The generated secret is cryptographically random, so tokens cannot be
+ * forged; the cost is that every restart or deploy signs everyone out until a
+ * real AUTH_SECRET is configured. That is a degraded state worth a loud
+ * warning, not a dead site.
+ */
+if (process.env.NODE_ENV === 'production') {
+  const configured = process.env.AUTH_SECRET || '';
+  if (configured.length < 32 || configured.startsWith('replace-me')) {
+    const { randomBytes } = require('node:crypto');
+    process.env.AUTH_SECRET = randomBytes(48).toString('base64');
+    process.env.AUTH_SECRET_EPHEMERAL = '1';
+    bootLog('warn', {
+      message:
+        'AUTH_SECRET is missing or invalid — generated an ephemeral secret for this instance',
+      consequence: 'Sign-in works, but every deploy or restart signs everyone out',
+      fix: 'Set AUTH_SECRET to a value from: openssl rand -base64 48',
+    });
+  }
+}
+
 bootLog('info', {
   message: 'Starting web server',
   port: process.env.PORT,

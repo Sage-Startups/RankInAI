@@ -74,6 +74,11 @@ export async function GET() {
       database: { ok: databaseOk, latencyMs: databaseLatencyMs, error: databaseError },
       queue: { ok: databaseOk, queuedJobs: queueDepth },
     },
+    // Degraded-but-serving states (ephemeral auth secret, billing test mode
+    // forced off, ignored fixture bypass). Warnings do not fail the check —
+    // the application is up and safe — but they belong where an operator
+    // debugging a deployment will actually look.
+    warnings: env?.configWarnings ?? [],
     capabilities: env
       ? {
           billingConfigured: env.stripeConfigured,

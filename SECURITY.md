@@ -59,15 +59,20 @@ constraints on it:
 - It names an **exact origin** (`127.0.0.1:4321`), not a host. A host-only entry
   would expose every other service on the loopback interface — the database among
   them — to the crawler.
-- `src/lib/env.ts` **throws on every request** if it is set while `NODE_ENV=production`,
-  so the process serves nothing at all. `next build` warns instead, because a build
-  produces an artifact rather than serving traffic.
+- In production the variable is **ignored outright**: `url-safety.ts` returns an
+  empty bypass set whenever `NODE_ENV=production`, regardless of the environment,
+  and the unit suite asserts it. `src/lib/env.ts` additionally logs a warning and
+  surfaces the mistake in `/api/health` when the variable is present.
   The E2E suite therefore runs with `NODE_ENV=test` and works with the guard rather
   than around it.
 
 ## Authentication and sessions
 
 - Passwords hashed with bcrypt at cost 12. Never logged, never returned by an API.
+- If `AUTH_SECRET` is absent in production the server generates a cryptographically
+  random per-instance secret rather than refusing to serve: tokens cannot be
+  forged, but sessions reset on every restart. The state is logged and reported by
+  `/api/health` until a real secret is configured.
 - Password strength is validated server-side, not only in the browser.
 - Session cookies are `httpOnly`, `sameSite=lax` and `secure` in production.
 - Sign-in failures return an identical message whether or not the account exists.
@@ -101,10 +106,11 @@ constraints on it:
   a second guard against double-granting.
 - Entitlements are granted only by the webhook (or, in test mode, by the same
   fulfillment function). The browser can never grant itself anything.
-- `BILLING_TEST_MODE` displays a prominent banner wherever billing appears, and in
-  production the server refuses to serve any request with it on unless
-  `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` explicitly acknowledges that no real
-  payments are being taken.
+- `BILLING_TEST_MODE` displays a prominent banner wherever billing appears. In
+  production it is **forced off** unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true`
+  explicitly acknowledges that no real payments are being taken — a stray variable
+  can therefore never cause simulated checkouts on a live storefront, and the
+  forced-off state is logged and reported by `/api/health`.
 
 ## Input handling
 
