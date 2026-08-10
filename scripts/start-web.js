@@ -10,17 +10,63 @@
  *   - forwards SIGTERM so deploys shut down gracefully
  */
 
-const { existsSync, cpSync } = require('node:fs');
+const { existsSync, cpSync, writeSync } = require('node:fs');
 const path = require('node:path');
+
+/**
+ * Boot logging is written synchronously.
+ *
+ * Node buffers stdout when it is a pipe, which every container platform uses.
+ * If the process dies during startup the buffer is discarded, and the platform
+ * shows a container that started and said nothing — which is indistinguishable
+ * from a hang and impossible to diagnose. `writeSync` cannot be lost.
+ */
+function bootLog(level, fields) {
+  const line = `${JSON.stringify({
+    ts: new Date().toISOString(),
+    level,
+    service: 'rankinai-web',
+    ...fields,
+  })}\n`;
+  try {
+    writeSync(level === 'error' ? 2 : 1, line);
+  } catch {
+    // A closed descriptor must not become the reason the server fails to boot.
+  }
+}
+
+/**
+ * Nothing should ever kill this process without saying why. Without these the
+ * only evidence of a crash is silence — a container that started and said
+ * nothing. Exiting on an uncaught exception preserves Node's default
+ * behavior; the handler only adds the explanation.
+ */
+process.on('uncaughtException', (error) => {
+  bootLog('error', {
+    message: 'Fatal: uncaught exception',
+    error: error && error.message,
+    stack: error && error.stack && error.stack.split('\n').slice(0, 6).join(' | '),
+  });
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  bootLog('error', {
+    message: 'Unhandled promise rejection',
+    error: reason instanceof Error ? reason.message : String(reason),
+  });
+});
 
 const root = path.resolve(__dirname, '..');
 const standaloneDir = path.join(root, '.next', 'standalone');
 const serverEntry = path.join(standaloneDir, 'server.js');
 
 if (!existsSync(serverEntry)) {
-  console.error(
-    '[rankinai] .next/standalone/server.js is missing. Run `npm run build` before `npm run start`.',
-  );
+  bootLog('error', {
+    message: 'Fatal: .next/standalone/server.js is missing',
+    hint: 'Run `npm run build` before `npm run start`.',
+    expectedAt: serverEntry,
+  });
   process.exit(1);
 }
 
@@ -43,17 +89,12 @@ for (const { from, to } of copies) {
 process.env.PORT = process.env.PORT || '3000';
 process.env.HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
-console.log(
-  JSON.stringify({
-    ts: new Date().toISOString(),
-    level: 'info',
-    service: 'rankinai-web',
-    message: 'Starting web server',
-    port: process.env.PORT,
-    hostname: process.env.HOSTNAME,
-    nodeEnv: process.env.NODE_ENV,
-  }),
-);
+bootLog('info', {
+  message: 'Starting web server',
+  port: process.env.PORT,
+  hostname: process.env.HOSTNAME,
+  nodeEnv: process.env.NODE_ENV,
+});
 
 /**
  * Report database reachability at startup, in the background.
@@ -68,15 +109,7 @@ console.log(
  * rather than a crash loop.
  */
 function probeDatabase() {
-  const log = (level, fields) =>
-    console[level === 'error' ? 'error' : 'log'](
-      JSON.stringify({
-        ts: new Date().toISOString(),
-        level,
-        service: 'rankinai-web',
-        ...fields,
-      }),
-    );
+  const log = bootLog;
 
   if (!process.env.DATABASE_URL) {
     log('error', {
@@ -95,19 +128,24 @@ function probeDatabase() {
     /* keep the placeholder */
   }
 
-  let PrismaClient;
+  // Loading the client and constructing it are both fallible — the generated
+  // client may be absent, or its query engine binary may not have survived
+  // output-file tracing into the standalone build. Neither is a reason for the
+  // web server to die, so both are contained here.
+  let client;
   try {
-    ({ PrismaClient } = require('@prisma/client'));
+    const { PrismaClient } = require('@prisma/client');
+    client = new PrismaClient({ log: [] });
   } catch (error) {
     log('error', {
-      message: 'Database probe could not load @prisma/client',
+      message: 'Database probe could not start — Prisma client unavailable',
       target,
-      error: error.message,
+      error: error && error.message,
+      hint: 'The server will still start; /api/health will report the database as failing.',
     });
     return;
   }
 
-  const client = new PrismaClient({ log: [] });
   const delays = [0, 1000, 2000, 3000, 5000, 5000, 5000, 5000];
 
   (async () => {
@@ -146,7 +184,16 @@ function probeDatabase() {
   })();
 }
 
-probeDatabase();
+// Belt and braces: a diagnostic must never be the reason the server fails to
+// boot, so even an unanticipated throw here is swallowed and reported.
+try {
+  probeDatabase();
+} catch (error) {
+  bootLog('error', {
+    message: 'Database probe failed to run — continuing to start the server',
+    error: error && error.message,
+  });
+}
 
 // Run the standalone server in-process so signals propagate directly.
 process.chdir(standaloneDir);
