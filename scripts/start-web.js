@@ -216,34 +216,15 @@ try {
   });
 }
 
-/**
- * Bind dual-stack ('::', IPv6 AND IPv4) whenever the environment supports it.
- *
- * This is load-bearing on Railway: its health checks and edge proxy connect
- * over the private network, which is IPv6. An app bound to 0.0.0.0 (IPv4
- * only) starts cleanly, reaches its database over outbound connections, and
- * then never receives a single inbound request — the health probe reports
- * "service unavailable" while the app logs nothing, because nothing ever
- * arrives. That silent failure shape cost this project several deployments.
- *
- * Hardcoding '::' is not safe either: IPv4-only environments (some CI
- * sandboxes and Docker configurations) fail to bind it with EAFNOSUPPORT and
- * the server dies. So probe once with a throwaway listener and use what works.
- */
-function pickHostname(done) {
-  if (process.env.HOSTNAME) {
-    done(process.env.HOSTNAME, 'from HOSTNAME env');
-    return;
-  }
-  const net = require('node:net');
-  const probe = net.createServer();
-  probe.once('error', () => done('0.0.0.0', 'IPv6 unavailable, IPv4 only'));
-  probe.listen({ host: '::', port: 0, ipv6Only: false }, () => {
-    probe.close(() => done('::', 'dual-stack IPv6 + IPv4'));
-  });
-}
+const { pickHostname } = require('./bind-host');
 
-pickHostname((hostname, why) => {
+pickHostname(process.env, (hostname, why, ignored) => {
+  if (ignored) {
+    bootLog('info', {
+      message: 'Ignoring HOSTNAME — it is a machine name, not a bind address',
+      ignored,
+    });
+  }
   process.env.HOSTNAME = hostname;
   bootLog('info', {
     message: 'Starting web server',
