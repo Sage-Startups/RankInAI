@@ -55,6 +55,99 @@ console.log(
   }),
 );
 
+/**
+ * Report database reachability at startup, in the background.
+ *
+ * A failing platform health check surfaces as one unhelpful line, and the
+ * cause — wrong host, wrong credentials, database asleep, private network not
+ * yet up — is invisible unless something asks and says so out loud. This
+ * probes with backoff and writes a structured verdict either way.
+ *
+ * It never blocks the server and never exits the process: the app must still
+ * come up and serve its health endpoint so the platform gets a real answer
+ * rather than a crash loop.
+ */
+function probeDatabase() {
+  const log = (level, fields) =>
+    console[level === 'error' ? 'error' : 'log'](
+      JSON.stringify({
+        ts: new Date().toISOString(),
+        level,
+        service: 'rankinai-web',
+        ...fields,
+      }),
+    );
+
+  if (!process.env.DATABASE_URL) {
+    log('error', {
+      message: 'Database probe skipped — DATABASE_URL is not set',
+      hint: 'The server will refuse every request until it is.',
+    });
+    return;
+  }
+
+  // Report where we are dialing without ever printing the credentials.
+  let target = 'unparseable DATABASE_URL';
+  try {
+    const u = new URL(process.env.DATABASE_URL);
+    target = `${u.hostname}:${u.port || '5432'}${u.pathname}`;
+  } catch {
+    /* keep the placeholder */
+  }
+
+  let PrismaClient;
+  try {
+    ({ PrismaClient } = require('@prisma/client'));
+  } catch (error) {
+    log('error', {
+      message: 'Database probe could not load @prisma/client',
+      target,
+      error: error.message,
+    });
+    return;
+  }
+
+  const client = new PrismaClient({ log: [] });
+  const delays = [0, 1000, 2000, 3000, 5000, 5000, 5000, 5000];
+
+  (async () => {
+    for (let attempt = 0; attempt < delays.length; attempt += 1) {
+      if (delays[attempt]) await new Promise((r) => setTimeout(r, delays[attempt]));
+      const started = Date.now();
+      try {
+        await client.$queryRaw`SELECT 1`;
+        log('info', {
+          message: 'Database reachable',
+          target,
+          latencyMs: Date.now() - started,
+          attempt: attempt + 1,
+        });
+        await client.$disconnect().catch(() => {});
+        return;
+      } catch (error) {
+        const reason =
+          String(error && error.message)
+            .split('\n')
+            .map((l) => l.trim())
+            .find((l) => l.length > 0 && !l.endsWith('invocation:')) ?? 'unknown error';
+        const last = attempt === delays.length - 1;
+        log(last ? 'error' : 'warn', {
+          message: last
+            ? 'Database UNREACHABLE — this is why the health check is failing'
+            : 'Database not reachable yet, retrying',
+          target,
+          attempt: attempt + 1,
+          of: delays.length,
+          reason,
+        });
+      }
+    }
+    await client.$disconnect().catch(() => {});
+  })();
+}
+
+probeDatabase();
+
 // Run the standalone server in-process so signals propagate directly.
 process.chdir(standaloneDir);
 require(serverEntry);
