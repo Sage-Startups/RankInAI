@@ -88,13 +88,15 @@ test.describe('Journey 5: super admin', () => {
     // Seeded demonstration customers must not appear in the real ledger.
     await expect(page.getByText('demo.customer1@example.invalid')).toHaveCount(0);
 
+    // The header summary aggregates every matching payment, while the table
+    // below it shows only the most recent 60. Assert on the summary: it is
+    // exact, and it cannot silently pass because a row fell off the first page.
     const summary = page.getByText(/successful payments totalling/);
     const realTotal = parseUsd(await summary.innerText());
 
     await page.getByRole('switch', { name: /Include demo data/i }).click();
     await page.waitForURL(/demo=1/);
 
-    await expect(page.getByText('demo.customer1@example.invalid').first()).toBeVisible();
     const withDemoTotal = parseUsd(
       await page.getByText(/successful payments totalling/).innerText(),
     );

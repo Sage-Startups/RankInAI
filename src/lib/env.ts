@@ -95,7 +95,25 @@ export type AppEnv = z.infer<typeof schema> & {
 let cached: AppEnv | null = null;
 
 function build(): AppEnv {
-  const parsed = schema.safeParse(process.env);
+  // `next build` runs with NODE_ENV=production but compiles an artifact rather
+  // than serving a request, so the production guards here are scoped to
+  // runtime: a build warns, a running server refuses. Otherwise a perfectly
+  // valid build fails on a variable that is only needed to serve traffic —
+  // which on any platform that builds and runs in separate steps (Vercel,
+  // Railway, a Docker CI job) is a deployment failure with a misleading cause.
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+
+  // Checked before parsing, because a missing DATABASE_URL fails the schema
+  // itself and would never reach the guards below.
+  const source: NodeJS.ProcessEnv = { ...process.env };
+  if (isBuildPhase && !source.DATABASE_URL) {
+    console.warn(
+      '[rankinai] WARNING: DATABASE_URL is not set during a production build.\n[rankinai] The build will continue, but the deployed server will refuse every request until this is fixed.',
+    );
+    source.DATABASE_URL = 'postgresql://build-phase-placeholder:0/none';
+  }
+
+  const parsed = schema.safeParse(source);
   if (!parsed.success) {
     const issues = parsed.error.issues
       .map((i) => `  - ${i.path.join('.')}: ${i.message}`)
@@ -106,14 +124,6 @@ function build(): AppEnv {
   const raw = parsed.data;
   const isProduction = raw.NODE_ENV === 'production';
   const isTest = raw.NODE_ENV === 'test';
-
-  // `next build` runs with NODE_ENV=production but compiles an artifact rather
-  // than serving a request, so the production guards below are scoped to
-  // runtime: a build warns, a running server refuses. Otherwise a perfectly
-  // valid build fails on a variable that is only needed to serve traffic —
-  // which on a platform that builds and runs in separate steps is a deployment
-  // failure with a misleading cause.
-  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
   // AUTH_SECRET: mandatory and non-trivial in production.
   let authSecret = raw.AUTH_SECRET ?? '';
@@ -128,7 +138,7 @@ function build(): AppEnv {
 
       if (isBuildPhase) {
         console.warn(
-          `[rankinai] WARNING: ${problem} The build will continue, but the server will refuse to start until it is set.`,
+          `[rankinai] WARNING: ${problem}\n[rankinai] The build will continue, but the deployed server will refuse every request until this is fixed.`,
         );
         // Never used to sign anything — nothing is served during a build — but
         // it keeps downstream initialization from seeing an empty string.
