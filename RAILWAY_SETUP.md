@@ -16,18 +16,28 @@ tens of seconds and must not occupy a request thread.
 
 Railway reads `railway.json` from the repo root:
 
-| Setting        | Value                        |
-| -------------- | ---------------------------- |
-| Build          | `npm run build`              |
-| Pre-deploy     | `npm run db:migrate`         |
-| Start          | `npm run start`              |
-| Health check   | `/api/health`, 120 s timeout |
-| Restart policy | On failure, max 5 retries    |
+| Setting        | Value                                                             |
+| -------------- | ----------------------------------------------------------------- |
+| Build          | `npm install --include=dev --no-audit --no-fund && npm run build` |
+| Pre-deploy     | `npm run db:migrate`                                              |
+| Start          | `npm run start`                                                   |
+| Health check   | `/api/health`, 120 s timeout                                      |
+| Restart policy | On failure, max 5 retries                                         |
 
-**Do not add `npm ci` to the build command.** Nixpacks installs dependencies in its
-own phase and mounts `/app/node_modules` as a Docker cache mount. `npm ci` begins by
-removing `node_modules` wholesale, which cannot remove a mount point, so the build
-dies with `EBUSY: resource busy or locked, rmdir '/app/node_modules'`.
+Two things about that build command, both learned the hard way:
+
+**`npm install --include=dev`, not `npm ci`.** Nixpacks' own install phase runs
+`npm ci`, which honors `NODE_ENV=production` by skipping devDependencies — and this
+project needs several of them (`@tailwindcss/postcss`, `typescript`, `prisma`) to
+compile. The explicit `--include=dev` restores them whatever `NODE_ENV` says. Do
+**not** substitute `npm ci` here: it removes `node_modules` wholesale, which cannot
+be done to the Docker cache mount Nixpacks places there, and the build dies with
+`EBUSY: resource busy or locked, rmdir '/app/node_modules'`.
+
+**Do not set `NODE_ENV` as a Railway variable.** Nixpacks already sets
+`NODE_ENV=production` in the runtime image. Setting it yourself additionally applies
+it at _build_ time, where it makes npm skip the tooling the build needs. The build
+command above survives it either way, but there is no reason to add the variable.
 
 Then generate a public domain: **Settings → Networking → Generate Domain**.
 
@@ -74,7 +84,6 @@ Set these on **both** the web and worker services unless noted.
 | `AUTH_TRUST_HOST`     | `true` (Railway terminates TLS in front of the app)  |
 | `NEXT_PUBLIC_APP_URL` | `https://<your-domain>.up.railway.app` — web service |
 | `SUPER_ADMIN_EMAIL`   | The address that gets the admin role at seed time    |
-| `NODE_ENV`            | `production`                                         |
 
 ### Stripe (required for real payments)
 
@@ -109,6 +118,7 @@ Set these on **both** the web and worker services unless noted.
 | `ALLOW_TEST_FIXTURE_HOST`   | **Ignored in production** — the crawler never relaxes SSRF protection there — but its presence is a mistake, warned about in the logs and `/api/health`. |
 | `BILLING_TEST_MODE`         | **Forced off in production** unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` explicitly acknowledges simulated billing. Warned, never silent.           |
 | `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                                        |
+| `NODE_ENV`                  | Nixpacks sets it in the runtime image already. Setting it yourself also applies it at build time, where npm reads it as "skip devDependencies".          |
 
 ## 5. First deploy
 
@@ -148,7 +158,14 @@ curl -sI https://<your-domain>/business-snapshot | grep -i x-robots-tag
 ## Troubleshooting
 
 **Build fails with `EBUSY: resource busy or locked, rmdir '/app/node_modules'`** — the
-build command contains `npm ci`. Remove it; see the note under the web service above.
+build command contains `npm ci`. Use `npm install --include=dev` instead; see the note
+under the web service above.
+
+**Build fails with `Cannot find module '@tailwindcss/postcss'`** (or `typescript`, or
+another tool) — devDependencies were skipped during install. The give-away is the
+package count in the log: a healthy install reports ~627 packages, a dev-less one
+~218. Caused by `NODE_ENV=production` being set as a service variable. Remove it, and
+make sure the build command carries `--include=dev`.
 
 **Build fails on `AUTH_SECRET`** — it should not. The production guards for
 `AUTH_SECRET`, `ALLOW_TEST_FIXTURE_HOST` and `BILLING_TEST_MODE` warn during
