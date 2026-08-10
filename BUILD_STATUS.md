@@ -1,14 +1,42 @@
 # Build Status
 
-Last updated: 2026-08-06
+Last updated: 2026-08-10
 
 ## Summary
 
-The application is complete and verified locally. **It is not deployed** — this
-environment has no Railway, Stripe, OpenAI or search-provider credentials, so no
-deployment was performed and no live URL exists. The repository is deployment-ready;
-`RAILWAY_SETUP.md` has the exact steps and `npm run verify` reports what any given
-environment is still missing.
+The application is complete, verified locally, and **deployed** at
+https://rankinai-production.up.railway.app — its health endpoint reports
+`status: ok` with the database reachable and the queue readable.
+
+The deployment is running in a **partially configured** state, which the app
+reports honestly rather than hiding:
+
+| Capability             | State                    | To enable                           |
+| ---------------------- | ------------------------ | ----------------------------------- |
+| Web app, auth, reports | working                  | —                                   |
+| Audit processing       | needs the worker service | `RAILWAY_SETUP.md` §3               |
+| Checkout               | unavailable              | set `STRIPE_SECRET_KEY` and friends |
+| Email                  | logged to the console    | set an email provider               |
+| LLM enhancement        | off                      | set `OPENAI_API_KEY`                |
+| Search observations    | off                      | set a search-provider key           |
+
+`npm run verify` reports what any given environment is still missing.
+
+### Deployment notes worth keeping
+
+Two failures cost several deployments and are now guarded in code, not in a
+runbook:
+
+- Setting `NODE_ENV=production` as a Railway **variable** applies it at build
+  time too, and npm reads it as `--omit=dev` — so the build lost every
+  devDependency it needs. The build command installs with `--include=dev`
+  explicitly. The give-away is the package count: 218 instead of 627.
+- Docker sets `HOSTNAME` to the container id, and Next's standalone server
+  passes it straight to `listen()`. That bound one interface, so Railway's
+  health probes — which arrive over the IPv6 private network — reached nothing
+  at all while the app logged a clean startup. `scripts/bind-host.js` now
+  honors only a value that parses as an address, and binds dual-stack
+  otherwise.
 
 ## Test results
 
@@ -16,7 +44,7 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **237 passed**, 0 failed   | `npm run test:unit`        |
+| Unit                  | **255 passed**, 0 failed   | `npm run test:unit`        |
 | Integration           | **94 passed**, 0 failed    | `npm run test:integration` |
 | End-to-end            | **37 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
