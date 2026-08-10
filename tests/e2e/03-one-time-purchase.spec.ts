@@ -86,8 +86,11 @@ test.describe('Journey 3: one-time audit purchase and full audit', () => {
     // Competitive Visibility is correctly marked unavailable.
     await expect(page.getByText(/No competitor was supplied for this audit/i)).toBeVisible();
 
-    // 10. Download the PDF.
-    const response = await page.request.get(`/api/reports/${auditId}/pdf`);
+    // 10. Download the PDF. The first request for a report renders it with
+    // PDFKit rather than serving the cached bytes, so it is allowed well past
+    // Playwright's 30s request default — on a loaded machine the render alone
+    // can outlast it, which looks like a product failure and is not one.
+    const response = await page.request.get(`/api/reports/${auditId}/pdf`, { timeout: 120_000 });
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toBe('application/pdf');
 
