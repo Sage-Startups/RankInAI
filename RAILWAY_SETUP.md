@@ -32,8 +32,13 @@ dies with `EBUSY: resource busy or locked, rmdir '/app/node_modules'`.
 Then generate a public domain: **Settings → Networking → Generate Domain**.
 
 `npm run start` runs `scripts/start-web.js`, which serves the standalone Next.js
-build, honors `$PORT`, binds `0.0.0.0`, copies the static assets the standalone bundle
-expects, and runs the server in-process so `SIGTERM` propagates for graceful shutdown.
+build, honors `$PORT`, binds **dual-stack `::`** (with an automatic IPv4 fallback in
+environments without IPv6), copies the static assets the standalone bundle expects,
+and runs the server in-process so `SIGTERM` propagates for graceful shutdown.
+
+The dual-stack bind is load-bearing: Railway's health checks and edge proxy connect
+over the private network, which is IPv6. An app bound only to `0.0.0.0` starts
+cleanly and then never receives a single request.
 
 ## 3. Worker service
 
@@ -151,8 +156,15 @@ build command contains `npm ci`. Remove it; see the note under the web service a
 than serving traffic. If the build genuinely stops, read the error: it is something
 else.
 
-**Build ✓, Deploy ✓, `Network > Healthcheck` ✗** — the application is running but
-`/api/health` is not returning 200. It never throws and always says why, so read the
+**Build ✓, Deploy ✓, `Network > Healthcheck` ✗ and the app logs show NOTHING after
+startup** — no `Health check failed` lines, no requests at all. The probes are not
+reaching the app: it is bound to IPv4 only while Railway probes over IPv6. The
+entrypoint binds dual-stack for exactly this reason; if you override `HOSTNAME`,
+never set it to `0.0.0.0` on Railway. Confirm the boot log line says
+`"hostname":"::"`.
+
+**Build ✓, Deploy ✓, `Network > Healthcheck` ✗ with `Health check failed` lines in
+the logs** — the application is running but `/api/health` is not returning 200. It never throws and always says why, so read the
 answer rather than guessing. Open the failed deployment's **Deploy logs** (not Build)
 and look for `"message":"Health check failed"`:
 
