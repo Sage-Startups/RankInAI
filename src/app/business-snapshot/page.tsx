@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AlertTriangle, ArrowUpRight, Coins, FileCheck2, TrendingUp, UserPlus } from 'lucide-react';
 
+import { DemoMetricCard } from '@/components/admin/demo-metric-card';
 import { Badge, Card } from '@/components/ui/primitives';
 import { Logo } from '@/components/brand/logo';
 import {
@@ -133,25 +134,25 @@ export default function BusinessSnapshotPage() {
 
         {/* Metric cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
+          <DemoMetricCard
             icon={TrendingUp}
             label="Demonstration gross revenue"
             value={formatUsd(DEMO_SNAPSHOT_TOTALS.grossRevenueCents)}
             detail={`${DEMO_SNAPSHOT_TOTALS.oneTimeSales} one-time audits at ${formatUsd(ONE_TIME_PRICE_CENTS)}`}
           />
-          <MetricCard
+          <DemoMetricCard
             icon={UserPlus}
             label="Demonstration sign-ups"
             value={String(DEMO_SNAPSHOT_TOTALS.signups)}
             detail="New accounts in the demonstration month"
           />
-          <MetricCard
+          <DemoMetricCard
             icon={Coins}
             label="One-time audit sales"
             value={String(DEMO_SNAPSHOT_TOTALS.oneTimeSales)}
             detail={`${DEMO_SNAPSHOT_TOTALS.creditsPurchased} audit credits purchased`}
           />
-          <MetricCard
+          <DemoMetricCard
             icon={FileCheck2}
             label="Audits completed"
             value={String(DEMO_SNAPSHOT_TOTALS.auditsCompleted)}
@@ -351,34 +352,6 @@ export default function BusinessSnapshotPage() {
         </p>
       </main>
     </div>
-  );
-}
-
-function MetricCard({
-  icon: Icon,
-  label,
-  value,
-  detail,
-}: {
-  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
-  label: string;
-  value: string;
-  detail: string;
-}) {
-  return (
-    <Card className="relative overflow-hidden p-5">
-      <span className="absolute top-3 right-3">
-        <Badge tone="demo">Demo</Badge>
-      </span>
-      <div className="flex items-center gap-2.5">
-        <Icon className="size-4 text-[var(--muted-foreground)]" aria-hidden />
-        <p className="text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
-          {label}
-        </p>
-      </div>
-      <p className="mt-2.5 text-2xl font-bold tabular-nums">{value}</p>
-      <p className="mt-1 text-xs text-[var(--muted-foreground)]">{detail}</p>
-    </Card>
   );
 }
 

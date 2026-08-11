@@ -15,6 +15,7 @@ const LINKS = [
   { href: '/admin/contacts', label: 'Contacts', exact: false },
   { href: '/admin/analytics', label: 'Analytics', exact: false },
   { href: '/admin/demo-data', label: 'Demo data', exact: false },
+  { href: '/admin/demo-snapshot', label: 'Demo snapshot', exact: false },
   { href: '/admin/settings', label: 'Settings', exact: false },
   { href: '/admin/system', label: 'System', exact: false },
 ];

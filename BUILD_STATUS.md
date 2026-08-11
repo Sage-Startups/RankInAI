@@ -44,16 +44,16 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **255 passed**, 0 failed   | `npm run test:unit`        |
+| Unit                  | **265 passed**, 0 failed   | `npm run test:unit`        |
 | Integration           | **94 passed**, 0 failed    | `npm run test:integration` |
-| End-to-end            | **37 passed**, 0 failed    | `npm run test:e2e`         |
+| End-to-end            | **38 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
 | Lint                  | clean, 0 errors 0 warnings | `npm run lint`             |
 | Format                | clean                      | `npm run format:check`     |
 | Production build      | succeeds                   | `npm run build`            |
 | Full audit validation | passed                     | `npm run audit:full-test`  |
 
-No test is skipped. The E2E suite includes axe-core accessibility scans of eight
+No test is skipped. The E2E suite includes axe-core accessibility scans of nine
 screens with serious and critical violations set to fail the build; all are clean.
 
 The full audit validation run is recorded in `FULL_AUDIT_TEST_REPORT.md`: a complete
@@ -109,7 +109,9 @@ headless browser, no local disk.
 ### Super admin
 
 Overview, users, user detail, audits, audit detail, jobs, payments, subscriptions,
-analytics, contacts, settings, system, demo data. Real metrics exclude demonstration
+analytics, contacts, settings, system, demo data, and a one-page demonstration
+revenue snapshot for June–July 2026 (three one-time Full Audits and one Starter
+subscription, $205 fabricated gross). Real metrics exclude demonstration
 records unless "Include demo data" is explicitly turned on, which is off by default
 everywhere and displays a warning when on. Every privileged action writes to an audit
 trail.

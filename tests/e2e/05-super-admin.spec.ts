@@ -146,6 +146,7 @@ test.describe('Journey 5: super admin', () => {
       ['/admin/contacts', 'Contact submissions'],
       ['/admin/settings', 'System settings'],
       ['/admin/demo-data', 'Demonstration data'],
+      ['/admin/demo-snapshot', 'Demonstration revenue snapshot'],
       ['/admin/system', 'System'],
     ];
 
@@ -179,5 +180,37 @@ test.describe('Journey 5: super admin', () => {
     // The page is not reachable from the public navigation.
     await page.goto('/');
     await expect(page.getByRole('link', { name: /business snapshot/i })).toHaveCount(0);
+  });
+
+  test('the demo revenue snapshot shows three one-time audits and one subscription', async ({
+    page,
+  }) => {
+    await signIn(page, SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD);
+    await page.goto('/admin/demo-snapshot');
+
+    // $147 of one-time revenue and $58 of subscription revenue. The figures are
+    // asserted here rather than only in the unit test because the page composes
+    // them from three different derived shapes — cards, month table, charge
+    // table — and they have to agree on screen, not just in the module.
+    await expect(page.getByText('$205', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('$147', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('$58', { exact: true }).first()).toBeVisible();
+
+    // Five charges, and exactly two of them recurring.
+    await expect(page.getByRole('cell', { name: 'One-time', exact: true })).toHaveCount(3);
+    await expect(page.getByRole('cell', { name: 'Recurring', exact: true })).toHaveCount(2);
+
+    // Both months are represented.
+    await expect(page.getByRole('rowheader', { name: 'June 2026' })).toBeVisible();
+    await expect(page.getByRole('rowheader', { name: 'July 2026' })).toBeVisible();
+
+    // The demonstration labeling cannot be missed, and there is no control to
+    // remove it.
+    await expect(page.getByRole('alert').getByText(/DEMONSTRATION DATA/)).toBeVisible();
+    await expect(
+      page.getByText(
+        'DEMONSTRATION DATA — FOR PRODUCT PRESENTATION ONLY. THESE ARE NOT REAL SALES, REAL CUSTOMERS OR VERIFIED REVENUE.',
+      ),
+    ).toHaveCount(2);
   });
 });

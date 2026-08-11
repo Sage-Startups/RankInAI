@@ -103,5 +103,14 @@ test.describe('Accessibility: no serious or critical violations', () => {
     await page.goto('/admin');
     await expect(page.getByRole('heading', { name: 'Admin overview' })).toBeVisible();
     await scan(page, 'admin dashboard');
+
+    // The demo snapshot is dense with tables and charts, and its warning
+    // banner uses the one place in the product with a saturated amber
+    // background — worth scanning rather than assuming.
+    await page.goto('/admin/demo-snapshot');
+    await expect(
+      page.getByRole('heading', { name: 'Demonstration revenue snapshot' }),
+    ).toBeVisible();
+    await scan(page, 'admin demo snapshot');
   });
 });
