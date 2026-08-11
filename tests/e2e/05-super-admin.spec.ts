@@ -204,13 +204,13 @@ test.describe('Journey 5: super admin', () => {
     await expect(page.getByRole('rowheader', { name: 'June 2026' })).toBeVisible();
     await expect(page.getByRole('rowheader', { name: 'July 2026' })).toBeVisible();
 
-    // The demonstration labeling cannot be missed, and there is no control to
-    // remove it.
+    // One demonstration banner, stated once and unmissably, with no control
+    // that removes it. The buyer preview repeats its disclaimer because it is
+    // shown to outsiders; this page is behind the admin guard and says it once.
+    const banner = page.getByText(
+      'DEMONSTRATION DATA — FOR PRODUCT PRESENTATION ONLY. THESE ARE NOT REAL SALES, REAL CUSTOMERS OR VERIFIED REVENUE.',
+    );
+    await expect(banner).toHaveCount(1);
     await expect(page.getByRole('alert').getByText(/DEMONSTRATION DATA/)).toBeVisible();
-    await expect(
-      page.getByText(
-        'DEMONSTRATION DATA — FOR PRODUCT PRESENTATION ONLY. THESE ARE NOT REAL SALES, REAL CUSTOMERS OR VERIFIED REVENUE.',
-      ),
-    ).toHaveCount(2);
   });
 });

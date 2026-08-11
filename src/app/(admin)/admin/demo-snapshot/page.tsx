@@ -77,10 +77,7 @@ export default async function AdminDemoSnapshotPage() {
       </div>
 
       <header>
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold">Demonstration revenue snapshot</h1>
-          <Badge tone="demo">Demo data</Badge>
-        </div>
+        <h1 className="text-2xl font-bold">Demonstration revenue snapshot</h1>
         <p className="mt-1 max-w-3xl text-sm leading-relaxed text-[var(--muted-foreground)]">
           {windowLabel}. Three one-time Full Audits and one Starter subscription — the smallest
           dataset that shows both revenue types working end to end. Nothing on this page is real
@@ -95,24 +92,28 @@ export default async function AdminDemoSnapshotPage() {
           label="Demonstration gross revenue"
           value={formatUsd(SUMMER_TOTALS.grossRevenueCents)}
           detail={`${formatUsd(SUMMER_TOTALS.oneTimeRevenueCents)} one-time + ${formatUsd(SUMMER_TOTALS.subscriptionRevenueCents)} recurring`}
+          badge={false}
         />
         <DemoMetricCard
           icon={ShoppingCart}
           label="One-time Full Audits"
           value={String(SUMMER_TOTALS.oneTimeSales)}
           detail={`${formatUsd(ONE_TIME_PRICE_CENTS)} each, ${SUMMER_TOTALS.oneTimeSales} customers`}
+          badge={false}
         />
         <DemoMetricCard
           icon={Repeat}
           label="Starter subscriptions"
           value={String(SUMMER_TOTALS.activeSubscriptions)}
           detail={`${formatUsd(STARTER_PRICE_CENTS)}/month, billed ${SUMMER_TOTALS.subscriptionInvoices} times`}
+          badge={false}
         />
         <DemoMetricCard
           icon={FileCheck2}
           label="Audits completed"
           value={String(SUMMER_TOTALS.auditsCompleted)}
           detail={`${SUMMER_TOTALS.oneTimeSales} from credits, ${SUMMER_TOTALS.auditsCompleted - SUMMER_TOTALS.oneTimeSales} from the subscription`}
+          badge={false}
         />
       </div>
 
@@ -120,7 +121,6 @@ export default async function AdminDemoSnapshotPage() {
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] p-5">
           <h2 className="text-base font-semibold">Month by month</h2>
-          <Badge tone="demo">Demo data</Badge>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-2xl border-collapse text-left text-sm">
@@ -200,7 +200,6 @@ export default async function AdminDemoSnapshotPage() {
       <Card className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-base font-semibold">Daily demonstration revenue</h2>
-          <Badge tone="demo">Demo data</Badge>
         </div>
         <p className="mt-1 text-xs text-[var(--muted-foreground)]">
           The two {formatUsd(STARTER_PRICE_CENTS)} points are the subscription billing on{' '}
@@ -220,7 +219,6 @@ export default async function AdminDemoSnapshotPage() {
         <Card className="p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-base font-semibold">Sign-up activity</h2>
-            <Badge tone="demo">Demo data</Badge>
           </div>
           <div className="mt-4">
             <SignupChart
@@ -233,7 +231,6 @@ export default async function AdminDemoSnapshotPage() {
         <Card className="p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-base font-semibold">Audits created</h2>
-            <Badge tone="demo">Demo data</Badge>
           </div>
           <div className="mt-4">
             <AuditsChart
@@ -253,7 +250,6 @@ export default async function AdminDemoSnapshotPage() {
               All {SUMMER_TRANSACTIONS.length} charges in the window. Nothing is summarized away.
             </p>
           </div>
-          <Badge tone="demo">Demo data</Badge>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-3xl border-collapse text-left text-sm">
@@ -334,7 +330,6 @@ export default async function AdminDemoSnapshotPage() {
       <Card className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-base font-semibold">The Starter subscription</h2>
-          <Badge tone="demo">Demo data</Badge>
         </div>
         <dl className="mt-4 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
           <Row label="Customer" value={SUMMER_SUBSCRIPTION.customerLabel} />
@@ -378,7 +373,6 @@ export default async function AdminDemoSnapshotPage() {
       <Card className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-base font-semibold">Demonstration conversion funnel</h2>
-          <Badge tone="demo">Demo data</Badge>
         </div>
         <p className="mt-1 text-xs text-[var(--muted-foreground)]">
           Fabricated event counts showing the shape of the funnel from free demo through to a
@@ -419,10 +413,6 @@ export default async function AdminDemoSnapshotPage() {
           </Link>
         </p>
       </Card>
-
-      <p className="text-center text-xs font-semibold tracking-wide text-amber-700 uppercase dark:text-amber-400">
-        {SUMMER_SNAPSHOT_BANNER}
-      </p>
     </div>
   );
 }
