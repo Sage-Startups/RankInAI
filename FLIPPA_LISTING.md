@@ -41,7 +41,7 @@ truthful position and the stronger one.
   scans of nine screens that fail the build on any serious or critical violation.
   A buyer can change something and know within minutes whether they broke it.
 
-- **Built to be handed over.** Eleven documentation files covering architecture,
+- **Built to be handed over.** Twelve documentation files covering architecture,
   the scoring methodology, security posture, testing, Railway and Stripe setup,
   and a handover document written for a buyer to read _before_ an offer. A
   `npm run verify` command reports exactly what any environment is still missing.
