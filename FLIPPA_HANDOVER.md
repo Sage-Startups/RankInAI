@@ -49,14 +49,14 @@ customers, no revenue and no traffic.
 
 ## Current state
 
-|             |                                                                                                                                                        |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Code        | Complete. No stubs, no dead buttons, no unimplemented pages.                                                                                           |
-| Tests       | 237 unit, 94 integration, 37 end-to-end. All pass.                                                                                                     |
-| Build       | `npm run build` succeeds; standalone output ready for Railway.                                                                                         |
-| Deployment  | **Not deployed.** No hosting account was available during the build.                                                                                   |
-| Stripe      | Integrated and tested through a simulated path that runs the real fulfillment code. Needs a Stripe account and the setup script to take live payments. |
-| Legal pages | Editable templates, flagged as such in the admin area. Not reviewed by a lawyer.                                                                       |
+|             |                                                                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Code        | Complete. No stubs, no dead buttons, no unimplemented pages.                                                                                                  |
+| Tests       | 265 unit, 94 integration, 38 end-to-end. All pass.                                                                                                            |
+| Build       | `npm run build` succeeds; standalone output ready for Railway.                                                                                                |
+| Deployment  | **Live** on Railway at https://rankinai-production.up.railway.app — `/api/health` reports ok. The worker service is not yet running; see RAILWAY_SETUP.md §3. |
+| Stripe      | Integrated and tested through a simulated path that runs the real fulfillment code. Needs a Stripe account and the setup script to take live payments.        |
+| Legal pages | Editable templates, flagged as such in the admin area. Not reviewed by a lawyer.                                                                              |
 
 `BUILD_STATUS.md` has the detailed breakdown, including everything found and fixed
 during the build.
