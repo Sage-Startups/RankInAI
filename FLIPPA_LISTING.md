@@ -188,7 +188,7 @@ state of the software, and the market position; it is not a multiple of earnings
 
 **On the demonstration figures inside the product.** The application contains seeded
 sample data — including a June–July 2026 snapshot showing three one-time audits and
-one subscription, and an April 2026 dataset showing five one-time sales. These exist
+two subscriptions, and an April 2026 dataset showing five one-time sales. These exist
 solely so the analytics screens can be demonstrated with data in them. **Every figure
 is invented.** They are labeled as demonstration data on screen, excluded from real
 reporting by default, and stored in the database with a flag that separates them from

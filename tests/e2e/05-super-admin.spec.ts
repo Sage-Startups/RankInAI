@@ -182,23 +182,29 @@ test.describe('Journey 5: super admin', () => {
     await expect(page.getByRole('link', { name: /business snapshot/i })).toHaveCount(0);
   });
 
-  test('the demo revenue snapshot shows three one-time audits and one subscription', async ({
+  test('the demo revenue snapshot shows three one-time audits and two subscriptions', async ({
     page,
   }) => {
     await signIn(page, SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD);
     await page.goto('/admin/demo-snapshot');
 
-    // $147 of one-time revenue and $58 of subscription revenue. The figures are
-    // asserted here rather than only in the unit test because the page composes
-    // them from three different derived shapes — cards, month table, charge
-    // table — and they have to agree on screen, not just in the module.
-    await expect(page.getByText('$205', { exact: true }).first()).toBeVisible();
+    // $147 of one-time revenue and $137 of subscription revenue (Starter $29
+    // billed twice + Growth $79 billed once). The figures are asserted here
+    // rather than only in the unit test because the page composes them from
+    // three different derived shapes — cards, month table, charge table — and
+    // they have to agree on screen, not just in the module.
+    await expect(page.getByText('$284', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('$147', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText('$58', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('$137', { exact: true }).first()).toBeVisible();
 
-    // Five charges, and exactly two of them recurring.
+    // Six charges: three one-time, three recurring invoices.
     await expect(page.getByRole('cell', { name: 'One-time', exact: true })).toHaveCount(3);
-    await expect(page.getByRole('cell', { name: 'Recurring', exact: true })).toHaveCount(2);
+    await expect(page.getByRole('cell', { name: 'Recurring', exact: true })).toHaveCount(3);
+
+    // Both subscriptions are listed by plan, and both are active.
+    await expect(page.getByRole('cell', { name: /Starter/ }).first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: /Growth/ }).first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Active', exact: true })).toHaveCount(2);
 
     // Both months are represented.
     await expect(page.getByRole('rowheader', { name: 'June 2026' })).toBeVisible();

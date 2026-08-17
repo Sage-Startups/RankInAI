@@ -19,6 +19,7 @@ import { DemoMetricCard } from '@/components/admin/demo-metric-card';
 import { Badge, Card } from '@/components/ui/primitives';
 import { requireAdmin } from '@/lib/auth/guards';
 import {
+  GROWTH_PRICE_CENTS,
   ONE_TIME_PRICE_CENTS,
   STARTER_PRICE_CENTS,
   SUMMER_2026_WINDOW,
@@ -26,20 +27,19 @@ import {
   SUMMER_SERIES,
   SUMMER_SNAPSHOT_BANNER,
   SUMMER_SNAPSHOT_NOTES,
-  SUMMER_SUBSCRIPTION,
+  SUMMER_SUBSCRIPTIONS,
   SUMMER_TOTALS,
   SUMMER_TRANSACTIONS,
 } from '@/lib/demo/summer-snapshot';
 import { formatDate, formatUsd } from '@/lib/utils';
 
 /**
- * One-page demonstration snapshot: three one-time Full Audits and one Starter
- * subscription across June and July 2026.
+ * One-page demonstration snapshot: three one-time Full Audits, a Starter
+ * subscription started in June, and a Growth subscription started in July.
  *
  * Sits inside the admin area, so it is behind `requireAdmin` like every other
- * admin route. Every figure is fabricated, and the page says so in a banner, on
- * each panel, and once more at the foot — there is deliberately no way to turn
- * that labeling off.
+ * admin route. Every figure is fabricated, and the page says so in an
+ * unremovable banner — there is deliberately no way to turn that labeling off.
  */
 export const metadata: Metadata = {
   title: 'Admin — demo revenue snapshot',
@@ -49,8 +49,8 @@ export const metadata: Metadata = {
 export default async function AdminDemoSnapshotPage() {
   await requireAdmin();
 
-  // Audits completed is deliberately NOT a funnel step: the subscription
-  // produced five audits from one customer, so the count rises at the end and a
+  // Audits completed is deliberately NOT a funnel step: the subscriptions
+  // produce many audits per customer, so the count rises at the end and a
   // funnel that grows reads as an error. It is a headline figure instead.
   const funnelSteps = [
     { label: 'Demo runs', value: SUMMER_TOTALS.demoRuns },
@@ -79,8 +79,9 @@ export default async function AdminDemoSnapshotPage() {
       <header>
         <h1 className="text-2xl font-bold">Demonstration revenue snapshot</h1>
         <p className="mt-1 max-w-3xl text-sm leading-relaxed text-[var(--muted-foreground)]">
-          {windowLabel}. Three one-time Full Audits and one Starter subscription — the smallest
-          dataset that shows both revenue types working end to end. Nothing on this page is real
+          {windowLabel}. Three one-time Full Audits, a Starter subscription from June and a Growth
+          subscription from July — a small dataset that shows both revenue types working end to end,
+          with the recurring layer compounding month over month. Nothing on this page is real
           revenue, a real customer or a forecast.
         </p>
       </header>
@@ -103,16 +104,16 @@ export default async function AdminDemoSnapshotPage() {
         />
         <DemoMetricCard
           icon={Repeat}
-          label="Starter subscriptions"
+          label="Active subscriptions"
           value={String(SUMMER_TOTALS.activeSubscriptions)}
-          detail={`${formatUsd(STARTER_PRICE_CENTS)}/month, billed ${SUMMER_TOTALS.subscriptionInvoices} times`}
+          detail={`Starter ${formatUsd(STARTER_PRICE_CENTS)}/mo + Growth ${formatUsd(GROWTH_PRICE_CENTS)}/mo, ${SUMMER_TOTALS.subscriptionInvoices} invoices`}
           badge={false}
         />
         <DemoMetricCard
           icon={FileCheck2}
           label="Audits completed"
           value={String(SUMMER_TOTALS.auditsCompleted)}
-          detail={`${SUMMER_TOTALS.oneTimeSales} from credits, ${SUMMER_TOTALS.auditsCompleted - SUMMER_TOTALS.oneTimeSales} from the subscription`}
+          detail={`${SUMMER_TOTALS.oneTimeSales} from credits, ${SUMMER_TOTALS.auditsCompleted - SUMMER_TOTALS.oneTimeSales} from the subscriptions`}
           badge={false}
         />
       </div>
@@ -202,10 +203,9 @@ export default async function AdminDemoSnapshotPage() {
           <h2 className="text-base font-semibold">Daily demonstration revenue</h2>
         </div>
         <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-          The two {formatUsd(STARTER_PRICE_CENTS)} points are the subscription billing on{' '}
-          {formatDate(new Date(`${SUMMER_SUBSCRIPTION.startedOn}T12:00:00Z`))} and{' '}
-          {formatDate(new Date(`${SUMMER_SUBSCRIPTION.renewedOn}T12:00:00Z`))}; the three taller
-          ones are the one-time audits.
+          The {formatUsd(STARTER_PRICE_CENTS)} points are the Starter subscription billing in June
+          and again in July; the {formatUsd(GROWTH_PRICE_CENTS)} point is the Growth subscription
+          starting in July; the {formatUsd(ONE_TIME_PRICE_CENTS)} points are the one-time audits.
         </p>
         <div className="mt-4">
           <RevenueChart
@@ -326,46 +326,97 @@ export default async function AdminDemoSnapshotPage() {
         </div>
       </Card>
 
-      {/* The subscription itself */}
-      <Card className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-base font-semibold">The Starter subscription</h2>
+      {/* The subscriptions */}
+      <Card>
+        <div className="border-b border-[var(--border)] p-5">
+          <h2 className="text-base font-semibold">The two subscriptions</h2>
+          <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+            A Starter that began in June and has renewed once, and a Growth that began in July and
+            has not reached its first renewal yet.
+          </p>
         </div>
-        <dl className="mt-4 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
-          <Row label="Customer" value={SUMMER_SUBSCRIPTION.customerLabel} />
-          <Row
-            label="Plan"
-            value={`${SUMMER_SUBSCRIPTION.planName} — ${formatUsd(SUMMER_SUBSCRIPTION.priceCents)}/month`}
-          />
-          <Row label="Status" value={SUMMER_SUBSCRIPTION.status} />
-          <Row
-            label="Started"
-            value={formatDate(new Date(`${SUMMER_SUBSCRIPTION.startedOn}T12:00:00Z`))}
-          />
-          <Row
-            label="Renewed"
-            value={formatDate(new Date(`${SUMMER_SUBSCRIPTION.renewedOn}T12:00:00Z`))}
-          />
-          <Row label="Periods billed" value={String(SUMMER_SUBSCRIPTION.periodsBilled)} />
-          <Row
-            label="Audits included per period"
-            value={String(SUMMER_SUBSCRIPTION.auditsIncludedPerPeriod)}
-          />
-          <Row
-            label="Used in the first period"
-            value={`${SUMMER_SUBSCRIPTION.auditsUsedFirstPeriod} of ${SUMMER_SUBSCRIPTION.auditsIncludedPerPeriod}`}
-          />
-          <Row
-            label="Used in the second period"
-            value={`${SUMMER_SUBSCRIPTION.auditsUsedSecondPeriod} of ${SUMMER_SUBSCRIPTION.auditsIncludedPerPeriod}`}
-          />
-        </dl>
-        <p className="mt-4 text-sm leading-relaxed text-[var(--muted-foreground)]">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-3xl border-collapse text-left text-sm">
+            <caption className="sr-only">
+              Fabricated demonstration subscriptions for June and July 2026
+            </caption>
+            <thead>
+              <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Customer
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Plan
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Started
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Last billed
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Next renewal
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Periods billed
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Audits used
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {SUMMER_SUBSCRIPTIONS.map((subscription) => (
+                <tr
+                  key={subscription.email}
+                  className="border-b border-[var(--border)] last:border-0"
+                >
+                  <th scope="row" className="px-5 py-3 font-normal">
+                    {subscription.customerLabel}
+                    <span className="block text-xs text-[var(--muted-foreground)]">
+                      {subscription.email}
+                    </span>
+                  </th>
+                  <td className="px-5 py-3 font-medium">
+                    {subscription.planName}
+                    <span className="block text-xs font-normal text-[var(--muted-foreground)]">
+                      {formatUsd(subscription.priceCents)}/month
+                    </span>
+                  </td>
+                  <td className="px-5 py-3">
+                    <Badge tone="success">{subscription.status}</Badge>
+                  </td>
+                  <td className="px-5 py-3 text-[var(--muted-foreground)]">
+                    {formatDate(new Date(`${subscription.startedOn}T12:00:00Z`))}
+                  </td>
+                  <td className="px-5 py-3 text-[var(--muted-foreground)]">
+                    {formatDate(
+                      new Date(`${subscription.renewedOn ?? subscription.startedOn}T12:00:00Z`),
+                    )}
+                  </td>
+                  <td className="px-5 py-3 text-[var(--muted-foreground)]">
+                    {formatDate(new Date(`${subscription.nextRenewalOn}T12:00:00Z`))}
+                  </td>
+                  <td className="px-5 py-3 tabular-nums">{subscription.periodsBilled}</td>
+                  <td className="px-5 py-3 tabular-nums">
+                    {subscription.auditsUsedByPeriod
+                      .map((used) => `${used} of ${subscription.auditsIncludedPerPeriod}`)
+                      .join(', ')}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="border-t border-[var(--border)] p-5 text-sm leading-relaxed text-[var(--muted-foreground)]">
           Recurring revenue in force on the last day of the window:{' '}
           <strong className="font-semibold text-[var(--foreground)]">
-            {formatUsd(SUMMER_TOTALS.recurringAtWindowEndCents)}
+            {formatUsd(SUMMER_TOTALS.recurringAtWindowEndCents)}/month
           </strong>
-          . One subscriber over two months is not a run rate, so it is not annualized here.
+          . Two subscribers over two months is not a run rate, so it is not annualized here.
         </p>
       </Card>
 
@@ -413,15 +464,6 @@ export default async function AdminDemoSnapshotPage() {
           </Link>
         </p>
       </Card>
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-[var(--border)] pb-2">
-      <dt className="text-[var(--muted-foreground)]">{label}</dt>
-      <dd className="font-semibold tabular-nums">{value}</dd>
     </div>
   );
 }

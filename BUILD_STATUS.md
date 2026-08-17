@@ -110,8 +110,8 @@ headless browser, no local disk.
 
 Overview, users, user detail, audits, audit detail, jobs, payments, subscriptions,
 analytics, contacts, settings, system, demo data, and a one-page demonstration
-revenue snapshot for June–July 2026 (three one-time Full Audits and one Starter
-subscription, $205 fabricated gross). Real metrics exclude demonstration
+revenue snapshot for June–July 2026 (three one-time Full Audits, a Starter and a
+Growth subscription, $284 fabricated gross). Real metrics exclude demonstration
 records unless "Include demo data" is explicitly turned on, which is off by default
 everywhere and displays a warning when on. Every privileged action writes to an audit
 trail.

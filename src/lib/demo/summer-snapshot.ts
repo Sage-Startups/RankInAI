@@ -1,8 +1,9 @@
 import { PRODUCTS } from '@/lib/plans';
 
 /**
- * June–July 2026 demonstration dataset: three one-time Full Audits and one
- * Starter subscription.
+ * June–July 2026 demonstration dataset: three one-time Full Audits, one
+ * Starter subscription started in June, and one Growth subscription started
+ * in July.
  *
  * EVERY figure here is fabricated for product demonstration. It exists so the
  * admin revenue surfaces can be shown with a small, honest mix of one-time and
@@ -11,9 +12,9 @@ import { PRODUCTS } from '@/lib/plans';
  * Prices are read from `@/lib/plans` rather than repeated, so a pricing change
  * cannot leave this dataset quoting a figure the product no longer charges.
  *
- * The totals are DERIVED from the rows below, never written down twice. That
- * is the whole reason the numbers on the page can be trusted to agree with the
- * table underneath them.
+ * Every total is DERIVED from the transaction rows below, never written down
+ * twice — daily revenue included. That is the whole reason the numbers on the
+ * page can be trusted to agree with the table underneath them.
  */
 
 export const SUMMER_2026_WINDOW = {
@@ -23,10 +24,10 @@ export const SUMMER_2026_WINDOW = {
 
 export const ONE_TIME_PRICE_CENTS = PRODUCTS.ONE_TIME_AUDIT.priceCents;
 export const STARTER_PRICE_CENTS = PRODUCTS.STARTER_MONTHLY.priceCents;
-export const STARTER_AUDITS_PER_PERIOD = PRODUCTS.STARTER_MONTHLY.entitlements.auditsPerPeriod;
+export const GROWTH_PRICE_CENTS = PRODUCTS.GROWTH_MONTHLY.priceCents;
 
 /* -------------------------------------------------------------------------- */
-/* Transactions                                                               */
+/* Transactions — the source of truth for every revenue figure                */
 /* -------------------------------------------------------------------------- */
 
 export type SummerTransactionKind = 'ONE_TIME' | 'SUBSCRIPTION';
@@ -64,7 +65,7 @@ export const SUMMER_TRANSACTIONS: SummerTransaction[] = [
     product: `${PRODUCTS.STARTER_MONTHLY.name} — monthly`,
     description: 'First month',
     amountCents: STARTER_PRICE_CENTS,
-    creditsGranted: STARTER_AUDITS_PER_PERIOD,
+    creditsGranted: PRODUCTS.STARTER_MONTHLY.entitlements.auditsPerPeriod,
   },
   {
     date: '2026-06-25',
@@ -75,6 +76,16 @@ export const SUMMER_TRANSACTIONS: SummerTransaction[] = [
     description: 'Single complete audit',
     amountCents: ONE_TIME_PRICE_CENTS,
     creditsGranted: 1,
+  },
+  {
+    date: '2026-07-08',
+    customerLabel: 'Demo customer 5',
+    email: 'demo.customer5@example.invalid',
+    kind: 'SUBSCRIPTION',
+    product: `${PRODUCTS.GROWTH_MONTHLY.name} — monthly`,
+    description: 'First month',
+    amountCents: GROWTH_PRICE_CENTS,
+    creditsGranted: PRODUCTS.GROWTH_MONTHLY.entitlements.auditsPerPeriod,
   },
   {
     date: '2026-07-14',
@@ -94,39 +105,67 @@ export const SUMMER_TRANSACTIONS: SummerTransaction[] = [
     product: `${PRODUCTS.STARTER_MONTHLY.name} — monthly`,
     description: 'Renewal, second month',
     amountCents: STARTER_PRICE_CENTS,
-    creditsGranted: STARTER_AUDITS_PER_PERIOD,
+    creditsGranted: PRODUCTS.STARTER_MONTHLY.entitlements.auditsPerPeriod,
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* The single subscription                                                    */
+/* The two subscriptions                                                      */
 /* -------------------------------------------------------------------------- */
 
-export const SUMMER_SUBSCRIPTION = {
-  customerLabel: 'Demo customer 2',
-  email: 'demo.customer2@example.invalid',
-  planName: PRODUCTS.STARTER_MONTHLY.name,
-  priceCents: STARTER_PRICE_CENTS,
-  startedOn: '2026-06-17',
-  renewedOn: '2026-07-17',
-  nextRenewalOn: '2026-08-17',
-  status: 'Active',
-  periodsBilled: 2,
-  auditsIncludedPerPeriod: STARTER_AUDITS_PER_PERIOD,
-  auditsUsedFirstPeriod: 2,
-  auditsUsedSecondPeriod: 3,
-} as const;
+export interface SummerSubscription {
+  customerLabel: string;
+  email: string;
+  planName: string;
+  priceCents: number;
+  startedOn: string;
+  /** Most recent billing after the first, or null if only billed once so far. */
+  renewedOn: string | null;
+  nextRenewalOn: string;
+  status: 'Active';
+  periodsBilled: number;
+  auditsIncludedPerPeriod: number;
+  /** Audits used in each billed period, oldest first. */
+  auditsUsedByPeriod: number[];
+}
+
+export const SUMMER_SUBSCRIPTIONS: SummerSubscription[] = [
+  {
+    customerLabel: 'Demo customer 2',
+    email: 'demo.customer2@example.invalid',
+    planName: PRODUCTS.STARTER_MONTHLY.name,
+    priceCents: STARTER_PRICE_CENTS,
+    startedOn: '2026-06-17',
+    renewedOn: '2026-07-17',
+    nextRenewalOn: '2026-08-17',
+    status: 'Active',
+    periodsBilled: 2,
+    auditsIncludedPerPeriod: PRODUCTS.STARTER_MONTHLY.entitlements.auditsPerPeriod,
+    auditsUsedByPeriod: [2, 3],
+  },
+  {
+    customerLabel: 'Demo customer 5',
+    email: 'demo.customer5@example.invalid',
+    planName: PRODUCTS.GROWTH_MONTHLY.name,
+    priceCents: GROWTH_PRICE_CENTS,
+    startedOn: '2026-07-08',
+    renewedOn: null,
+    nextRenewalOn: '2026-08-08',
+    status: 'Active',
+    periodsBilled: 1,
+    auditsIncludedPerPeriod: PRODUCTS.GROWTH_MONTHLY.entitlements.auditsPerPeriod,
+    auditsUsedByPeriod: [6],
+  },
+];
 
 /* -------------------------------------------------------------------------- */
-/* Daily activity                                                             */
+/* Daily activity — signups, audit runs and funnel traffic                    */
 /* -------------------------------------------------------------------------- */
 
 export interface SummerDay {
   /** ISO date, YYYY-MM-DD, inside the window above. */
   date: string;
   signups: number;
-  oneTimeSales: number;
-  subscriptionInvoices: number;
   auditsCreated: number;
   auditsCompleted: number;
   demoRuns: number;
@@ -134,16 +173,14 @@ export interface SummerDay {
 }
 
 /**
- * Only days with something on them are listed; the charts read a continuous
- * series built from this. Every paid day corresponds to a row in
- * SUMMER_TRANSACTIONS, and a unit test holds the two in agreement.
+ * Only days with something on them are listed; the charts read a series built
+ * from this. Revenue is NOT stored here — it is derived per-day from
+ * SUMMER_TRANSACTIONS, and a unit test asserts every charge date appears.
  */
 export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-01',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 5,
@@ -152,8 +189,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-02',
     signups: 1,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 6,
@@ -162,8 +197,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-04',
     signups: 0,
-    oneTimeSales: 1,
-    subscriptionInvoices: 0,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 7,
@@ -172,8 +205,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-08',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 5,
@@ -182,8 +213,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-15',
     signups: 1,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 8,
@@ -192,8 +221,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-17',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 1,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 6,
@@ -202,8 +229,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-22',
     signups: 1,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 7,
@@ -212,8 +237,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-25',
     signups: 0,
-    oneTimeSales: 1,
-    subscriptionInvoices: 0,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 9,
@@ -222,8 +245,6 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-06-29',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 5,
@@ -232,28 +253,38 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-07-02',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 6,
     previewRuns: 2,
   },
   {
-    date: '2026-07-09',
-    signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
+    date: '2026-07-06',
+    signups: 1,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 7,
     previewRuns: 3,
   },
   {
+    date: '2026-07-08',
+    signups: 0,
+    auditsCreated: 2,
+    auditsCompleted: 2,
+    demoRuns: 8,
+    previewRuns: 3,
+  },
+  {
+    date: '2026-07-10',
+    signups: 0,
+    auditsCreated: 1,
+    auditsCompleted: 1,
+    demoRuns: 6,
+    previewRuns: 2,
+  },
+  {
     date: '2026-07-13',
     signups: 1,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 8,
@@ -262,48 +293,62 @@ export const SUMMER_DAYS: SummerDay[] = [
   {
     date: '2026-07-14',
     signups: 0,
-    oneTimeSales: 1,
-    subscriptionInvoices: 0,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 6,
     previewRuns: 3,
   },
   {
-    date: '2026-07-17',
+    date: '2026-07-16',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 1,
-    auditsCreated: 1,
-    auditsCompleted: 1,
-    demoRuns: 7,
-    previewRuns: 2,
-  },
-  {
-    date: '2026-07-23',
-    signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 5,
     previewRuns: 2,
   },
   {
-    date: '2026-07-28',
+    date: '2026-07-17',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
+    auditsCreated: 1,
+    auditsCompleted: 1,
+    demoRuns: 7,
+    previewRuns: 2,
+  },
+  {
+    date: '2026-07-21',
+    signups: 0,
+    auditsCreated: 1,
+    auditsCompleted: 1,
+    demoRuns: 6,
+    previewRuns: 2,
+  },
+  {
+    date: '2026-07-23',
+    signups: 0,
+    auditsCreated: 1,
+    auditsCompleted: 1,
+    demoRuns: 5,
+    previewRuns: 2,
+  },
+  {
+    date: '2026-07-27',
+    signups: 0,
     auditsCreated: 1,
     auditsCompleted: 1,
     demoRuns: 6,
     previewRuns: 3,
   },
   {
+    date: '2026-07-28',
+    signups: 0,
+    auditsCreated: 1,
+    auditsCompleted: 1,
+    demoRuns: 5,
+    previewRuns: 2,
+  },
+  {
     date: '2026-07-31',
     signups: 0,
-    oneTimeSales: 0,
-    subscriptionInvoices: 0,
     auditsCreated: 0,
     auditsCompleted: 0,
     demoRuns: 5,
@@ -319,8 +364,12 @@ function sum(values: number[]): number {
   return values.reduce((total, value) => total + value, 0);
 }
 
-function dayRevenueCents(day: SummerDay): number {
-  return day.oneTimeSales * ONE_TIME_PRICE_CENTS + day.subscriptionInvoices * STARTER_PRICE_CENTS;
+function transactionsOn(date: string): SummerTransaction[] {
+  return SUMMER_TRANSACTIONS.filter((t) => t.date === date);
+}
+
+function revenueOf(transactions: SummerTransaction[]): number {
+  return sum(transactions.map((t) => t.amountCents));
 }
 
 export interface SummerMonth {
@@ -338,21 +387,20 @@ export interface SummerMonth {
 
 function buildMonth(key: SummerMonth['key'], label: string): SummerMonth {
   const days = SUMMER_DAYS.filter((day) => day.date.startsWith(key));
-  const oneTimeSales = sum(days.map((day) => day.oneTimeSales));
-  const subscriptionInvoices = sum(days.map((day) => day.subscriptionInvoices));
-  const oneTimeRevenueCents = oneTimeSales * ONE_TIME_PRICE_CENTS;
-  const subscriptionRevenueCents = subscriptionInvoices * STARTER_PRICE_CENTS;
+  const transactions = SUMMER_TRANSACTIONS.filter((t) => t.date.startsWith(key));
+  const oneTime = transactions.filter((t) => t.kind === 'ONE_TIME');
+  const recurring = transactions.filter((t) => t.kind === 'SUBSCRIPTION');
 
   return {
     key,
     label,
     days,
     signups: sum(days.map((day) => day.signups)),
-    oneTimeSales,
-    subscriptionInvoices,
-    oneTimeRevenueCents,
-    subscriptionRevenueCents,
-    grossRevenueCents: oneTimeRevenueCents + subscriptionRevenueCents,
+    oneTimeSales: oneTime.length,
+    subscriptionInvoices: recurring.length,
+    oneTimeRevenueCents: revenueOf(oneTime),
+    subscriptionRevenueCents: revenueOf(recurring),
+    grossRevenueCents: revenueOf(transactions),
     auditsCompleted: sum(days.map((day) => day.auditsCompleted)),
   };
 }
@@ -362,27 +410,29 @@ export const SUMMER_MONTHS: SummerMonth[] = [
   buildMonth('2026-07', 'July 2026'),
 ];
 
+const ONE_TIME_TRANSACTIONS = SUMMER_TRANSACTIONS.filter((t) => t.kind === 'ONE_TIME');
+const SUBSCRIPTION_TRANSACTIONS = SUMMER_TRANSACTIONS.filter((t) => t.kind === 'SUBSCRIPTION');
+
 export const SUMMER_TOTALS = {
   signups: sum(SUMMER_DAYS.map((day) => day.signups)),
-  oneTimeSales: sum(SUMMER_DAYS.map((day) => day.oneTimeSales)),
-  subscriptionInvoices: sum(SUMMER_DAYS.map((day) => day.subscriptionInvoices)),
-  activeSubscriptions: 1,
-  oneTimeRevenueCents: sum(SUMMER_DAYS.map((day) => day.oneTimeSales)) * ONE_TIME_PRICE_CENTS,
-  subscriptionRevenueCents:
-    sum(SUMMER_DAYS.map((day) => day.subscriptionInvoices)) * STARTER_PRICE_CENTS,
-  grossRevenueCents: sum(SUMMER_DAYS.map(dayRevenueCents)),
+  oneTimeSales: ONE_TIME_TRANSACTIONS.length,
+  subscriptionInvoices: SUBSCRIPTION_TRANSACTIONS.length,
+  activeSubscriptions: SUMMER_SUBSCRIPTIONS.length,
+  oneTimeRevenueCents: revenueOf(ONE_TIME_TRANSACTIONS),
+  subscriptionRevenueCents: revenueOf(SUBSCRIPTION_TRANSACTIONS),
+  grossRevenueCents: revenueOf(SUMMER_TRANSACTIONS),
   auditsCreated: sum(SUMMER_DAYS.map((day) => day.auditsCreated)),
   auditsCompleted: sum(SUMMER_DAYS.map((day) => day.auditsCompleted)),
   demoRuns: sum(SUMMER_DAYS.map((day) => day.demoRuns)),
   previewRuns: sum(SUMMER_DAYS.map((day) => day.previewRuns)),
   /** Recurring revenue in force on the last day of the window. Not annualized. */
-  recurringAtWindowEndCents: STARTER_PRICE_CENTS,
+  recurringAtWindowEndCents: sum(SUMMER_SUBSCRIPTIONS.map((s) => s.priceCents)),
 } as const;
 
-/** The series shape the admin charts read. */
+/** The series shape the admin charts read. Revenue comes from the charges. */
 export const SUMMER_SERIES = SUMMER_DAYS.map((day) => ({
   date: day.date,
-  revenueCents: dayRevenueCents(day),
+  revenueCents: revenueOf(transactionsOn(day.date)),
   signups: day.signups,
   audits: day.auditsCreated,
 }));
@@ -393,15 +443,15 @@ export const SUMMER_SNAPSHOT_BANNER =
 export const SUMMER_SNAPSHOT_NOTES = [
   {
     heading: 'What this two-month window shows',
-    body: 'Three one-time Full Audits and one Starter subscription, billed twice — once when it started in June and once when it renewed in July. That is the whole dataset: five charges, four customers, and one of them recurring.',
+    body: 'Three one-time Full Audits and two subscriptions: a Starter that began in June and renewed in July, and a Growth that began in July. Six charges, five customers, two of them recurring. July grosses more than June because the recurring layer compounds — the Starter billed again and the Growth arrived on top of it.',
   },
   {
     heading: 'Why the mix matters more than the total',
-    body: 'One-time revenue arrives once and has to be won again. The Starter subscription billed a second time without any further selling, and it carries an audit allowance that gives the customer a reason to come back inside the product each month. A window this small proves the mechanism works end to end; it does not establish a rate.',
+    body: 'One-time revenue arrives once and has to be won again. The subscriptions billed without any further selling, and each carries an audit allowance that gives the customer a reason to come back inside the product every month. A window this small proves the mechanism works end to end; it does not establish a rate.',
   },
   {
     heading: 'What is deliberately not shown',
-    body: 'No annualized run rate, no projection, and no conversion percentage. Two months and one subscriber cannot support any of those, and presenting them would be misleading.',
+    body: 'No annualized run rate, no projection, and no conversion percentage. Two months and two subscribers cannot support any of those, and presenting them would be misleading.',
   },
   {
     heading: 'Where real figures come from',
