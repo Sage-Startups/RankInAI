@@ -372,6 +372,27 @@ function revenueOf(transactions: SummerTransaction[]): number {
   return sum(transactions.map((t) => t.amountCents));
 }
 
+/* -------------------------------------------------------------------------- */
+/* Simulated processing fees                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Standard US card pricing — 2.9% + 30¢ per successful charge — applied to
+ * the fabricated charges above so the demonstration can show what a payment
+ * processor would keep. These fees are SIMULATED: no processor was involved,
+ * and real fees exist only in a real Stripe account's own reporting.
+ */
+export const SIMULATED_FEE_PERCENT = 2.9;
+export const SIMULATED_FEE_FLAT_CENTS = 30;
+
+export function simulatedFeeCents(amountCents: number): number {
+  return Math.round((amountCents * SIMULATED_FEE_PERCENT) / 100) + SIMULATED_FEE_FLAT_CENTS;
+}
+
+function feesOf(transactions: SummerTransaction[]): number {
+  return sum(transactions.map((t) => simulatedFeeCents(t.amountCents)));
+}
+
 export interface SummerMonth {
   key: '2026-06' | '2026-07';
   label: string;
@@ -382,6 +403,8 @@ export interface SummerMonth {
   oneTimeRevenueCents: number;
   subscriptionRevenueCents: number;
   grossRevenueCents: number;
+  simulatedFeeCents: number;
+  netRevenueCents: number;
   auditsCompleted: number;
 }
 
@@ -401,6 +424,8 @@ function buildMonth(key: SummerMonth['key'], label: string): SummerMonth {
     oneTimeRevenueCents: revenueOf(oneTime),
     subscriptionRevenueCents: revenueOf(recurring),
     grossRevenueCents: revenueOf(transactions),
+    simulatedFeeCents: feesOf(transactions),
+    netRevenueCents: revenueOf(transactions) - feesOf(transactions),
     auditsCompleted: sum(days.map((day) => day.auditsCompleted)),
   };
 }
@@ -421,6 +446,8 @@ export const SUMMER_TOTALS = {
   oneTimeRevenueCents: revenueOf(ONE_TIME_TRANSACTIONS),
   subscriptionRevenueCents: revenueOf(SUBSCRIPTION_TRANSACTIONS),
   grossRevenueCents: revenueOf(SUMMER_TRANSACTIONS),
+  simulatedFeeCents: feesOf(SUMMER_TRANSACTIONS),
+  netRevenueCents: revenueOf(SUMMER_TRANSACTIONS) - feesOf(SUMMER_TRANSACTIONS),
   auditsCreated: sum(SUMMER_DAYS.map((day) => day.auditsCreated)),
   auditsCompleted: sum(SUMMER_DAYS.map((day) => day.auditsCompleted)),
   demoRuns: sum(SUMMER_DAYS.map((day) => day.demoRuns)),

@@ -4,7 +4,10 @@ import { PRODUCTS } from '@/lib/plans';
 import {
   GROWTH_PRICE_CENTS,
   ONE_TIME_PRICE_CENTS,
+  SIMULATED_FEE_FLAT_CENTS,
+  SIMULATED_FEE_PERCENT,
   STARTER_PRICE_CENTS,
+  simulatedFeeCents,
   SUMMER_2026_WINDOW,
   SUMMER_DAYS,
   SUMMER_MONTHS,
@@ -136,6 +139,38 @@ describe('June–July 2026 demonstration snapshot', () => {
 
   it('reports recurring revenue at window end as the sum of both plans', () => {
     expect(SUMMER_TOTALS.recurringAtWindowEndCents).toBe(STARTER_PRICE_CENTS + GROWTH_PRICE_CENTS);
+  });
+
+  it('simulates processing fees at standard card pricing, per charge', () => {
+    expect(SIMULATED_FEE_PERCENT).toBe(2.9);
+    expect(SIMULATED_FEE_FLAT_CENTS).toBe(30);
+
+    // 2.9% + 30¢, rounded to the cent, at each of the three ticket sizes.
+    expect(simulatedFeeCents(4900)).toBe(172); // $49 → $1.72
+    expect(simulatedFeeCents(2900)).toBe(114); // $29 → $1.14
+    expect(simulatedFeeCents(7900)).toBe(259); // $79 → $2.59
+  });
+
+  it('nets out to gross minus the per-charge fees, month by month and in total', () => {
+    const totalFees = SUMMER_TRANSACTIONS.reduce(
+      (sum, t) => sum + simulatedFeeCents(t.amountCents),
+      0,
+    );
+
+    expect(SUMMER_TOTALS.simulatedFeeCents).toBe(totalFees);
+    expect(SUMMER_TOTALS.netRevenueCents).toBe(SUMMER_TOTALS.grossRevenueCents - totalFees);
+
+    for (const month of SUMMER_MONTHS) {
+      expect(month.netRevenueCents).toBe(month.grossRevenueCents - month.simulatedFeeCents);
+    }
+    const monthFees = SUMMER_MONTHS.reduce((sum, m) => sum + m.simulatedFeeCents, 0);
+    const monthNet = SUMMER_MONTHS.reduce((sum, m) => sum + m.netRevenueCents, 0);
+    expect(monthFees).toBe(SUMMER_TOTALS.simulatedFeeCents);
+    expect(monthNet).toBe(SUMMER_TOTALS.netRevenueCents);
+
+    // The concrete figures the page shows: $10.03 in fees, $273.97 net.
+    expect(SUMMER_TOTALS.simulatedFeeCents).toBe(1003);
+    expect(SUMMER_TOTALS.netRevenueCents).toBe(27397);
   });
 
   it('stays inside the stated window and uses only reserved email addresses', () => {

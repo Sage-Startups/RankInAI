@@ -21,7 +21,10 @@ import { requireAdmin } from '@/lib/auth/guards';
 import {
   GROWTH_PRICE_CENTS,
   ONE_TIME_PRICE_CENTS,
+  SIMULATED_FEE_FLAT_CENTS,
+  SIMULATED_FEE_PERCENT,
   STARTER_PRICE_CENTS,
+  simulatedFeeCents,
   SUMMER_2026_WINDOW,
   SUMMER_MONTHS,
   SUMMER_SERIES,
@@ -92,7 +95,7 @@ export default async function AdminDemoSnapshotPage() {
           icon={TrendingUp}
           label="Demonstration gross revenue"
           value={formatUsd(SUMMER_TOTALS.grossRevenueCents)}
-          detail={`${formatUsd(SUMMER_TOTALS.oneTimeRevenueCents)} one-time + ${formatUsd(SUMMER_TOTALS.subscriptionRevenueCents)} recurring`}
+          detail={`${formatUsd(SUMMER_TOTALS.oneTimeRevenueCents)} one-time + ${formatUsd(SUMMER_TOTALS.subscriptionRevenueCents)} recurring; ${formatUsd(SUMMER_TOTALS.netRevenueCents)} net of simulated fees`}
           badge={false}
         />
         <DemoMetricCard
@@ -121,7 +124,14 @@ export default async function AdminDemoSnapshotPage() {
       {/* Month by month */}
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] p-5">
-          <h2 className="text-base font-semibold">Month by month</h2>
+          <div>
+            <h2 className="text-base font-semibold">Month by month</h2>
+            <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+              Fees are simulated at standard card pricing — {SIMULATED_FEE_PERCENT}% +{' '}
+              {formatUsd(SIMULATED_FEE_FLAT_CENTS)} per charge. No processor was involved; real fees
+              exist only in a real Stripe account&apos;s own reporting.
+            </p>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-2xl border-collapse text-left text-sm">
@@ -149,6 +159,12 @@ export default async function AdminDemoSnapshotPage() {
                   Gross
                 </th>
                 <th scope="col" className="px-5 py-3 font-semibold">
+                  Fees (simulated)
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Net
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
                   Audits completed
                 </th>
               </tr>
@@ -167,6 +183,12 @@ export default async function AdminDemoSnapshotPage() {
                   </td>
                   <td className="px-5 py-3 font-semibold tabular-nums">
                     {formatUsd(month.grossRevenueCents)}
+                  </td>
+                  <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
+                    −{formatUsd(month.simulatedFeeCents)}
+                  </td>
+                  <td className="px-5 py-3 font-semibold tabular-nums">
+                    {formatUsd(month.netRevenueCents)}
                   </td>
                   <td className="px-5 py-3 tabular-nums">{month.auditsCompleted}</td>
                 </tr>
@@ -187,6 +209,12 @@ export default async function AdminDemoSnapshotPage() {
                 </td>
                 <td className="px-5 py-3 font-bold tabular-nums">
                   {formatUsd(SUMMER_TOTALS.grossRevenueCents)}
+                </td>
+                <td className="px-5 py-3 font-bold text-[var(--muted-foreground)] tabular-nums">
+                  −{formatUsd(SUMMER_TOTALS.simulatedFeeCents)}
+                </td>
+                <td className="px-5 py-3 font-bold tabular-nums">
+                  {formatUsd(SUMMER_TOTALS.netRevenueCents)}
                 </td>
                 <td className="px-5 py-3 font-bold tabular-nums">
                   {SUMMER_TOTALS.auditsCompleted}
@@ -247,7 +275,9 @@ export default async function AdminDemoSnapshotPage() {
           <div>
             <h2 className="text-base font-semibold">Every demonstration charge</h2>
             <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-              All {SUMMER_TRANSACTIONS.length} charges in the window. Nothing is summarized away.
+              All {SUMMER_TRANSACTIONS.length} charges in the window, with a simulated processing
+              fee of {SIMULATED_FEE_PERCENT}% + {formatUsd(SIMULATED_FEE_FLAT_CENTS)} per charge.
+              Nothing is summarized away.
             </p>
           </div>
         </div>
@@ -272,6 +302,12 @@ export default async function AdminDemoSnapshotPage() {
                 </th>
                 <th scope="col" className="px-5 py-3 font-semibold">
                   Amount
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Fee (simulated)
+                </th>
+                <th scope="col" className="px-5 py-3 font-semibold">
+                  Net
                 </th>
                 <th scope="col" className="px-5 py-3 font-semibold">
                   Audits granted
@@ -307,6 +343,14 @@ export default async function AdminDemoSnapshotPage() {
                   <td className="px-5 py-3 font-semibold tabular-nums">
                     {formatUsd(transaction.amountCents)}
                   </td>
+                  <td className="px-5 py-3 text-[var(--muted-foreground)] tabular-nums">
+                    −{formatUsd(simulatedFeeCents(transaction.amountCents))}
+                  </td>
+                  <td className="px-5 py-3 font-semibold tabular-nums">
+                    {formatUsd(
+                      transaction.amountCents - simulatedFeeCents(transaction.amountCents),
+                    )}
+                  </td>
                   <td className="px-5 py-3 tabular-nums">{transaction.creditsGranted}</td>
                 </tr>
               ))}
@@ -318,6 +362,12 @@ export default async function AdminDemoSnapshotPage() {
                 </th>
                 <td className="px-5 py-3 font-bold tabular-nums">
                   {formatUsd(SUMMER_TOTALS.grossRevenueCents)}
+                </td>
+                <td className="px-5 py-3 font-bold text-[var(--muted-foreground)] tabular-nums">
+                  −{formatUsd(SUMMER_TOTALS.simulatedFeeCents)}
+                </td>
+                <td className="px-5 py-3 font-bold tabular-nums">
+                  {formatUsd(SUMMER_TOTALS.netRevenueCents)}
                 </td>
                 <td className="px-5 py-3" />
               </tr>

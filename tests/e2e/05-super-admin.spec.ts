@@ -197,6 +197,13 @@ test.describe('Journey 5: super admin', () => {
     await expect(page.getByText('$147', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('$137', { exact: true }).first()).toBeVisible();
 
+    // Simulated processing fees and the resulting net, labeled as simulated.
+    await expect(page.getByText('−$10.03', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('$273.97', { exact: true }).first()).toBeVisible();
+    await expect(
+      page.getByText(/Fees are simulated at standard card pricing/).first(),
+    ).toBeVisible();
+
     // Six charges: three one-time, three recurring invoices.
     await expect(page.getByRole('cell', { name: 'One-time', exact: true })).toHaveCount(3);
     await expect(page.getByRole('cell', { name: 'Recurring', exact: true })).toHaveCount(3);
