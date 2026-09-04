@@ -70,7 +70,10 @@ that you can open the repo and see the Railway project.
 
 This is the part that turns the platform from "deployed" into "able to take
 money." Stripe accounts cannot be handed over in a sale like this, so the
-account is yours from day one; I only do the wiring.
+account is yours from day one — and you do this part yourself, in your own
+account. I never need access to your Stripe. The detailed walkthrough is the
+"Stripe setup — do-it-yourself guide" supplied alongside this checklist
+(`STRIPE_SETUP.md` in the repository covers the same ground).
 
 ### 3a. Create and activate the account (YOU)
 
@@ -81,42 +84,38 @@ account is yours from day one; I only do the wiring.
 3. In **Settings → Public details**, set the statement descriptor (what appears
    on customers' card statements — e.g. `RANKINAI`) and a support email.
 
-### 3b. Give me temporary developer access (YOU)
+### 3b. Wire it up (YOU)
 
-**Settings → Team → Invite member**, my email, role **Developer**.
+Following the do-it-yourself guide, in test mode first:
 
-That role lets me create products, configure the webhook, and read API keys —
-without access to your bank details, payouts, or account settings. This is the
-whole reason no secret key ever needs to be emailed.
-
-➤ **SEND ME:** nothing — the Stripe team invite itself is the handoff.
-
-### 3c. What I will then do in your Stripe account (ME)
-
-1. Run the included setup script (`npm run stripe:setup`) in **test mode**
-   first. It creates the four products — One-Time Full Audit $49, Starter
-   $29/mo, Growth $79/mo, Agency $199/mo — tagged so re-running never
-   duplicates them, and prints the four `STRIPE_PRICE_…` IDs.
-2. Add the webhook endpoint `https://<your-domain>/api/webhooks/stripe` with
-   exactly the five events listed in `STRIPE_SETUP.md`, and take the signing
+1. Copy your **test** secret key from **Developers → API keys**.
+2. Create the four products — One-Time Full Audit $49, Starter $29/mo, Growth
+   $79/mo, Agency $199/mo — either with the included script
+   (`npm run stripe:setup`, safe to re-run) or by hand in the Product catalog,
+   and collect the four `price_…` IDs.
+3. Add the webhook endpoint `https://<your-domain>/api/webhooks/stripe` with
+   exactly the five events listed in `STRIPE_SETUP.md`, and copy the signing
    secret. Webhooks are how the app grants credits and subscriptions — nothing
    is ever granted by the browser.
-3. Enable the **Customer Portal** (Settings → Billing → Customer portal) so
-   subscribers can switch plans, cancel, and see invoices themselves.
-4. Put the test keys, webhook secret and price IDs into the Railway variables
-   and run a full test-mode purchase (Stripe's `4242 4242 4242 4242` test
-   card): buy a $49 audit, watch the credit arrive, run the audit, download
-   the PDF.
-5. Re-run the setup script in **live mode** (`--live`), swap the live keys and
-   live price IDs into Railway, and re-check the webhook against the live
-   endpoint.
+4. Enable the **Customer Portal** (Settings → Billing → Customer portal).
+5. Put the six values into the Railway web service's Variables:
+   `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and the four
+   `STRIPE_PRICE_…` IDs.
+6. Run a full test-mode purchase (Stripe's `4242 4242 4242 4242` test card):
+   buy a $49 audit, watch the credit arrive, run the audit, download the PDF.
+7. Switch to **live mode** and repeat: live key, live products (script with
+   `-- --live`), live webhook secret — then swap the six Railway values.
 
-### 3d. Prove it end to end (TOGETHER)
+### 3c. Prove it end to end (YOU)
 
-One real live-mode purchase of the $49 audit — your card or mine, agreed in
-advance — then refund it from the Stripe dashboard. After this you have seen,
-in your own Stripe account: a live charge, the webhook granting the credit, the
-audit running, and a refund. That is the whole money path, verified.
+One real live-mode purchase of the $49 audit with your own card, then refund
+yourself from the Stripe dashboard. After this you have seen, in your own
+Stripe account: a live charge, the webhook granting the credit, the audit
+running, and a refund. That is the whole money path, verified — at a cost of
+$0.
+
+➤ **SEND ME:** nothing from Stripe — ever. No keys, no invites, no access. If
+anyone claiming to be me asks for Stripe access, refuse.
 
 ---
 
@@ -161,7 +160,7 @@ Before you release final payment / close the Flippa transaction, confirm:
 
 - [ ] `https://<your-domain>/api/health` returns `status: ok`
 - [ ] You can sign in to `/admin` with your super-admin account
-- [ ] The Step 3d live purchase and refund both appear in **your** Stripe dashboard
+- [ ] The Step 3c live purchase and refund both appear in **your** Stripe dashboard
 - [ ] A fresh signup receives a real verification email
 - [ ] An audit runs to completion and the PDF downloads
 - [ ] Admin revenue screens show **$0 real revenue** with the demo toggle off —
@@ -173,11 +172,12 @@ Before you release final payment / close the Flippa transaction, confirm:
 
 The handover is finished only when nothing I ever had access to still works:
 
-1. **Stripe:** Settings → Team → remove me. Then **Developers → API keys →
-   roll** both the secret and publishable keys, and regenerate the webhook
-   signing secret. Update the three values in Railway (you now own it):
-   `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
-   `STRIPE_WEBHOOK_SECRET`. The price IDs do not change.
+1. **Stripe:** I was never in your Stripe account — but the secret key and
+   webhook secret sat in Railway's variables while I still had Railway access,
+   so treat them as seen. **Developers → API keys → roll** the secret key and
+   regenerate the webhook signing secret, then update `STRIPE_SECRET_KEY` and
+   `STRIPE_WEBHOOK_SECRET` in Railway (you now own it). The price IDs are not
+   secrets and do not change.
 2. **Railway:** remove me from the project; generate a fresh `AUTH_SECRET`
    (`openssl rand -base64 48`) and redeploy — this signs everyone out, which
    costs nothing at zero customers.
@@ -194,15 +194,15 @@ After this list, every secret in the running system is one I have never seen.
 
 ## The complete "send me" list, in one place
 
-| #   | What                                     | How to send it                       |
-| --- | ---------------------------------------- | ------------------------------------ |
-| 1   | GitHub username                          | Any channel — it's public            |
-| 2   | Railway account email                    | Any channel                          |
-| 3   | Email address for your super-admin login | Any channel                          |
-| 4   | Stripe team invite (role: Developer)     | Stripe sends it                      |
-| 5   | Email-provider access                    | Team invite, or one-time secret link |
-| 6   | Domain transfer confirmation             | Any channel                          |
-| 7   | (Optional) OpenAI API key                | One-time secret link only            |
+| #   | What                                          | How to send it                       |
+| --- | --------------------------------------------- | ------------------------------------ |
+| 1   | GitHub username                               | Any channel — it's public            |
+| 2   | Railway account email                         | Any channel                          |
+| 3   | Email address for your super-admin login      | Any channel                          |
+| 4   | Word that Stripe setup + test purchase passed | Any channel — never keys or access   |
+| 5   | Email-provider access                         | Team invite, or one-time secret link |
+| 6   | Domain transfer confirmation                  | Any channel                          |
+| 7   | (Optional) OpenAI API key                     | One-time secret link only            |
 
 **Never send:** any password, your bank details, card numbers, or secret keys
 pasted into email or chat. If I ever appear to ask for one of those, treat it as
