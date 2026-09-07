@@ -1,4 +1,4 @@
-# RankInAI Handover Checklist
+# RankClear Handover Checklist
 
 A step-by-step guide for the new owner. Written to be followed in order.
 
@@ -82,7 +82,7 @@ account. I never need access to your Stripe. The detailed walkthrough is the
    account payouts should land in. This is yours alone — I never see it and
    never need to.
 3. In **Settings → Public details**, set the statement descriptor (what appears
-   on customers' card statements — e.g. `RANKINAI`) and a support email.
+   on customers' card statements — e.g. `RANKCLEAR`) and a support email.
 
 ### 3b. Wire it up (YOU)
 
