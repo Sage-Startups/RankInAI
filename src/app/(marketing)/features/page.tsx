@@ -24,7 +24,7 @@ import { CATEGORY_WEIGHTS } from '@/lib/audit/scoring';
 export const metadata: Metadata = {
   title: 'Features',
   description:
-    'Every audit category and platform feature in RankInAI: technical accessibility, entity clarity, content authority, answer readiness, structured data, trust and evidence, and competitive visibility.',
+    'Every audit category and platform feature in RankClear: technical accessibility, entity clarity, content authority, answer readiness, structured data, trust and evidence, and competitive visibility.',
   alternates: { canonical: '/features' },
 };
 
@@ -188,7 +188,7 @@ const PLATFORM_FEATURES = [
   {
     icon: Palette,
     title: 'White-label reports',
-    body: 'Agency plans replace the RankInAI cover branding with a client name and logo, keeping a small "Powered by RankInAI" line in the footer.',
+    body: 'Agency plans replace the RankClear cover branding with a client name and logo, keeping a small "Powered by RankClear" line in the footer.',
   },
   {
     icon: Table2,
@@ -211,7 +211,7 @@ export default function FeaturesPage() {
           <SectionHeading
             eyebrow="Features"
             title="Every check, and what each one is for"
-            description="RankInAI runs roughly seventy deterministic checks across seven weighted categories. Below is what each category covers and the platform features around it."
+            description="RankClear runs roughly seventy deterministic checks across seven weighted categories. Below is what each category covers and the platform features around it."
           />
         </div>
       </section>
@@ -311,7 +311,7 @@ export default function FeaturesPage() {
           <Card className="bg-ink-900/60 border-white/12 p-6">
             <h3 className="text-sm font-semibold text-white">Public-web search observations</h3>
             <p className="mt-2.5 text-sm leading-relaxed text-slate-400">
-              When a search provider is configured, RankInAI runs a small fixed set of queries
+              When a search provider is configured, RankClear runs a small fixed set of queries
               (brand plus service, brand plus location, brand reviews) and reports what is publicly
               visible. These are labeled <em>public-web observations</em> and are never presented as
               evidence of what any particular AI model will say.

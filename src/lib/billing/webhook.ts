@@ -156,13 +156,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
     typeof session.customer === 'string' ? session.customer : (session.customer?.id ?? null);
 
   const userId = await resolveUserId({
-    metadataUserId: session.metadata?.rankinaiUserId,
+    metadataUserId: session.metadata?.rankclearUserId,
     clientReferenceId: session.client_reference_id,
     customerId,
   });
 
   if (!userId) {
-    return 'No matching RankInAI user for this checkout session.';
+    return 'No matching RankClear user for this checkout session.';
   }
 
   // Backfill the customer link if this was the user's first purchase.
@@ -191,7 +191,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
       status: session.payment_status === 'paid' ? PaymentStatus.SUCCEEDED : PaymentStatus.PENDING,
       amountCents,
       currency: session.currency ?? 'usd',
-      description: productKey ? PRODUCTS[productKey].name : 'RankInAI purchase',
+      description: productKey ? PRODUCTS[productKey].name : 'RankClear purchase',
       productKey,
       isDemo: false,
       paidAt: session.payment_status === 'paid' ? new Date() : null,
@@ -254,7 +254,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<string> {
   const customerId =
     typeof invoice.customer === 'string' ? invoice.customer : (invoice.customer?.id ?? null);
   const userId = await resolveUserId({ customerId });
-  if (!userId) return 'No matching RankInAI user for this invoice.';
+  if (!userId) return 'No matching RankClear user for this invoice.';
 
   if (invoice.id) {
     await prisma.payment.upsert({
@@ -320,7 +320,7 @@ async function handleInvoiceFailed(invoice: Stripe.Invoice): Promise<string> {
   const customerId =
     typeof invoice.customer === 'string' ? invoice.customer : (invoice.customer?.id ?? null);
   const userId = await resolveUserId({ customerId });
-  if (!userId) return 'No matching RankInAI user for this invoice.';
+  if (!userId) return 'No matching RankClear user for this invoice.';
 
   if (invoice.id) {
     await prisma.payment.upsert({
@@ -358,10 +358,10 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
       : (subscription.customer?.id ?? null);
 
   const userId = await resolveUserId({
-    metadataUserId: subscription.metadata?.rankinaiUserId,
+    metadataUserId: subscription.metadata?.rankclearUserId,
     customerId,
   });
-  if (!userId) return 'No matching RankInAI user for this subscription.';
+  if (!userId) return 'No matching RankClear user for this subscription.';
 
   const priceId = subscription.items?.data?.[0]?.price?.id ?? null;
   const product = priceId ? productForStripePriceId(priceId) : null;

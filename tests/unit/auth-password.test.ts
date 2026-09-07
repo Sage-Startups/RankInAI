@@ -44,7 +44,7 @@ describe('checkPasswordStrength', () => {
   });
 
   it('rejects well-known weak passwords', () => {
-    for (const weak of ['Password123', 'welcome123', 'RankInAI123']) {
+    for (const weak of ['Password123', 'welcome123', 'RankClear123']) {
       // Case-insensitive banned list; add a capital so only the ban trips.
       const result = checkPasswordStrength(weak);
       expect(result.valid).toBe(false);
@@ -115,7 +115,7 @@ describe('password hashing', () => {
 describe('normalizeEmail', () => {
   it.each([
     ['  User@Example.COM  ', 'user@example.com'],
-    ['ADMIN@RANKINAI.COM', 'admin@rankinai.com'],
+    ['ADMIN@RANKCLEAR.COM', 'admin@rankclear.com'],
   ])('normalizes %j', (input, expected) => {
     expect(normalizeEmail(input)).toBe(expected);
   });

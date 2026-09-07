@@ -116,7 +116,7 @@ function layout(title: string, body: string, footerNote?: string): string {
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;">
         <tr><td style="background:#0b1020;padding:22px 28px;">
-          <span style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:-0.3px;">Rank<span style="color:#8b7cf6;">In</span><span style="color:#22d3ee;">AI</span></span>
+          <span style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:-0.3px;">Rank<span style="color:#5ccec1;">Clear</span></span>
         </td></tr>
         <tr><td style="padding:28px;color:#0f172a;font-size:15px;line-height:1.6;">
           <h1 style="margin:0 0 16px;font-size:20px;color:#0b1020;">${escapeHtml(title)}</h1>
@@ -124,7 +124,7 @@ function layout(title: string, body: string, footerNote?: string): string {
         </td></tr>
         <tr><td style="padding:18px 28px;background:#f8fafc;color:#64748b;font-size:12px;line-height:1.5;">
           ${footerNote ? `${escapeHtml(footerNote)}<br><br>` : ''}
-          RankInAI — AI visibility and Generative Engine Optimization audits.<br>
+          RankClear — AI visibility and Generative Engine Optimization audits.<br>
           Questions? Reply to this email or contact ${escapeHtml(env.SUPPORT_EMAIL)}.
         </td></tr>
       </table>
@@ -149,29 +149,29 @@ function escapeHtml(value: string): string {
 export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<SendResult> {
   return sendEmail({
     to,
-    subject: 'Reset your RankInAI password',
+    subject: 'Reset your RankClear password',
     html: layout(
       'Reset your password',
-      `<p>We received a request to reset the password for this RankInAI account.</p>
+      `<p>We received a request to reset the password for this RankClear account.</p>
        ${button(resetUrl, 'Choose a new password')}
        <p style="color:#475569;font-size:13px;">This link expires in 60 minutes and can only be used once. If you did not request a password reset, no action is needed — your password has not changed.</p>`,
       'For your security, never share this link with anyone.',
     ),
-    text: `Reset your RankInAI password\n\nOpen this link to choose a new password:\n${resetUrl}\n\nThis link expires in 60 minutes and can only be used once. If you did not request a reset, no action is needed.`,
+    text: `Reset your RankClear password\n\nOpen this link to choose a new password:\n${resetUrl}\n\nThis link expires in 60 minutes and can only be used once. If you did not request a reset, no action is needed.`,
   });
 }
 
 export async function sendEmailVerification(to: string, verifyUrl: string): Promise<SendResult> {
   return sendEmail({
     to,
-    subject: 'Confirm your RankInAI email address',
+    subject: 'Confirm your RankClear email address',
     html: layout(
       'Confirm your email address',
-      `<p>Thanks for creating a RankInAI account. Confirm your email address to secure your account and receive audit notifications.</p>
+      `<p>Thanks for creating a RankClear account. Confirm your email address to secure your account and receive audit notifications.</p>
        ${button(verifyUrl, 'Confirm email address')}
        <p style="color:#475569;font-size:13px;">This link expires in 24 hours.</p>`,
     ),
-    text: `Confirm your RankInAI email address\n\n${verifyUrl}\n\nThis link expires in 24 hours.`,
+    text: `Confirm your RankClear email address\n\n${verifyUrl}\n\nThis link expires in 24 hours.`,
   });
 }
 
@@ -180,15 +180,15 @@ export async function sendWelcomeEmail(to: string, name: string | null): Promise
   const appUrl = env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '');
   return sendEmail({
     to,
-    subject: 'Welcome to RankInAI',
+    subject: 'Welcome to RankClear',
     html: layout(
       `Welcome${name ? `, ${escapeHtml(name)}` : ''}`,
-      `<p>Your RankInAI account is ready. RankInAI audits how well AI systems and answer engines can discover, understand and cite your website.</p>
+      `<p>Your RankClear account is ready. RankClear audits how well AI systems and answer engines can discover, understand and cite your website.</p>
        <p>Start with a full audit of your site, or open the sample report to see what one looks like.</p>
        ${button(`${appUrl}/dashboard/audits/new`, 'Run your first audit')}
        <p style="color:#475569;font-size:13px;">Every audit scores seven categories, lists the evidence behind each finding and gives you a prioritized action plan.</p>`,
     ),
-    text: `Welcome to RankInAI.\n\nYour account is ready. Start your first audit: ${appUrl}/dashboard/audits/new`,
+    text: `Welcome to RankClear.\n\nYour account is ready. Start your first audit: ${appUrl}/dashboard/audits/new`,
   });
 }
 
@@ -203,7 +203,7 @@ export async function sendAuditCompleteEmail(params: {
   const url = `${appUrl}/dashboard/audits/${params.auditId}`;
   return sendEmail({
     to: params.to,
-    subject: `Your RankInAI audit for ${params.businessName} is ready`,
+    subject: `Your RankClear audit for ${params.businessName} is ready`,
     html: layout(
       'Your audit is ready',
       `<p>The AI visibility audit for <strong>${escapeHtml(params.businessName)}</strong> has finished.</p>
@@ -211,6 +211,6 @@ export async function sendAuditCompleteEmail(params: {
        <p style="color:#475569;margin-top:0;">Overall AI Visibility Score</p>
        ${button(url, 'Open the full report')}`,
     ),
-    text: `Your RankInAI audit for ${params.businessName} is ready. Overall AI Visibility Score: ${params.score}/100.\n\nOpen the report: ${url}`,
+    text: `Your RankClear audit for ${params.businessName} is ready. Overall AI Visibility Score: ${params.score}/100.\n\nOpen the report: ${url}`,
   });
 }

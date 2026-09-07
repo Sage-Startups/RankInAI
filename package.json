@@ -1,8 +1,8 @@
 {
-  "name": "rankinai",
+  "name": "rankclear",
   "version": "1.0.0",
   "private": true,
-  "description": "RankInAI — AI visibility and Generative Engine Optimization audit platform.",
+  "description": "RankClear — AI visibility and Generative Engine Optimization audit platform.",
   "engines": {
     "node": "22.x"
   },

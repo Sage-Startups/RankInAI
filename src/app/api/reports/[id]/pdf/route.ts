@@ -65,7 +65,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     );
   }
 
-  const filename = `rankinai-audit-${slugify(audit.businessName) || 'report'}-${
+  const filename = `rankclear-audit-${slugify(audit.businessName) || 'report'}-${
     audit.completedAt ? audit.completedAt.toISOString().slice(0, 10) : 'report'
   }.pdf`;
 

@@ -20,7 +20,7 @@ npm run test:e2e
 npm run test:e2e:install   # first time only, installs Chromium
 ```
 
-The test database is `rankinai_test`. Integration setup refuses to run against a
+The test database is `rankclear_test`. Integration setup refuses to run against a
 `DATABASE_URL` whose name does not contain `test`, so a mistyped variable cannot
 wipe development data.
 

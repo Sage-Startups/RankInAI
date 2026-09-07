@@ -114,7 +114,7 @@ function IdleState({ onStart }: { onStart: () => void }) {
       </div>
       <h3 className="mt-4 text-lg font-semibold text-white">See a completed audit in 5 seconds</h3>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-400">
-        Watch RankInAI analyze a fictional US roofing contractor and produce a scored AI visibility
+        Watch RankClear analyze a fictional US roofing contractor and produce a scored AI visibility
         report. No account, no email address.
       </p>
       <Button onClick={onStart} size="lg" className="mt-6">

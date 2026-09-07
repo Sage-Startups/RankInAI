@@ -117,7 +117,7 @@ describe('lenient parsing of recoverable fields', () => {
   it('falls back to the default for an invalid admin email', () => {
     process.env.SUPER_ADMIN_EMAIL = 'not-an-email';
     const env = getEnv();
-    expect(env.SUPER_ADMIN_EMAIL).toBe('admin@rankinai.com');
+    expect(env.SUPER_ADMIN_EMAIL).toBe('admin@rankclear.com');
   });
 });
 

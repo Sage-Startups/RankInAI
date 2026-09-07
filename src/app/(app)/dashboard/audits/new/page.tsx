@@ -34,8 +34,8 @@ export default async function NewAuditPage() {
       <header>
         <h1 className="text-2xl font-bold">Start a new audit</h1>
         <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-          RankInAI will crawl the site, score seven AI visibility categories and build a prioritized
-          action plan.
+          RankClear will crawl the site, score seven AI visibility categories and build a
+          prioritized action plan.
         </p>
       </header>
 

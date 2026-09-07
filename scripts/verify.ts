@@ -181,7 +181,7 @@ function checkSafety() {
 }
 
 async function main() {
-  console.log('\nRankInAI deployment verification\n');
+  console.log('\nRankClear deployment verification\n');
   console.log(`  environment: ${process.env.NODE_ENV ?? 'development'}\n`);
 
   required('DATABASE_URL', 'the application cannot run without a database');

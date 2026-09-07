@@ -23,7 +23,7 @@ export interface LegalDocument {
 }
 
 export const LEGAL_TEMPLATE_NOTICE =
-  'This document is a software-generated starting template provided with the RankInAI platform. It has not been reviewed by an attorney and does not constitute legal advice. Have it reviewed and adapted to your jurisdiction and business before commercial launch.';
+  'This document is a software-generated starting template provided with the RankClear platform. It has not been reviewed by an attorney and does not constitute legal advice. Have it reviewed and adapted to your jurisdiction and business before commercial launch.';
 
 const LAST_UPDATED = 'April 1, 2026';
 
@@ -31,22 +31,22 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
   terms: {
     slug: 'terms',
     title: 'Terms of Service',
-    description: 'The terms governing your use of the RankInAI platform.',
+    description: 'The terms governing your use of the RankClear platform.',
     lastUpdated: LAST_UPDATED,
     intro:
-      'These Terms of Service govern your access to and use of the RankInAI website, application and audit services. By creating an account or purchasing an audit you agree to these terms.',
+      'These Terms of Service govern your access to and use of the RankClear website, application and audit services. By creating an account or purchasing an audit you agree to these terms.',
     sections: [
       {
         heading: '1. The service',
         paragraphs: [
-          'RankInAI is a software product that analyzes publicly accessible website content and produces a report describing observed signals relevant to AI visibility and Generative Engine Optimization (GEO) readiness.',
+          'RankClear is a software product that analyzes publicly accessible website content and produces a report describing observed signals relevant to AI visibility and Generative Engine Optimization (GEO) readiness.',
           'The service reports on signals measured from the website you submit. It is an analysis and reporting tool. It does not modify your website and does not act on your behalf with any third party.',
         ],
       },
       {
         heading: '2. No guarantee of results',
         paragraphs: [
-          'RankInAI does not and cannot guarantee that any artificial intelligence system, answer engine, search engine or assistant will discover, index, mention, cite or recommend your business or content.',
+          'RankClear does not and cannot guarantee that any artificial intelligence system, answer engine, search engine or assistant will discover, index, mention, cite or recommend your business or content.',
           'Scores produced by the service describe readiness based on observable website signals. They are not a prediction or promise of traffic, rankings, citations, referrals, leads or revenue. You are solely responsible for decisions you make based on the report.',
         ],
       },
@@ -75,20 +75,20 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
         paragraphs: [
           'All prices are stated in US dollars and exclude any applicable sales tax or VAT, which is calculated at checkout where required.',
           'Subscriptions renew automatically each month until canceled. Canceling stops future renewals; access continues until the end of the paid period. One-time audit credits do not expire and are consumed only after any subscription allowance for the period has been used.',
-          'Payments are processed by Stripe. RankInAI does not receive or store your payment card details.',
+          'Payments are processed by Stripe. RankClear does not receive or store your payment card details.',
         ],
       },
       {
         heading: '7. Intellectual property',
         paragraphs: [
-          'The platform, its software, methodology, scoring rubric and interface are owned by RankInAI and protected by intellectual property law. You receive a limited, non-exclusive, non-transferable right to use the service under these terms.',
+          'The platform, its software, methodology, scoring rubric and interface are owned by RankClear and protected by intellectual property law. You receive a limited, non-exclusive, non-transferable right to use the service under these terms.',
           'Reports generated for your account are yours to use, share with clients and republish. You may not resell access to the platform itself, or present the audit engine as your own software.',
         ],
       },
       {
         heading: '8. Your content and data',
         paragraphs: [
-          'You retain all rights in your website content. You grant RankInAI a limited right to retrieve, process and store publicly accessible content from the websites you submit for the purpose of producing your reports.',
+          'You retain all rights in your website content. You grant RankClear a limited right to retrieve, process and store publicly accessible content from the websites you submit for the purpose of producing your reports.',
           'How personal data is handled is described in the Privacy Policy.',
         ],
       },
@@ -113,7 +113,7 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
       {
         heading: '12. Limitation of liability',
         paragraphs: [
-          'To the maximum extent permitted by law, RankInAI is not liable for indirect, incidental, special, consequential or punitive damages, or for lost profits, revenue, data or goodwill.',
+          'To the maximum extent permitted by law, RankClear is not liable for indirect, incidental, special, consequential or punitive damages, or for lost profits, revenue, data or goodwill.',
           'Total aggregate liability arising out of or relating to the service is limited to the greater of the amount you paid in the twelve months before the claim, or one hundred US dollars.',
         ],
       },
@@ -143,10 +143,10 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
   privacy: {
     slug: 'privacy',
     title: 'Privacy Policy',
-    description: 'What data RankInAI collects, why, and how it is protected.',
+    description: 'What data RankClear collects, why, and how it is protected.',
     lastUpdated: LAST_UPDATED,
     intro:
-      'This policy explains what personal data RankInAI collects, why it is collected, how long it is kept and what rights you have over it.',
+      'This policy explains what personal data RankClear collects, why it is collected, how long it is kept and what rights you have over it.',
     sections: [
       {
         heading: '1. Data we collect',
@@ -219,7 +219,7 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
       {
         heading: '9. Cookies',
         paragraphs: [
-          'RankInAI uses a small number of cookies, described in the Cookie Policy. Third-party analytics are optional and disabled unless explicitly configured by the operator.',
+          'RankClear uses a small number of cookies, described in the Cookie Policy. Third-party analytics are optional and disabled unless explicitly configured by the operator.',
         ],
       },
       {
@@ -294,10 +294,10 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
   cookies: {
     slug: 'cookies',
     title: 'Cookie Policy',
-    description: 'The cookies RankInAI uses and what they do.',
+    description: 'The cookies RankClear uses and what they do.',
     lastUpdated: LAST_UPDATED,
     intro:
-      'This policy describes the cookies and similar technologies used by RankInAI and why each one is needed.',
+      'This policy describes the cookies and similar technologies used by RankClear and why each one is needed.',
     sections: [
       {
         heading: '1. Strictly necessary cookies',
@@ -319,7 +319,7 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
       {
         heading: '3. Analytics',
         paragraphs: [
-          'RankInAI uses a first-party, privacy-conscious internal analytics system that records which product events occurred — a demo was started, a checkout completed — without storing form values or personal details.',
+          'RankClear uses a first-party, privacy-conscious internal analytics system that records which product events occurred — a demo was started, a checkout completed — without storing form values or personal details.',
           'Third-party analytics such as Google Analytics are optional and are only loaded if the operator of this instance has explicitly configured them. The product functions fully without any third-party tracker.',
         ],
       },
@@ -341,10 +341,10 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
   'acceptable-use': {
     slug: 'acceptable-use',
     title: 'Acceptable Use Policy',
-    description: 'How RankInAI may and may not be used.',
+    description: 'How RankClear may and may not be used.',
     lastUpdated: LAST_UPDATED,
     intro:
-      'This policy sets out how the RankInAI service may be used. It forms part of the Terms of Service. Breaching it may result in suspension or termination.',
+      'This policy sets out how the RankClear service may be used. It forms part of the Terms of Service. Breaching it may result in suspension or termination.',
     sections: [
       {
         heading: '1. Authorization',
@@ -368,7 +368,7 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
       {
         heading: '3. How our crawler behaves',
         paragraphs: [
-          'The RankInAI crawler identifies itself as RankInAI-Auditor. It honors robots.txt directives for its own agent, requests only publicly accessible pages, applies a request timeout and a response size limit, follows a bounded number of redirects, and paces its requests.',
+          'The RankClear crawler identifies itself as RankClear-Auditor. It honors robots.txt directives for its own agent, requests only publicly accessible pages, applies a request timeout and a response size limit, follows a bounded number of redirects, and paces its requests.',
           'It never submits forms, never authenticates to an audited website, never executes downloaded files, and never requests cart, checkout, account or login URLs.',
         ],
       },
@@ -381,7 +381,7 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
       {
         heading: '5. Reporting abuse',
         paragraphs: [
-          'If you believe the RankInAI crawler has behaved improperly against a website you operate, or that an account is misusing the service, contact us through the contact page with the relevant details and we will investigate.',
+          'If you believe the RankClear crawler has behaved improperly against a website you operate, or that an account is misusing the service, contact us through the contact page with the relevant details and we will investigate.',
         ],
       },
       {

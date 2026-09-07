@@ -1,6 +1,6 @@
 # Stripe Setup
 
-RankInAI never handles card data. Stripe Checkout and the Customer Portal are hosted
+RankClear never handles card data. Stripe Checkout and the Customer Portal are hosted
 by Stripe; the application stores a customer ID and payment metadata only.
 
 Price IDs are **never hard-coded**. `src/lib/plans.ts` reads them from the
@@ -12,7 +12,7 @@ environment, so the same build works against test and live modes.
 STRIPE_SECRET_KEY=sk_test_... npm run stripe:setup
 ```
 
-The script creates four products with a `rankinaiProductKey` metadata tag and one
+The script creates four products with a `rankclearProductKey` metadata tag and one
 price each, then prints the environment variables to set. Re-running it is safe:
 existing products are matched by that tag and reused rather than duplicated.
 

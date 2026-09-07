@@ -3,14 +3,14 @@ import { safeFetch } from '@/lib/audit/fetcher';
 /**
  * robots.txt parsing.
  *
- * RankInAI identifies itself as `RankInAI-Auditor` and honors:
+ * RankClear identifies itself as `RankClear-Auditor` and honors:
  *   - a group matching that agent exactly
  *   - otherwise the `*` group
  * The most specific matching group wins, per the de-facto standard, and the
  * longest matching path rule decides Allow vs Disallow.
  */
 
-export const CRAWLER_TOKEN = 'rankinai-auditor';
+export const CRAWLER_TOKEN = 'rankclear-auditor';
 
 export interface RobotsRule {
   type: 'allow' | 'disallow';
@@ -20,7 +20,7 @@ export interface RobotsRule {
 export interface RobotsTxt {
   found: boolean;
   statusCode: number | null;
-  /** Rules that apply to the RankInAI crawler. */
+  /** Rules that apply to the RankClear crawler. */
   rules: RobotsRule[];
   sitemaps: string[];
   crawlDelaySeconds: number | null;

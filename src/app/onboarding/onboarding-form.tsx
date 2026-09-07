@@ -94,7 +94,7 @@ export function OnboardingForm({
         </div>
 
         <div>
-          <Label htmlFor="onboarding-use-case">What will you mainly use RankInAI for?</Label>
+          <Label htmlFor="onboarding-use-case">What will you mainly use RankClear for?</Label>
           <Select id="onboarding-use-case" name="primaryUseCase" className="mt-2" defaultValue="">
             <option value="">Select an option</option>
             {USE_CASES.map((useCase) => (

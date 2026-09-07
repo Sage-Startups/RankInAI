@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
 
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET ?? 'rankinai-development-only-secret-do-not-use-in-production',
+    secret: process.env.AUTH_SECRET ?? 'rankclear-development-only-secret-do-not-use-in-production',
     secureCookie: process.env.NODE_ENV === 'production',
     salt:
       process.env.NODE_ENV === 'production'

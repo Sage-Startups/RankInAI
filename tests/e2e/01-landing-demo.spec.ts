@@ -10,7 +10,7 @@ test.describe('Journey 1: landing-page demo', () => {
   test('a visitor runs the demo and reaches the full sample report', async ({ page }) => {
     // 1. Visit the home page.
     await page.goto('/');
-    await expect(page).toHaveTitle(/RankInAI/);
+    await expect(page).toHaveTitle(/RankClear/);
     await expect(page.getByRole('heading', { name: /Find out whether AI can/i })).toBeVisible();
 
     // The primary and secondary CTAs are both present.

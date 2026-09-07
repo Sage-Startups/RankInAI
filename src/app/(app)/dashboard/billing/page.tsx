@@ -289,7 +289,7 @@ export default async function BillingPage() {
                       {formatDate(payment.paidAt ?? payment.createdAt)}
                     </th>
                     <td className="px-5 py-3">
-                      {payment.description ?? 'RankInAI purchase'}
+                      {payment.description ?? 'RankClear purchase'}
                       {payment.isDemo ? (
                         <Badge tone="demo" className="ml-2">
                           Demo
@@ -354,7 +354,7 @@ export default async function BillingPage() {
       ) : null}
 
       <p className="text-center text-xs text-[var(--muted-foreground)]">
-        Payments are processed by Stripe. RankInAI never receives or stores your card details. See
+        Payments are processed by Stripe. RankClear never receives or stores your card details. See
         the{' '}
         <Link href="/legal/refunds" className="underline underline-offset-4">
           Refund Policy

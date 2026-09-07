@@ -251,8 +251,8 @@ export function NewAuditForm({
         <Card className="p-6">
           <h2 className="text-base font-semibold">Report branding</h2>
           <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-            Agency plans can replace the RankInAI cover branding with your own. A small
-            &ldquo;Powered by RankInAI&rdquo; line remains in the report footer.
+            Agency plans can replace the RankClear cover branding with your own. A small
+            &ldquo;Powered by RankClear&rdquo; line remains in the report footer.
           </p>
 
           <div className="mt-5 flex gap-3">
@@ -302,7 +302,7 @@ export function NewAuditForm({
         <div className="flex gap-3">
           <Checkbox id="consentConfirmed" name="consentConfirmed" value="on" required />
           <Label htmlFor="consentConfirmed" className="text-sm leading-relaxed font-normal">
-            I confirm I own this website, operate it, or am authorized to have it audited. RankInAI
+            I confirm I own this website, operate it, or am authorized to have it audited. RankClear
             will request only public pages, honor robots.txt, and never submit a form or sign in.
           </Label>
         </div>

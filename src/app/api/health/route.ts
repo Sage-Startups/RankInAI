@@ -66,7 +66,7 @@ export async function GET() {
 
   const body = {
     status: healthy ? 'ok' : 'degraded',
-    service: 'rankinai-web',
+    service: 'rankclear-web',
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.round(process.uptime()),
     checks: {
@@ -98,7 +98,7 @@ export async function GET() {
       JSON.stringify({
         ts: body.timestamp,
         level: 'error',
-        service: 'rankinai-web',
+        service: 'rankclear-web',
         message: 'Health check failed',
         configuration: configError ?? 'ok',
         database: databaseError ?? 'ok',

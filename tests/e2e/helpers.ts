@@ -37,14 +37,14 @@ export { expect };
 
 export const FIXTURE_SITE = 'http://127.0.0.1:4321';
 export const STRONG_PASSWORD = 'E2E-Journey-Test-42';
-export const SUPER_ADMIN_EMAIL = 'admin@rankinai.com';
-export const SUPER_ADMIN_PASSWORD = 'RankInAI-Dev-Admin-2026!';
+export const SUPER_ADMIN_EMAIL = 'admin@rankclear.com';
+export const SUPER_ADMIN_PASSWORD = 'RankClear-Dev-Admin-2026!';
 
 let counter = 0;
 
 export function uniqueEmail(label = 'journey'): string {
   counter += 1;
-  return `e2e-${label}-${Date.now()}-${counter}@rankinai-e2e.invalid`;
+  return `e2e-${label}-${Date.now()}-${counter}@rankclear-e2e.invalid`;
 }
 
 export async function signUp(

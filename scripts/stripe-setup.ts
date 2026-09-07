@@ -1,10 +1,10 @@
 /**
- * Create (or find) the RankInAI products and prices in Stripe and print the
+ * Create (or find) the RankClear products and prices in Stripe and print the
  * environment variables to set.
  *
  * Nothing is written to the database and no price ID is ever hard-coded in the
  * application — `src/lib/plans.ts` reads them from the environment. Re-running
- * this is safe: existing products are matched by their `rankinaiProductKey`
+ * this is safe: existing products are matched by their `rankclearProductKey`
  * metadata and reused rather than duplicated.
  *
  *   STRIPE_SECRET_KEY=sk_test_... npm run stripe:setup
@@ -25,13 +25,13 @@ function fail(message: string): never {
 async function findProduct(stripe: Stripe, product: PricedProduct): Promise<Stripe.Product | null> {
   // Stripe's search index is eventually consistent, so fall back to a listing.
   const search = await stripe.products.search({
-    query: `metadata['rankinaiProductKey']:'${product.key}'`,
+    query: `metadata['rankclearProductKey']:'${product.key}'`,
     limit: 1,
   });
   if (search.data[0]) return search.data[0];
 
   for await (const candidate of stripe.products.list({ limit: 100, active: true })) {
-    if (candidate.metadata?.rankinaiProductKey === product.key) return candidate;
+    if (candidate.metadata?.rankclearProductKey === product.key) return candidate;
   }
   return null;
 }
@@ -74,7 +74,7 @@ async function main() {
 
   const stripe = new Stripe(secretKey, { apiVersion: '2026-07-29.dahlia' });
 
-  console.log(`\nRankInAI Stripe setup — ${isLive ? 'LIVE' : 'test'} mode\n`);
+  console.log(`\nRankClear Stripe setup — ${isLive ? 'LIVE' : 'test'} mode\n`);
 
   const envLines: string[] = [];
 
@@ -85,9 +85,9 @@ async function main() {
       console.log(`  = ${product.name}: reusing product ${stripeProduct.id}`);
     } else {
       stripeProduct = await stripe.products.create({
-        name: `RankInAI ${product.name}`,
+        name: `RankClear ${product.name}`,
         description: product.tagline,
-        metadata: { rankinaiProductKey: product.key },
+        metadata: { rankclearProductKey: product.key },
       });
       console.log(`  + ${product.name}: created product ${stripeProduct.id}`);
     }
@@ -102,7 +102,7 @@ async function main() {
         currency: CURRENCY,
         unit_amount: product.priceCents,
         ...(product.interval === 'month' ? { recurring: { interval: 'month' } } : {}),
-        metadata: { rankinaiProductKey: product.key },
+        metadata: { rankclearProductKey: product.key },
       });
       console.log(`    + price ${price.id} (${(product.priceCents / 100).toFixed(2)} USD)`);
     }

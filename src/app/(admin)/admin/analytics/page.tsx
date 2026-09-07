@@ -174,7 +174,7 @@ export default async function AdminAnalyticsPage({
       <Card className="p-5">
         <h2 className="text-base font-semibold">Privacy note</h2>
         <p className="mt-2 text-sm leading-relaxed text-[var(--muted-foreground)]">
-          RankInAI records product events through a first-party system. Event properties are
+          RankClear records product events through a first-party system. Event properties are
           restricted to a fixed whitelist and never contain form values, message contents,
           credentials or payment details. IP addresses used for rate limiting are stored as salted
           one-way hashes and pruned automatically. No third-party analytics script is loaded unless

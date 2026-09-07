@@ -11,7 +11,7 @@ import { sendAuditCompleteEmail } from '@/lib/email';
 import { trackEvent } from '@/lib/analytics';
 
 /**
- * RankInAI audit worker.
+ * RankClear audit worker.
  *
  * Runs as its own Railway service (`npm run worker`) against the same database
  * as the web service. Long crawls must never depend on an HTTP request staying
@@ -71,7 +71,7 @@ function log(
   const payload = {
     ts: new Date().toISOString(),
     level,
-    service: 'rankinai-worker',
+    service: 'rankclear-worker',
     worker: workerId,
     message,
     ...extra,

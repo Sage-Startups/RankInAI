@@ -13,11 +13,11 @@ export function SiteFooter({ supportEmail }: { supportEmail: string }) {
           <div className="lg:col-span-2">
             <Logo tone="light" />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-              {SITE.tagline} RankInAI measures the public website signals that influence whether
+              {SITE.tagline} RankClear measures the public website signals that influence whether
               generative search and answer engines can discover, understand and cite your brand.
             </p>
             <p className="mt-4 text-xs leading-relaxed text-slate-400">
-              RankInAI reports on observed website signals and AI visibility readiness. No tool can
+              RankClear reports on observed website signals and AI visibility readiness. No tool can
               guarantee that a specific AI assistant will mention or recommend a business.
             </p>
           </div>
@@ -42,7 +42,7 @@ export function SiteFooter({ supportEmail }: { supportEmail: string }) {
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} RankInAI. All rights reserved.</p>
+          <p>© {year} RankClear. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <a href={`mailto:${supportEmail}`} className="transition-colors hover:text-slate-300">
               {supportEmail}

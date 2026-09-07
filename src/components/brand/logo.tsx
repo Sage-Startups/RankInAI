@@ -3,11 +3,24 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 /**
- * RankInAI mark — an original geometric device.
+ * RankClear mark — an original geometric device.
  *
- * Three ascending bars (a rising rank) intersected by a diagonal beam
- * (the query passing through), inside a rounded square.
+ * A ring of four arcs (the signals being read from every side) around a solid
+ * centre (the answer they resolve to), inside a light outer circle.
+ *
+ * The mark is theme-aware rather than a fixed image. The centre is near-black
+ * on light surfaces and near-white on dark ones: at 1.15:1 the navy centre is
+ * effectively invisible against the marketing shell, so a single fixed fill
+ * would erase the middle of the logo on half the site.
  */
+
+/** Mint arcs, right half. */
+const ARC_MINT_TOP = 'M23.75 6.93 A13.6 13.6 0 0 1 33.57 19.05';
+const ARC_MINT_LOWER = 'M33.47 21.89 A13.6 13.6 0 0 1 22.83 33.30';
+/** Gold arcs, left half. */
+const ARC_GOLD_LOWER = 'M17.17 33.30 A13.6 13.6 0 0 1 6.53 21.89';
+const ARC_GOLD_TOP = 'M6.43 19.05 A13.6 13.6 0 0 1 16.25 6.93';
+
 export function LogoMark({
   className,
   size = 32,
@@ -30,41 +43,24 @@ export function LogoMark({
       aria-label={title}
     >
       {title ? <title>{title}</title> : null}
-      <defs>
-        <linearGradient
-          id="rk-mark-bg"
-          x1="0"
-          y1="0"
-          x2="40"
-          y2="40"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#5844D8" />
-          <stop offset="1" stopColor="#0E7490" />
-        </linearGradient>
-        <linearGradient
-          id="rk-mark-beam"
-          x1="8"
-          y1="30"
-          x2="32"
-          y2="10"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#67E8F9" />
-          <stop offset="1" stopColor="#CFC7FF" />
-        </linearGradient>
-      </defs>
-      <rect width="40" height="40" rx="11" fill="url(#rk-mark-bg)" />
-      <rect x="9" y="22" width="5" height="9" rx="1.6" fill="#ffffff" fillOpacity="0.62" />
-      <rect x="17.5" y="17" width="5" height="14" rx="1.6" fill="#ffffff" fillOpacity="0.82" />
-      <rect x="26" y="11" width="5" height="20" rx="1.6" fill="#ffffff" />
-      <path
-        d="M7.5 27.5 L32.5 10.5"
-        stroke="url(#rk-mark-beam)"
-        strokeWidth="2.4"
-        strokeLinecap="round"
+
+      {/* Outer circle: pale on light surfaces, a dim teal on dark ones. */}
+      <circle
+        cx="20"
+        cy="20"
+        r="18.4"
+        className="stroke-[#c4e7e1] dark:stroke-[#2a5f58]"
+        strokeWidth="1.5"
       />
-      <circle cx="32.5" cy="10.5" r="2.9" fill="#67E8F9" />
+
+      <g strokeWidth="2.9" strokeLinecap="round">
+        <path d={ARC_MINT_TOP} className="stroke-[#4fc7b8]" />
+        <path d={ARC_MINT_LOWER} className="stroke-[#4fc7b8]" />
+        <path d={ARC_GOLD_LOWER} className="stroke-[#c89a4b]" />
+        <path d={ARC_GOLD_TOP} className="stroke-[#c89a4b]" />
+      </g>
+
+      <circle cx="20" cy="20" r="5.4" className="fill-[#101a26] dark:fill-white" />
     </svg>
   );
 }
@@ -88,19 +84,18 @@ export function Logo({
 
   const content = (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <LogoMark size={size} title="RankInAI" />
+      <LogoMark size={size} title="RankClear" />
       {showWordmark ? (
         <span
           className={cn('text-[1.0625rem] leading-none font-bold tracking-[-0.02em]', textColor)}
         >
           Rank
           {/*
-            Shades chosen for AA contrast at this weight and size against both
-            the white app surface and the near-black marketing surface:
-            violet-600 6.5:1 / violet-400 6.2:1, cyan-700 5.4:1 / cyan-400 11:1.
+            The brand teal (#3aa294) reaches only 3.10:1 on white, which fails AA
+            for text at this weight and size, so light mode uses a darker tone of
+            the same hue (5.5:1) and dark mode uses the mark's own mint (10:1).
           */}
-          <span className="text-violet-600 dark:text-violet-400">In</span>
-          <span className="text-cyan-700 dark:text-cyan-400">AI</span>
+          <span className="text-[#12766a] dark:text-[#5ccec1]">Clear</span>
         </span>
       ) : null}
     </span>
@@ -112,7 +107,7 @@ export function Logo({
     <Link
       href={href}
       className="inline-flex rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ring)]"
-      aria-label="RankInAI home"
+      aria-label="RankClear home"
     >
       {content}
     </Link>

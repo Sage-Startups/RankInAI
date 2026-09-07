@@ -163,7 +163,7 @@ describe('resolveHostSafely', () => {
   });
 
   it('rejects a hostname that does not resolve', async () => {
-    const result = await resolveHostSafely('this-domain-should-not-exist-rankinai-test.invalid');
+    const result = await resolveHostSafely('this-domain-should-not-exist-rankclear-test.invalid');
     expect(result.ok).toBe(false);
     if (!result.ok) expect(['DNS_FAILURE', 'NO_ADDRESSES']).toContain(result.code);
   });

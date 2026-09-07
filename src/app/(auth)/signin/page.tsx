@@ -8,7 +8,7 @@ import { getCurrentUser } from '@/lib/auth/guards';
 
 export const metadata: Metadata = {
   title: 'Sign in',
-  description: 'Sign in to your RankInAI account to run audits and open your reports.',
+  description: 'Sign in to your RankClear account to run audits and open your reports.',
 };
 
 const NOTICES: Record<string, { tone: 'success' | 'info' | 'warning'; message: string }> = {
@@ -38,7 +38,7 @@ export default async function SignInPage({
     <div>
       <h1 className="text-2xl font-bold">Sign in</h1>
       <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-        New to RankInAI?{' '}
+        New to RankClear?{' '}
         <Link href="/signup" className="text-[var(--accent)] underline underline-offset-4">
           Create an account
         </Link>

@@ -13,7 +13,7 @@ always-on process, and functions are capped (10s on Hobby, 60s by default on Pro
 marketing site, sign-up, dashboard and billing all work; the core product does not.
 
 There is also a licensing constraint. Vercel's Hobby plan prohibits commercial use,
-and RankInAI charges money. A real deployment needs **Pro at $20/month**, which is
+and RankClear charges money. A real deployment needs **Pro at $20/month**, which is
 more than the ~$10–25/month a complete Railway setup costs — so Vercel is unlikely
 to be the cheaper option here.
 

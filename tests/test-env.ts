@@ -29,12 +29,13 @@ export const FIXTURE_ORIGIN = 'http://127.0.0.1:4321';
 export const TEST_ENV = {
   NODE_ENV: 'test',
   DATABASE_URL:
-    process.env.E2E_DATABASE_URL ?? 'postgresql://rankinai:rankinai@127.0.0.1:5432/rankinai_test',
+    process.env.E2E_DATABASE_URL ??
+    'postgresql://rankclear:rankclear@127.0.0.1:5432/rankclear_test',
   AUTH_SECRET: 'e2e-secret-value-long-enough-for-the-production-guard-abcdef',
   AUTH_TRUST_HOST: 'true',
   NEXT_PUBLIC_APP_URL: E2E_BASE_URL,
-  SUPER_ADMIN_EMAIL: 'admin@rankinai.com',
-  SUPER_ADMIN_SEED_PASSWORD: 'RankInAI-Dev-Admin-2026!',
+  SUPER_ADMIN_EMAIL: 'admin@rankclear.com',
+  SUPER_ADMIN_SEED_PASSWORD: 'RankClear-Dev-Admin-2026!',
   BILLING_TEST_MODE: 'true',
   EMAIL_PROVIDER: 'console',
   SEARCH_PROVIDER: 'none',

@@ -144,7 +144,7 @@ export interface ReportData {
 }
 
 export const REPORT_LIMITATIONS = [
-  'RankInAI measures signals that are publicly visible on your website at the time of the audit. It cannot see inside any AI system’s training data, retrieval index or ranking logic.',
+  'RankClear measures signals that are publicly visible on your website at the time of the audit. It cannot see inside any AI system’s training data, retrieval index or ranking logic.',
   'No tool — including this one — can guarantee that ChatGPT, Perplexity, Gemini, Copilot or any other assistant will mention, cite or recommend a business.',
   'Scores describe AI visibility readiness: how well the site is set up to be discovered, understood, retrieved and attributed. They are not a prediction of traffic, referrals or revenue.',
   'The crawl is bounded by your plan and by what is publicly reachable. Content behind a login, a paywall, a form, or rendered only by client-side JavaScript after user interaction is not analyzed.',
@@ -156,7 +156,7 @@ export const REPORT_LIMITATIONS = [
 export const METHODOLOGY_SUMMARY = [
   {
     heading: 'Evidence collection',
-    body: 'A crawler identifying itself as RankInAI-Auditor fetches robots.txt, the XML sitemap and llms.txt, then requests up to your plan’s page limit of public HTML pages. It honors robots.txt rules for its own agent, follows a bounded number of redirects, enforces a response size cap and a request timeout, and never submits forms, signs in or executes downloaded files.',
+    body: 'A crawler identifying itself as RankClear-Auditor fetches robots.txt, the XML sitemap and llms.txt, then requests up to your plan’s page limit of public HTML pages. It honors robots.txt rules for its own agent, follows a bounded number of redirects, enforces a response size cap and a request timeout, and never submits forms, signs in or executes downloaded files.',
   },
   {
     heading: 'Deterministic checks',

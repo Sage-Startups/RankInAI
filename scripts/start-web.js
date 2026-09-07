@@ -25,7 +25,7 @@ function bootLog(level, fields) {
   const line = `${JSON.stringify({
     ts: new Date().toISOString(),
     level,
-    service: 'rankinai-web',
+    service: 'rankclear-web',
     ...fields,
   })}\n`;
   try {
@@ -81,7 +81,7 @@ for (const { from, to } of copies) {
     try {
       cpSync(from, to, { recursive: true });
     } catch (error) {
-      console.warn(`[rankinai] Could not copy ${from} -> ${to}:`, error.message);
+      console.warn(`[rankclear] Could not copy ${from} -> ${to}:`, error.message);
     }
   }
 }

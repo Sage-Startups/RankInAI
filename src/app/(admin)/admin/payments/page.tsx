@@ -67,7 +67,7 @@ export default async function AdminPaymentsPage({
       </header>
 
       <p className="text-xs text-[var(--muted-foreground)]">
-        RankInAI never handles card data. All card details and refunds are managed inside Stripe;
+        RankClear never handles card data. All card details and refunds are managed inside Stripe;
         this view reflects what Stripe has reported through webhooks.
       </p>
 

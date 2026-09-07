@@ -1,4 +1,4 @@
-// RankInAI — data model
+// RankClear — data model
 //
 // Conventions used throughout:
 //  * every business table carries `isDemo` so seeded demonstration records can

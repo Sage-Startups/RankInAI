@@ -130,7 +130,7 @@ export async function crawlSite(startUrl: string, options: CrawlOptions): Promis
       fatalError: {
         code: 'ROBOTS_BLOCKED',
         message:
-          "This website's robots.txt disallows all automated crawling, so RankInAI cannot analyze it. Update robots.txt to allow the RankInAI-Auditor agent and run the audit again.",
+          "This website's robots.txt disallows all automated crawling, so RankClear cannot analyze it. Update robots.txt to allow the RankClear-Auditor agent and run the audit again.",
       },
     };
   }

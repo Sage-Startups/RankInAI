@@ -97,8 +97,7 @@ function ReportCover({ data }: { data: ReportData }) {
               <p className="text-lg font-bold tracking-tight">{data.branding.companyName}</p>
             ) : (
               <p className="text-lg font-bold tracking-tight">
-                Rank<span className="text-violet-400">In</span>
-                <span className="text-cyan-400">AI</span>
+                Rank<span className="text-[#5ccec1]">Clear</span>
               </p>
             )}
             <p className="mt-1 text-xs tracking-[0.16em] text-slate-400 uppercase">

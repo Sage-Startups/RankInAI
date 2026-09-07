@@ -11,7 +11,7 @@ import { absoluteUrl } from '@/lib/site-config';
 export const metadata: Metadata = {
   title: 'How it works',
   description:
-    'How a RankInAI audit runs: safe crawling, roughly seventy deterministic checks, weighted category scoring and a prioritized action plan.',
+    'How a RankClear audit runs: safe crawling, roughly seventy deterministic checks, weighted category scoring and a prioritized action plan.',
   alternates: { canonical: '/how-it-works' },
 };
 
@@ -27,10 +27,10 @@ const STEPS = [
   },
   {
     icon: ScanSearch,
-    title: 'RankInAI crawls and analyzes it',
+    title: 'RankClear crawls and analyzes it',
     body: 'A queued worker fetches robots.txt, your sitemap and llms.txt, then crawls up to 50 public pages depending on your plan, prioritizing the pages that matter most for AI visibility.',
     detail: [
-      'The crawler identifies itself as RankInAI-Auditor and honors robots.txt rules for that agent.',
+      'The crawler identifies itself as RankClear-Auditor and honors robots.txt rules for that agent.',
       'It never submits a form, never signs in, never executes a downloaded file and skips cart, checkout, account and login URLs entirely.',
       'Homepage, about, services, FAQ, contact, case studies and editorial pages are prioritized over deep or parameterized URLs.',
     ],
@@ -94,7 +94,7 @@ export default function HowItWorksPage() {
           <SectionHeading
             eyebrow="How it works"
             title="From a URL to an evidence-backed action plan"
-            description="RankInAI reads your public website the way a search crawler does, scores what it finds against a fixed rubric, and turns every gap into a specific change you can make."
+            description="RankClear reads your public website the way a search crawler does, scores what it finds against a fixed rubric, and turns every gap into a specific change you can make."
           />
         </div>
       </section>
@@ -238,12 +238,12 @@ effective_weight = base_weight / Σ(base_weight of available categories)`}
         <SectionHeading
           eyebrow="Honest limits"
           title="What an audit can and cannot tell you"
-          description="RankInAI measures observable website signals. It is important to be precise about what that does and does not prove."
+          description="RankClear measures observable website signals. It is important to be precise about what that does and does not prove."
         />
 
         <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
           <Card className="border-emerald-500/25 bg-emerald-500/[0.06] p-6">
-            <h3 className="text-sm font-semibold text-emerald-300">What RankInAI does</h3>
+            <h3 className="text-sm font-semibold text-emerald-300">What RankClear does</h3>
             <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-slate-300">
               <li>Measures signals directly from your website with recorded evidence</li>
               <li>Scores AI visibility readiness against a fixed, published rubric</li>

@@ -8,7 +8,7 @@ import { SITE, absoluteUrl } from '@/lib/site-config';
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'RankInAI is a focused software product for auditing AI visibility and Generative Engine Optimization readiness. Here is what it is, what it is not, and how it is built.',
+    'RankClear is a focused software product for auditing AI visibility and Generative Engine Optimization readiness. Here is what it is, what it is not, and how it is built.',
   alternates: { canonical: '/about' },
 };
 
@@ -23,7 +23,7 @@ const PRINCIPLES = [
   },
   {
     title: 'Honest about limits',
-    body: 'RankInAI measures readiness for AI visibility. It cannot see inside any AI system, and it never claims a specific assistant will mention or recommend you. Anyone promising that is guessing.',
+    body: 'RankClear measures readiness for AI visibility. It cannot see inside any AI system, and it never claims a specific assistant will mention or recommend you. Anyone promising that is guessing.',
   },
   {
     title: 'Respectful of the sites we read',
@@ -54,7 +54,7 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="About"
             title="A focused tool for one specific problem"
-            description="RankInAI exists to answer a question that traditional SEO tooling was not built for: can an AI system find this business, understand what it does, and safely say something accurate about it?"
+            description="RankClear exists to answer a question that traditional SEO tooling was not built for: can an AI system find this business, understand what it does, and safely say something accurate about it?"
           />
         </div>
       </section>
@@ -75,9 +75,9 @@ export default function AboutPage() {
               stand alone, and specific enough to be worth quoting. Most business websites were not
               built that way, and most audit tools do not check for it.
             </p>
-            <p>RankInAI checks for exactly that, and tells you what to change.</p>
+            <p>RankClear checks for exactly that, and tells you what to change.</p>
 
-            <h2 className="text-white">What RankInAI is</h2>
+            <h2 className="text-white">What RankClear is</h2>
             <p>
               A self-serve web application. You enter a website, it crawls the public pages, runs
               roughly seventy deterministic checks across seven weighted categories, and produces a
@@ -85,7 +85,7 @@ export default function AboutPage() {
               white-label the report for clients.
             </p>
 
-            <h2 className="text-white">What RankInAI is not</h2>
+            <h2 className="text-white">What RankClear is not</h2>
             <p>
               It is not a rank tracker, a content generator, or a service that claims privileged
               access to any AI system. It has no relationship with OpenAI, Perplexity, Google,

@@ -92,7 +92,7 @@ export default async function CheckoutStartPage({
             <p className="mt-4 text-center text-xs text-[var(--muted-foreground)]">
               {simulated
                 ? 'Billing test mode is enabled on this deployment.'
-                : 'Payments are processed securely by Stripe. RankInAI never sees your card details.'}
+                : 'Payments are processed securely by Stripe. RankClear never sees your card details.'}
             </p>
 
             <div className="mt-6 border-t border-[var(--border)] pt-5 text-center">

@@ -191,7 +191,7 @@ export default async function DashboardPage({
           <EmptyState
             icon={<Sparkles className="size-6" aria-hidden="true" />}
             title="Run your first audit"
-            description="Enter your website and RankInAI will crawl it, score seven AI visibility categories and give you a prioritized action plan. Not ready? Open the sample report to see exactly what you'll get."
+            description="Enter your website and RankClear will crawl it, score seven AI visibility categories and give you a prioritized action plan. Not ready? Open the sample report to see exactly what you'll get."
             action={
               <div className="flex flex-wrap justify-center gap-2.5">
                 <Button asChild>

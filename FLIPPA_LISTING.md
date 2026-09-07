@@ -74,7 +74,7 @@ truthful position and the stronger one.
 
 ## Operations
 
-**What the business does.** RankInAI audits a website's readiness to be found,
+**What the business does.** RankClear audits a website's readiness to be found,
 understood and cited by AI assistants and AI-powered search. A visitor enters a
 URL; the platform crawls up to ten pages, runs 76 deterministic checks across
 seven weighted categories, and produces an overall AI Visibility Score with
@@ -202,7 +202,7 @@ nothing unless a new owner enables them.
 **What the buyer is actually acquiring:** the complete source code and its full
 history, the audit engine and its scoring methodology, the database schema and
 migrations, the Stripe integration, the test suite, all documentation, the deployed
-Railway environment, and the RankInAI brand and domain.
+Railway environment, and the RankClear brand and domain.
 
 **Unit economics, stated as design rather than as results.** The one-time audit is
 priced at $49 against a marginal cost per audit measured in fractions of a cent —
@@ -216,7 +216,7 @@ treat their own marketing test as the first real experiment, not as a formality.
 
 ## Additional Notes
 
-**How this came to exist.** RankInAI was built as a complete, production-grade
+**How this came to exist.** RankClear was built as a complete, production-grade
 product from a single detailed specification, then deployed. The intent was to
 build the whole thing properly — engine, payments, admin, tests, documentation,
 deployment — rather than a demo to flip. The commit history is intact and comes

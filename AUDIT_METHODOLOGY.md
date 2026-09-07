@@ -1,11 +1,11 @@
 # Audit Methodology
 
-How RankInAI produces an AI Visibility Score, what each check looks at, and what the
+How RankClear produces an AI Visibility Score, what each check looks at, and what the
 number does and does not mean.
 
 ## The honest version first
 
-RankInAI measures signals it can read from a website. It cannot measure whether
+RankClear measures signals it can read from a website. It cannot measure whether
 ChatGPT, Perplexity, Gemini, Copilot or any other system actually mentions a business,
 because none of them publish their retrieval or citation criteria and all of them
 change without notice.
@@ -186,7 +186,7 @@ Each carries an example implementation where one is useful.
 
 ## Limitations
 
-- JavaScript-rendered content that requires execution is not seen. RankInAI reads
+- JavaScript-rendered content that requires execution is not seen. RankClear reads
   server-delivered HTML, as most AI crawlers do.
 - Pages behind authentication, paywalls or `robots.txt` disallow are not audited.
 - Competitor comparison uses the same public signals; it infers nothing about a

@@ -5,14 +5,14 @@ import bcrypt from 'bcryptjs';
  * Integration-test helpers.
  *
  * Every test file claims its own namespace via `useTestScope('name')`. All
- * fixture users are created under `<scope>-…@rankinai-itest.invalid`, and
+ * fixture users are created under `<scope>-…@rankclear-itest.invalid`, and
  * cleanup only removes rows in that namespace. Test files are therefore
  * independent of each other regardless of how Vitest schedules them.
  */
 
 export const prisma = new PrismaClient();
 
-export const TEST_EMAIL_DOMAIN = 'rankinai-itest.invalid';
+export const TEST_EMAIL_DOMAIN = 'rankclear-itest.invalid';
 
 let scope = 'default';
 let counter = 0;

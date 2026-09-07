@@ -363,7 +363,7 @@ export function validateAuditUrl(input: string): UrlValidationResult {
       ok: false,
       code: 'CREDENTIALS_IN_URL',
       message:
-        'Remove the username and password from the address. RankInAI never signs in to a website.',
+        'Remove the username and password from the address. RankClear never signs in to a website.',
     };
   }
 

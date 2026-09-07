@@ -107,6 +107,6 @@ Competitive Visibility cannot be scored when no competitor is supplied. Its weig
 ## What this run does not prove
 
 - The target is a controlled fixture, not a live commercial website. It exercises the engine deterministically; it is not a sample of real-world sites.
-- Scores measure signals RankInAI can read from a website. They are not a measurement of whether ChatGPT, Perplexity, Gemini or Copilot actually mention a business, and no audit can establish that.
+- Scores measure signals RankClear can read from a website. They are not a measurement of whether ChatGPT, Perplexity, Gemini or Copilot actually mention a business, and no audit can establish that.
 - AI narrative enhancement was disabled on this run. Scoring and evidence are rule-based either way; only the written explanations change.
 

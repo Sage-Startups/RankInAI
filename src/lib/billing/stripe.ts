@@ -18,7 +18,7 @@ export function getStripe(): Stripe | null {
     cached = new Stripe(env.STRIPE_SECRET_KEY, {
       // Pinning the version keeps webhook payload shapes stable across deploys.
       apiVersion: '2026-07-29.dahlia',
-      appInfo: { name: 'RankInAI', version: '1.0.0' },
+      appInfo: { name: 'RankClear', version: '1.0.0' },
       maxNetworkRetries: 2,
       timeout: 20_000,
     });

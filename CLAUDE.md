@@ -41,7 +41,7 @@ scripts/              start-web, verify, stripe-setup, full-audit-validation
   suspension or role change takes effect immediately rather than at the next token
   refresh.
 - **US English and US dollars** throughout, in code and in copy.
-- **Honest positioning.** Never claim RankInAI can guarantee a mention on any AI
+- **Honest positioning.** Never claim RankClear can guarantee a mention on any AI
   platform. The vocabulary is "AI visibility readiness", "GEO readiness", "may
   improve discoverability".
 

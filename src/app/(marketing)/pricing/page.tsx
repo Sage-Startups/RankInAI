@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'RankInAI pricing in US dollars. One complete AI visibility audit for $49, or monthly plans from $29. Compare Starter, Growth and Agency.',
+    'RankClear pricing in US dollars. One complete AI visibility audit for $49, or monthly plans from $29. Compare Starter, Growth and Agency.',
   alternates: { canonical: '/pricing' },
 };
 
@@ -46,12 +46,12 @@ const PRICING_FAQS = [
   {
     question: 'What counts as a competitor?',
     answer:
-      'Any public website you want compared against yours. RankInAI fetches a single public homepage from each competitor and compares the same homepage-level signals. It does not crawl a competitor’s site in depth.',
+      'Any public website you want compared against yours. RankClear fetches a single public homepage from each competitor and compares the same homepage-level signals. It does not crawl a competitor’s site in depth.',
   },
   {
     question: 'Can I white-label reports for my clients?',
     answer:
-      'Agency plans can replace the RankInAI cover branding with your business name and logo. A small "Powered by RankInAI" line remains in the report footer.',
+      'Agency plans can replace the RankClear cover branding with your business name and logo. A small "Powered by RankClear" line remains in the report footer.',
   },
   {
     question: 'What is your refund policy?',
@@ -135,7 +135,8 @@ export default function PricingPage() {
               allowance for the period has been used.
             </li>
             <li>
-              Payments are processed by Stripe. RankInAI never receives or stores your card details.
+              Payments are processed by Stripe. RankClear never receives or stores your card
+              details.
             </li>
           </ul>
           <p className="mt-4 text-sm text-slate-400">

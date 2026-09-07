@@ -74,7 +74,7 @@ async function main() {
 
   const user = await prisma.user.create({
     data: {
-      email: `${MARKER}-${Date.now()}@rankinai-validation.invalid`,
+      email: `${MARKER}-${Date.now()}@rankclear-validation.invalid`,
       name: 'Full Audit Validation',
       isDemo: false,
     },
@@ -285,7 +285,7 @@ async function main() {
         'the engine deterministically; it is not a sample of real-world sites.',
     );
     push(
-      '- Scores measure signals RankInAI can read from a website. They are not a measurement ' +
+      '- Scores measure signals RankClear can read from a website. They are not a measurement ' +
         'of whether ChatGPT, Perplexity, Gemini or Copilot actually mention a business, and ' +
         'no audit can establish that.',
     );

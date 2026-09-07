@@ -37,7 +37,7 @@ describe('web server bind address', () => {
   });
 
   it('rejects other hostnames that resolve but are not bind specifications', () => {
-    expect(isBindAddress('rankinai.up.railway.app')).toBe(false);
+    expect(isBindAddress('rankclear.up.railway.app')).toBe(false);
     expect(isBindAddress('postgres.railway.internal')).toBe(false);
   });
 

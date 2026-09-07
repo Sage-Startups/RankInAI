@@ -38,7 +38,7 @@ export default async function SettingsPage() {
         </p>
       </header>
 
-      <Section title="Profile" description="How your account and company appear inside RankInAI.">
+      <Section title="Profile" description="How your account and company appear inside RankClear.">
         <ProfileForm
           defaults={{
             name: user.name ?? '',
@@ -49,7 +49,7 @@ export default async function SettingsPage() {
         />
       </Section>
 
-      <Section title="Account" description="Details of this RankInAI account.">
+      <Section title="Account" description="Details of this RankClear account.">
         <dl className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
           <Field label="Email address" value={user.email} />
           <Field

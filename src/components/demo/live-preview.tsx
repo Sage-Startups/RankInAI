@@ -240,7 +240,7 @@ function PreviewResult({ data }: { data: NonNullable<PreviewResponse['data']> })
             <div className="text-slate-300">
               <p className="font-medium text-white">This is a preview, not the full audit.</p>
               <p className="mt-1 text-[0.8125rem] leading-relaxed">
-                A full RankInAI audit crawls up to 50 pages, scores all seven categories with
+                A full RankClear audit crawls up to 50 pages, scores all seven categories with
                 evidence for every finding, compares competitors and produces a prioritized action
                 plan with example implementations.
               </p>

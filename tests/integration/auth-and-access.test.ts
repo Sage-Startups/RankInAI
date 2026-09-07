@@ -211,7 +211,7 @@ describe('password reset tokens', () => {
 
     const captured = lastEmailTo(email);
     expect(captured).toBeDefined();
-    expect(captured?.subject).toContain('Reset your RankInAI password');
+    expect(captured?.subject).toContain('Reset your RankClear password');
     expect(captured?.text).toContain(url);
     // The email must state the expiry so the user is not surprised.
     expect(captured?.text).toContain('60 minutes');

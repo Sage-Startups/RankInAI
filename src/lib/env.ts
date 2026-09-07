@@ -37,7 +37,7 @@ const intFromString = (fallback: number) =>
 
 /**
  * A URL that forgives the most common operator mistake: pasting a bare domain
- * without a scheme. `rankinai.up.railway.app` becomes `https://…`; anything
+ * without a scheme. `rankclear.up.railway.app` becomes `https://…`; anything
  * still unparseable falls back to the default rather than failing the whole
  * environment — a wrong public URL mis-addresses Stripe redirects, which is
  * recoverable, while a failed parse used to take down every route.
@@ -61,7 +61,7 @@ const schema = z.object({
   // `.catch` on the forgiving fields below: a malformed optional value must
   // degrade to its default, not fail the parse and 500 every request. Only
   // DATABASE_URL stays strict — nothing works without it.
-  SUPER_ADMIN_EMAIL: z.string().email().catch('admin@rankinai.com').default('admin@rankinai.com'),
+  SUPER_ADMIN_EMAIL: z.string().email().catch('admin@rankclear.com').default('admin@rankclear.com'),
   SUPER_ADMIN_SEED_PASSWORD: z.string().optional(),
 
   STRIPE_SECRET_KEY: z.string().optional(),
@@ -81,9 +81,9 @@ const schema = z.object({
   SERPER_API_KEY: z.string().optional(),
 
   EMAIL_PROVIDER: z.enum(['console', 'resend']).catch('console').default('console'),
-  EMAIL_FROM: z.string().default('RankInAI <no-reply@rankinai.com>'),
+  EMAIL_FROM: z.string().default('RankClear <no-reply@rankclear.com>'),
   EMAIL_PROVIDER_API_KEY: z.string().optional(),
-  SUPPORT_EMAIL: z.string().default('support@rankinai.com'),
+  SUPPORT_EMAIL: z.string().default('support@rankclear.com'),
 
   CRON_SECRET: z.string().optional(),
   AUDIT_WORKER_SECRET: z.string().optional(),
@@ -95,7 +95,7 @@ const schema = z.object({
   CRAWL_MAX_BYTES: intFromString(3_000_000),
   CRAWL_MAX_REDIRECTS: intFromString(5),
   CRAWL_DELAY_MS: intFromString(400),
-  CRAWL_USER_AGENT: z.string().default('RankInAI-Auditor/1.0 (+https://rankinai.com/crawler)'),
+  CRAWL_USER_AGENT: z.string().default('RankClear-Auditor/1.0 (+https://rankclear.com/crawler)'),
 
   ALLOW_TEST_FIXTURE_HOST: z.string().optional(),
   TEST_FIXTURE_ORIGIN: z.string().optional(),
@@ -135,7 +135,7 @@ function build(): AppEnv {
   const source: NodeJS.ProcessEnv = { ...process.env };
   if (isBuildPhase && !source.DATABASE_URL) {
     console.warn(
-      '[rankinai] WARNING: DATABASE_URL is not set during a production build.\n[rankinai] The build will continue, but the deployed server will refuse every request until this is fixed.',
+      '[rankclear] WARNING: DATABASE_URL is not set during a production build.\n[rankclear] The build will continue, but the deployed server will refuse every request until this is fixed.',
     );
     source.DATABASE_URL = 'postgresql://build-phase-placeholder:0/none';
   }
@@ -168,7 +168,7 @@ function build(): AppEnv {
   const configWarnings: string[] = [];
   const warn = (message: string) => {
     configWarnings.push(message);
-    console.warn(`[rankinai] WARNING: ${message}`);
+    console.warn(`[rankclear] WARNING: ${message}`);
   };
 
   // AUTH_SECRET: required for durable sessions. When absent or invalid in
@@ -185,9 +185,9 @@ function build(): AppEnv {
     if (tooShort || isPlaceholder) {
       if (isBuildPhase) {
         // Nothing is served during a build; a marked placeholder is enough.
-        authSecret = 'rankinai-build-phase-placeholder-never-used-to-sign-anything';
+        authSecret = 'rankclear-build-phase-placeholder-never-used-to-sign-anything';
         console.warn(
-          '[rankinai] WARNING: AUTH_SECRET is missing or invalid. The build will continue; the deployed server will fall back to an ephemeral secret until a real one is set.',
+          '[rankclear] WARNING: AUTH_SECRET is missing or invalid. The build will continue; the deployed server will fall back to an ephemeral secret until a real one is set.',
         );
       } else {
         const bytes = new Uint8Array(48);
@@ -206,7 +206,7 @@ function build(): AppEnv {
   } else if (!authSecret) {
     // Deterministic, clearly-marked development fallback so `next dev` and the
     // test suite work without manual setup. Never reachable in production.
-    authSecret = 'rankinai-development-only-secret-do-not-use-in-production';
+    authSecret = 'rankclear-development-only-secret-do-not-use-in-production';
   }
 
   // When the entrypoint already generated the fallback (before the server

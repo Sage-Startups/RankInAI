@@ -1,22 +1,22 @@
-# RankInAI
+# RankClear
 
 An AI visibility and Generative Engine Optimization (GEO) auditing platform for US
 businesses, agencies and consultants.
 
-RankInAI crawls a website, runs 76 deterministic checks across seven categories, and
+RankClear crawls a website, runs 76 deterministic checks across seven categories, and
 produces an evidence-backed report with a prioritized action plan — as an interactive
 web report and a downloadable PDF.
 
 ## What it measures, and what it does not
 
-RankInAI measures **signals it can read from your website**: whether AI crawlers are
+RankClear measures **signals it can read from your website**: whether AI crawlers are
 allowed in, whether your business entity is stated clearly, whether your content is
 substantive and attributable, whether it is structured in a way retrieval systems can
 extract, and whether it carries the trust markers that make a citation defensible.
 
 It does **not** measure whether ChatGPT, Perplexity, Gemini or Copilot actually mention
 your business, and no audit can establish that. Those systems do not publish their
-retrieval or citation criteria, and their behavior changes without notice. RankInAI
+retrieval or citation criteria, and their behavior changes without notice. RankClear
 reports GEO readiness. Improving readiness may improve discoverability; it guarantees
 nothing about any specific platform's output.
 

@@ -99,7 +99,7 @@ export function ComparisonTable() {
   return (
     <div className="overflow-x-auto rounded-xl border border-white/12">
       <table className="w-full min-w-3xl border-collapse text-left text-sm">
-        <caption className="sr-only">Feature comparison across RankInAI plans</caption>
+        <caption className="sr-only">Feature comparison across RankClear plans</caption>
         <thead>
           <tr className="bg-white/[0.04]">
             <th scope="col" className="px-5 py-4 font-semibold text-white">

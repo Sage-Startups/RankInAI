@@ -8,6 +8,11 @@ The application is complete, verified locally, and **deployed** at
 https://rankinai-production.up.railway.app — its health endpoint reports
 `status: ok` with the database reachable and the queue readable.
 
+That URL still carries the pre-rebrand name because it is derived from the
+Railway **service** name, not from the product. It is the real, live address and
+is left as-is rather than rewritten to something that would not resolve;
+renaming the service in Railway changes it.
+
 The deployment is running in a **partially configured** state, which the app
 reports honestly rather than hiding:
 
@@ -44,7 +49,7 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **265 passed**, 0 failed   | `npm run test:unit`        |
+| Unit                  | **269 passed**, 0 failed   | `npm run test:unit`        |
 | Integration           | **94 passed**, 0 failed    | `npm run test:integration` |
 | End-to-end            | **38 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
@@ -103,7 +108,7 @@ the same fulfillment code.
 
 Nineteen-section interactive report plus a branded PDF with running headers, footers,
 page numbers and correct page breaks. Agency white-labeling retains a "Powered by
-RankInAI" footer. PDFs are rendered with PDFKit and cached in PostgreSQL — no
+RankClear" footer. PDFs are rendered with PDFKit and cached in PostgreSQL — no
 headless browser, no local disk.
 
 ### Super admin
@@ -170,7 +175,7 @@ None of these are code gaps. Each needs a secret this environment does not have.
 
 - The E2E suite runs Chromium only.
 - No load or performance testing has been done.
-- JavaScript-rendered content is not executed during a crawl; RankInAI reads
+- JavaScript-rendered content is not executed during a crawl; RankClear reads
   server-delivered HTML, as most AI crawlers do. This is documented in
   `AUDIT_METHODOLOGY.md` and stated in each report's limitations section.
 - `npm audit` reports 3 high-severity advisories, all in Next.js 15's own transitive

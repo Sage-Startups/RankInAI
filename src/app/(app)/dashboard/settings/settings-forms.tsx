@@ -215,7 +215,7 @@ export function EmailPreferencesForm({
     {
       name: 'emailMarketing',
       label: 'Marketing',
-      description: 'Occasional emails about pricing, offers and RankInAI news.',
+      description: 'Occasional emails about pricing, offers and RankClear news.',
       defaultChecked: defaults.emailMarketing,
     },
   ];

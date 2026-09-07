@@ -97,7 +97,7 @@ export const FETCH_ERROR_MESSAGES: Record<FetchErrorCode, string> = {
     'We could not connect to the website. It may be offline or blocking automated visitors.',
   TOO_MANY_REDIRECTS: 'The website redirected too many times.',
   REDIRECT_LOOP: 'The website is stuck in a redirect loop.',
-  RESPONSE_TOO_LARGE: 'The page is too large for RankInAI to analyze.',
+  RESPONSE_TOO_LARGE: 'The page is too large for RankClear to analyze.',
   UNSUPPORTED_CONTENT_TYPE: 'That address does not return a readable web page.',
   HTTP_ERROR: 'The website returned an error response.',
 };

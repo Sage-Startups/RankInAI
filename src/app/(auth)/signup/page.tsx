@@ -12,7 +12,7 @@ import { formatUsd } from '@/lib/utils';
 export const metadata: Metadata = {
   title: 'Create your account',
   description:
-    'Create a RankInAI account to run a full AI visibility audit of your website and get a prioritized action plan.',
+    'Create a RankClear account to run a full AI visibility audit of your website and get a prioritized action plan.',
   robots: { index: true, follow: true },
 };
 

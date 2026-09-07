@@ -5,7 +5,7 @@ import { ForgotPasswordForm } from '@/app/(auth)/forgot-password/forgot-password
 
 export const metadata: Metadata = {
   title: 'Reset your password',
-  description: 'Request a password reset link for your RankInAI account.',
+  description: 'Request a password reset link for your RankClear account.',
   robots: { index: false, follow: false },
 };
 

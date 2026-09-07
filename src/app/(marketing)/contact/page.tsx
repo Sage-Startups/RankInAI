@@ -9,7 +9,7 @@ import { getSettings } from '@/lib/settings';
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Contact the RankInAI team about sales, support, billing, agency pricing or a question about an audit result.',
+    'Contact the RankClear team about sales, support, billing, agency pricing or a question about an audit result.',
   alternates: { canonical: '/contact' },
 };
 

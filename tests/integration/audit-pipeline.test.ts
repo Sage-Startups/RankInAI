@@ -259,7 +259,7 @@ describe('end-to-end audit pipeline against the controlled fixture', () => {
   it('fails cleanly and refunds the credit for an unreachable website', async () => {
     const user = await createTestUser({ credits: 1 });
     const audit = await createQueuedAudit(user.id, {
-      websiteUrl: 'https://this-domain-definitely-does-not-exist-rankinai.invalid',
+      websiteUrl: 'https://this-domain-definitely-does-not-exist-rankclear.invalid',
     });
     await reserveAuditCredit(user.id, audit.id);
 
@@ -468,7 +468,7 @@ describe('free live preview', () => {
   });
 
   it('rejects a reserved internal suffix before any DNS lookup', async () => {
-    const result = await runFreePreview('https://definitely-not-real-rankinai-preview.invalid');
+    const result = await runFreePreview('https://definitely-not-real-rankclear-preview.invalid');
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe('BLOCKED_HOSTNAME');
@@ -477,7 +477,7 @@ describe('free live preview', () => {
 
   it('returns a friendly error for a domain that does not resolve', async () => {
     const result = await runFreePreview(
-      'https://rankinai-preview-nonexistent-a7f3c91b2e.example.com',
+      'https://rankclear-preview-nonexistent-a7f3c91b2e.example.com',
     );
     expect(result.ok).toBe(false);
     if (!result.ok) {

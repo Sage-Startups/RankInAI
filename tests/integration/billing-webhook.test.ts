@@ -68,7 +68,7 @@ describe('Stripe webhook processing', () => {
           customer: `cus_itest_${user.id}`,
           client_reference_id: user.id,
           payment_intent: `pi_itest_${user.id}`,
-          metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
+          metadata: { rankclearUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
         }),
       );
 
@@ -99,7 +99,7 @@ describe('Stripe webhook processing', () => {
         currency: 'usd',
         customer: `cus_itest_${user.id}`,
         client_reference_id: user.id,
-        metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
+        metadata: { rankclearUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
       };
 
       const original = event('checkout.session.completed', payload);
@@ -126,7 +126,7 @@ describe('Stripe webhook processing', () => {
         amount_total: 4900,
         currency: 'usd',
         client_reference_id: user.id,
-        metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
+        metadata: { rankclearUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
       };
 
       await processStripeEvent(event('checkout.session.completed', payload));
@@ -150,7 +150,7 @@ describe('Stripe webhook processing', () => {
           payment_status: 'unpaid',
           amount_total: 4900,
           client_reference_id: user.id,
-          metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
+          metadata: { rankclearUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
         }),
       );
 
@@ -172,7 +172,7 @@ describe('Stripe webhook processing', () => {
         }),
       );
 
-      expect(result.message).toContain('No matching RankInAI user');
+      expect(result.message).toContain('No matching RankClear user');
     });
   });
 
@@ -187,7 +187,7 @@ describe('Stripe webhook processing', () => {
           status: 'active',
           customer: `cus_itest_${user.id}`,
           cancel_at_period_end: false,
-          metadata: { rankinaiUserId: user.id, productKey: 'GROWTH_MONTHLY' },
+          metadata: { rankclearUserId: user.id, productKey: 'GROWTH_MONTHLY' },
           items: {
             data: [
               {
@@ -226,7 +226,7 @@ describe('Stripe webhook processing', () => {
           object: 'subscription',
           status: 'active',
           customer: `cus_itest_${user.id}`,
-          metadata: { rankinaiUserId: user.id, productKey: 'AGENCY_MONTHLY' },
+          metadata: { rankclearUserId: user.id, productKey: 'AGENCY_MONTHLY' },
           items: { data: [{ price: { id: 'price_itest_agency' } }] },
         }),
       );
@@ -258,7 +258,7 @@ describe('Stripe webhook processing', () => {
           status: 'active',
           customer: `cus_itest_${user.id}`,
           cancel_at_period_end: true,
-          metadata: { rankinaiUserId: user.id, productKey: 'GROWTH_MONTHLY' },
+          metadata: { rankclearUserId: user.id, productKey: 'GROWTH_MONTHLY' },
           items: { data: [{ price: { id: 'price_itest_growth' } }] },
         }),
       );
@@ -430,7 +430,7 @@ describe('Stripe webhook processing', () => {
         payment_status: 'paid',
         amount_total: 4900,
         client_reference_id: user.id,
-        metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
+        metadata: { rankclearUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
       });
 
       await processStripeEvent(stripeEvent);
@@ -471,7 +471,7 @@ describe('Stripe webhook processing', () => {
           name: 'A Buyer',
           address: { line1: '1 Main St' },
         },
-        metadata: { rankinaiUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
+        metadata: { rankclearUserId: user.id, productKey: 'ONE_TIME_AUDIT' },
       });
 
       await processStripeEvent(stripeEvent);

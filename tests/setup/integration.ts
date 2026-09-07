@@ -7,7 +7,7 @@ import { writeTestEnvFile } from '../test-env';
  *
  * `.env.test` is regenerated first so a fresh clone works with no manual setup
  * and so this run and the E2E suite always agree on the settings. It points
- * DATABASE_URL at the dedicated `rankinai_test` database. Tests clean up after
+ * DATABASE_URL at the dedicated `rankclear_test` database. Tests clean up after
  * themselves rather than truncating everything, so a developer's seeded demo
  * data survives a test run.
  */

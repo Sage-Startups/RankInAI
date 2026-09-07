@@ -37,7 +37,7 @@ export async function ensureStripeCustomer(userId: string): Promise<string | nul
   const customer = await stripe.customers.create({
     email: user.email,
     name: user.name ?? undefined,
-    metadata: { rankinaiUserId: user.id },
+    metadata: { rankclearUserId: user.id },
   });
 
   await prisma.user.update({
@@ -104,18 +104,18 @@ export async function createCheckoutSession(params: {
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
       metadata: {
-        rankinaiUserId: params.userId,
+        rankclearUserId: params.userId,
         productKey: params.productKey,
       },
       ...(product.interval === 'month'
         ? {
             subscription_data: {
-              metadata: { rankinaiUserId: params.userId, productKey: params.productKey },
+              metadata: { rankclearUserId: params.userId, productKey: params.productKey },
             },
           }
         : {
             payment_intent_data: {
-              metadata: { rankinaiUserId: params.userId, productKey: params.productKey },
+              metadata: { rankclearUserId: params.userId, productKey: params.productKey },
             },
           }),
     });

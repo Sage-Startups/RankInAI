@@ -1,6 +1,6 @@
 # Railway Setup
 
-RankInAI runs on Railway as **three services in one project**: a PostgreSQL database,
+RankClear runs on Railway as **three services in one project**: a PostgreSQL database,
 a web service and a worker service. The worker is separate on purpose — an audit takes
 tens of seconds and must not occupy a request thread.
 

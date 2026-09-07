@@ -58,7 +58,7 @@ const WORKFLOW = [
     icon: FileSearch,
   },
   {
-    title: 'RankInAI crawls and analyzes',
+    title: 'RankClear crawls and analyzes',
     body: 'A polite, identifiable crawler fetches up to 50 public pages, honors robots.txt and records evidence from each one.',
     icon: ScanSearch,
   },
@@ -189,7 +189,7 @@ export default async function HomePage() {
                 <span className="rk-gradient-text">understand and recommend</span> your business.
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                RankInAI audits your website’s technical accessibility, entity clarity, content
+                RankClear audits your website’s technical accessibility, entity clarity, content
                 authority and answer readiness, then gives you a prioritized plan for improving
                 AI-search visibility.
               </p>
@@ -260,7 +260,7 @@ export default async function HomePage() {
             <ValueStat
               value="0"
               label="guarantees invented"
-              body="RankInAI reports observed website signals and readiness. It never claims a specific AI assistant will mention or recommend your brand."
+              body="RankClear reports observed website signals and readiness. It never claims a specific AI assistant will mention or recommend your brand."
             />
           </div>
         </div>
@@ -274,7 +274,7 @@ export default async function HomePage() {
               align="left"
               eyebrow="What we measure"
               title="Generative search reads your website differently"
-              description="Traditional SEO optimizes for a ranked list of links. Generative engines assemble an answer from passages they can retrieve, understand and attribute. RankInAI evaluates the signals that determine whether AI systems can:"
+              description="Traditional SEO optimizes for a ranked list of links. Generative engines assemble an answer from passages they can retrieve, understand and attribute. RankClear evaluates the signals that determine whether AI systems can:"
             />
             <ul className="mt-7 grid gap-2.5 sm:grid-cols-2">
               {CAPABILITIES.map((item) => (
@@ -340,7 +340,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="Product workflow"
             title="From URL to action plan in one pass"
-            description="No browser extension, no tag to install, no access to your analytics. RankInAI reads your public website the way a search crawler does."
+            description="No browser extension, no tag to install, no access to your analytics. RankClear reads your public website the way a search crawler does."
           />
           <ol className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
             {WORKFLOW.map((step, index) => {
@@ -421,7 +421,7 @@ export default async function HomePage() {
         <SectionHeading
           eyebrow="Free live preview"
           title="Or point it at your own homepage right now"
-          description="No account required. RankInAI fetches your homepage only and shows up to five findings so you can see the analysis working on real content."
+          description="No account required. RankClear fetches your homepage only and shows up to five findings so you can see the analysis working on real content."
         />
         <div className="mt-10">
           {settings.freePreviewEnabled ? (
@@ -475,7 +475,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="Feedback"
             title="What customers say"
-            description="RankInAI is a young product. Rather than invent social proof, the quotes below are clearly marked as samples until real, attributed testimonials replace them."
+            description="RankClear is a young product. Rather than invent social proof, the quotes below are clearly marked as samples until real, attributed testimonials replace them."
           />
           <div className="mt-12">
             <Testimonials />
@@ -488,7 +488,7 @@ export default async function HomePage() {
         <SectionHeading
           eyebrow="Questions"
           title="Frequently asked questions"
-          description="Straight answers about what RankInAI measures, what it cannot promise, and how it treats your website."
+          description="Straight answers about what RankClear measures, what it cannot promise, and how it treats your website."
         />
         <div className="mt-12">
           <FaqAccordion items={HOME_FAQS} />

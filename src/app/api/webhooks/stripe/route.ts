@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       JSON.stringify({
         ts: new Date().toISOString(),
         level: 'warn',
-        service: 'rankinai-web',
+        service: 'rankclear-web',
         message: 'Rejected Stripe webhook with an invalid signature',
         detail: detail.slice(0, 200),
       }),
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       JSON.stringify({
         ts: new Date().toISOString(),
         level: 'error',
-        service: 'rankinai-web',
+        service: 'rankclear-web',
         message: 'Stripe webhook processing failed',
         eventId: event.id,
         eventType: event.type,

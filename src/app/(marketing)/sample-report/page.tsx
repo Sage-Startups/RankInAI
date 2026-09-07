@@ -12,7 +12,7 @@ import { DEMO_DISCLAIMER, DEMO_LABEL } from '@/lib/demo/sample-audit';
 export const metadata: Metadata = {
   title: 'Sample report',
   description:
-    'A complete RankInAI AI visibility audit report for a fictional US business, showing every section: scores, findings with evidence, competitor comparison and the prioritized action plan.',
+    'A complete RankClear AI visibility audit report for a fictional US business, showing every section: scores, findings with evidence, competitor comparison and the prioritized action plan.',
   alternates: { canonical: '/sample-report' },
 };
 
@@ -31,7 +31,7 @@ export default function SampleReportPage() {
             align="left"
             eyebrow="Sample report"
             title="A complete audit report, start to finish"
-            description="This is exactly what a paid RankInAI audit produces — every section, every finding, every piece of evidence. Only the business is fictional."
+            description="This is exactly what a paid RankClear audit produces — every section, every finding, every piece of evidence. Only the business is fictional."
           />
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">

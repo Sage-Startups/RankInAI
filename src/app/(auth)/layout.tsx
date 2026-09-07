@@ -64,7 +64,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             ))}
           </ul>
           <p className="mt-10 max-w-md text-xs leading-relaxed text-slate-400">
-            RankInAI reports on observed website signals and AI visibility readiness. No tool can
+            RankClear reports on observed website signals and AI visibility readiness. No tool can
             guarantee that a specific AI assistant will mention or recommend a business.
           </p>
         </div>

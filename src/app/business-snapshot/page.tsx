@@ -99,7 +99,7 @@ export default function BusinessSnapshotPage() {
         <div className="mb-7">
           <h1 className="text-2xl font-bold">Business snapshot — demonstration data</h1>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted-foreground)]">
-            This page shows how business performance would be presented inside RankInAI. Every
+            This page shows how business performance would be presented inside RankClear. Every
             figure below was fabricated by the seed script for{' '}
             {formatDate(APRIL_2026_WINDOW.from, 'long')} through{' '}
             {formatDate(APRIL_2026_WINDOW.to, 'long')}. Nothing here is verified revenue, real

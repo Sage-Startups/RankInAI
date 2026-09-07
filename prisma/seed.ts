@@ -76,7 +76,7 @@ async function seedSettings() {
 }
 
 async function seedSuperAdmin(): Promise<string> {
-  const email = (process.env.SUPER_ADMIN_EMAIL ?? 'admin@rankinai.com').trim().toLowerCase();
+  const email = (process.env.SUPER_ADMIN_EMAIL ?? 'admin@rankclear.com').trim().toLowerCase();
   const seedPassword = process.env.SUPER_ADMIN_SEED_PASSWORD;
 
   const passwordHash = seedPassword ? await bcrypt.hash(seedPassword, 12) : undefined;
@@ -85,15 +85,15 @@ async function seedSuperAdmin(): Promise<string> {
     where: { email },
     create: {
       email,
-      name: 'RankInAI Administrator',
+      name: 'RankClear Administrator',
       role: Role.SUPER_ADMIN,
       emailVerified: new Date(),
       isDemo: false,
       ...(passwordHash ? { passwordHash } : {}),
       profile: {
         create: {
-          fullName: 'RankInAI Administrator',
-          companyName: 'RankInAI',
+          fullName: 'RankClear Administrator',
+          companyName: 'RankClear',
           onboardingCompleted: true,
         },
       },

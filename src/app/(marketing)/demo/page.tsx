@@ -11,7 +11,7 @@ import { DEMO_DISCLAIMER } from '@/lib/demo/sample-audit';
 export const metadata: Metadata = {
   title: 'Free demo',
   description:
-    'Run the RankInAI demo instantly, or get a free limited AI visibility preview of your own homepage. No account required.',
+    'Run the RankClear demo instantly, or get a free limited AI visibility preview of your own homepage. No account required.',
   alternates: { canonical: '/demo' },
 };
 
@@ -26,7 +26,7 @@ export default async function DemoPage() {
         <div className="rk-container relative py-16 lg:py-20">
           <SectionHeading
             eyebrow="Free demo"
-            title="Two ways to see RankInAI working"
+            title="Two ways to see RankClear working"
             description="Watch a full audit on a fictional company, or point the analyzer at your own homepage. Neither requires an account or a credit card."
           />
         </div>
@@ -85,7 +85,7 @@ export default async function DemoPage() {
           <SectionHeading
             eyebrow="Free live preview"
             title="2. Analyze your own homepage"
-            description="Enter a public website address and RankInAI will fetch the homepage and run twelve real checks against it. This is a limited preview — the full audit crawls up to 50 pages and scores all seven categories."
+            description="Enter a public website address and RankClear will fetch the homepage and run twelve real checks against it. This is a limited preview — the full audit crawls up to 50 pages and scores all seven categories."
           />
 
           <div className="mt-10">
@@ -104,7 +104,7 @@ export default async function DemoPage() {
               <ul className="mt-3 space-y-2 text-[0.8125rem] leading-relaxed text-slate-400">
                 <li>Fetches one page — your homepage — and nothing else.</li>
                 <li>
-                  Identifies itself as RankInAI-Auditor, never submits a form and never signs in.
+                  Identifies itself as RankClear-Auditor, never submits a form and never signs in.
                 </li>
                 <li>
                   Stores only hashed operational metadata (domain, a hashed client identifier, the

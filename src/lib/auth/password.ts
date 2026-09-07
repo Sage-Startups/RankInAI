@@ -25,7 +25,7 @@ const BANNED_PASSWORDS = new Set([
   'admin12345',
   'welcome123',
   'changeme123',
-  'rankinai123',
+  'rankclear123',
 ]);
 
 export interface PasswordCheckResult {

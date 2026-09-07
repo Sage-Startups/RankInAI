@@ -2,7 +2,7 @@
 
 ## Threat model
 
-RankInAI accepts an arbitrary URL from a user and fetches it from a server holding a
+RankClear accepts an arbitrary URL from a user and fetches it from a server holding a
 database and API credentials. That makes **server-side request forgery the primary
 risk**, ahead of everything else. The secondary risks are ordinary for a paid SaaS:
 authorization bypass between tenants, payment fraud through forged webhooks, and
@@ -97,7 +97,7 @@ constraints on it:
 
 ## Payments
 
-- **No card data ever touches RankInAI.** Stripe Checkout and the Customer Portal are
+- **No card data ever touches RankClear.** Stripe Checkout and the Customer Portal are
   hosted by Stripe; the application stores a customer ID and payment metadata only.
 - Webhook signatures are verified with `STRIPE_WEBHOOK_SECRET` against the raw body.
   Unsigned or badly signed requests are rejected before any parsing.
