@@ -156,15 +156,15 @@ export default async function HomePage() {
       />
 
       {/* 1. Announcement bar */}
-      <div className="border-b border-white/10 bg-violet-600/12">
+      <div className="bg-mint-600/12 border-b border-white/10">
         <div className="rk-container flex items-center justify-center gap-2 py-2.5 text-center text-[0.8125rem] text-slate-200">
-          <Sparkles className="size-4 shrink-0 text-cyan-300" aria-hidden="true" />
+          <Sparkles className="text-gold-300 size-4 shrink-0" aria-hidden="true" />
           <span>
             New: llms.txt detection and AI-crawler access checks are now part of every audit.
           </span>
           <Link
             href="/features"
-            className="hidden font-medium text-cyan-300 underline underline-offset-4 hover:text-cyan-200 sm:inline"
+            className="text-gold-300 hover:text-gold-200 hidden font-medium underline underline-offset-4 sm:inline"
           >
             See what changed
           </Link>
@@ -178,10 +178,7 @@ export default async function HomePage() {
         <div className="rk-container relative py-16 lg:py-24">
           <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
             <div>
-              <Badge
-                tone="accent"
-                className="border-violet-400/40 bg-violet-500/15 text-violet-200"
-              >
+              <Badge tone="accent" className="border-mint-400/40 bg-mint-500/15 text-mint-200">
                 AI visibility &amp; GEO audits
               </Badge>
               <h1 className="mt-5 text-[2.125rem] leading-[1.1] font-bold tracking-tight text-white sm:text-5xl lg:text-[3.25rem]">
@@ -283,7 +280,7 @@ export default async function HomePage() {
                   className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-300"
                 >
                   <span
-                    className="mt-1.5 size-1.5 shrink-0 rounded-full bg-cyan-400"
+                    className="bg-gold-400 mt-1.5 size-1.5 shrink-0 rounded-full"
                     aria-hidden="true"
                   />
                   {item}
@@ -293,7 +290,7 @@ export default async function HomePage() {
           </div>
 
           <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
-            <h3 className="text-sm font-semibold tracking-[0.12em] text-violet-300 uppercase">
+            <h3 className="text-mint-300 text-sm font-semibold tracking-[0.12em] uppercase">
               How the overall score is built
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -312,7 +309,7 @@ export default async function HomePage() {
                   <dd className="mt-1.5 flex items-center gap-3">
                     <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
                       <span
-                        className="block h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
+                        className="from-mint-500 to-gold-400 block h-full rounded-full bg-gradient-to-r"
                         style={{ width: `${CATEGORY_WEIGHTS[category] * 100 * 5}%` }}
                       />
                     </span>
@@ -325,7 +322,7 @@ export default async function HomePage() {
             </dl>
             <Link
               href="/how-it-works#methodology"
-              className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300 underline underline-offset-4 hover:text-cyan-200"
+              className="text-gold-300 hover:text-gold-200 mt-6 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4"
             >
               Read the full scoring methodology
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -349,7 +346,7 @@ export default async function HomePage() {
                 <li key={step.title}>
                   <Card className="bg-ink-900/60 h-full border-white/12 p-5">
                     <div className="flex items-center gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
+                      <span className="bg-mint-500/15 text-mint-300 flex size-9 shrink-0 items-center justify-center rounded-lg">
                         <Icon className="size-4.5" aria-hidden="true" />
                       </span>
                       <span className="text-xs font-semibold text-slate-400 tabular-nums">
@@ -381,7 +378,7 @@ export default async function HomePage() {
             return (
               <Card key={category} className="bg-ink-900/60 border-white/12 p-6">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-lg bg-cyan-500/12 text-cyan-300">
+                  <span className="bg-gold-500/12 text-gold-300 flex size-10 items-center justify-center rounded-lg">
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <span className="rounded-full border border-white/12 px-2 py-0.5 text-xs text-slate-400 tabular-nums">
@@ -462,7 +459,7 @@ export default async function HomePage() {
         </div>
         <p className="mt-8 text-center text-sm text-slate-400">
           Need a higher volume than the Agency plan?{' '}
-          <Link href="/contact" className="text-cyan-300 underline underline-offset-4">
+          <Link href="/contact" className="text-gold-300 underline underline-offset-4">
             Talk to us
           </Link>
           .
@@ -509,7 +506,7 @@ function ValueStat({ value, label, body }: { value: string; label: string; body:
     <div>
       <p className="flex items-baseline gap-2">
         <span className="text-3xl font-bold tracking-tight text-white">{value}</span>
-        <span className="text-sm font-medium text-violet-300">{label}</span>
+        <span className="text-mint-300 text-sm font-medium">{label}</span>
       </p>
       <p className="mt-2.5 text-sm leading-relaxed text-slate-400">{body}</p>
     </div>
@@ -604,7 +601,7 @@ function ReportPreview() {
             {
               label: 'Longer-term',
               count: 2,
-              tone: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/25',
+              tone: 'bg-gold-500/15 text-gold-300 border-gold-500/25',
             },
           ].map((group) => (
             <div
@@ -660,7 +657,7 @@ function MiniStat({
     <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
       <p className="text-[0.6875rem] tracking-wide text-slate-400 uppercase">{label}</p>
       <p
-        className={`mt-1 text-lg font-semibold tabular-nums ${accent ? 'text-cyan-300' : 'text-white'}`}
+        className={`mt-1 text-lg font-semibold tabular-nums ${accent ? 'text-gold-300' : 'text-white'}`}
       >
         {value}
       </p>

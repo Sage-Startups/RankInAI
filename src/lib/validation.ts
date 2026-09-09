@@ -152,7 +152,7 @@ export const brandingSchema = z.object({
   brandingAccentColor: z
     .string()
     .trim()
-    .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, 'Enter a hex color such as #6D5EF0')
+    .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, 'Enter a hex color such as #12766A')
     .optional()
     .or(z.literal('')),
 });

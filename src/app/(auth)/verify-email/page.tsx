@@ -97,7 +97,7 @@ export default async function VerifyEmailPage({
         </>
       ) : (
         <>
-          <MailCheck className="size-10 text-violet-500" aria-hidden="true" />
+          <MailCheck className="text-mint-500 size-10" aria-hidden="true" />
           <h1 className="mt-5 text-2xl font-bold">Confirm your email address</h1>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted-foreground)]">
             We sent a confirmation link to the address on your account. Open it to verify your

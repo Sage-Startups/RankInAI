@@ -38,7 +38,7 @@ const SEVERITY_TONE = {
 const HORIZON_STYLES = {
   DO_FIRST: 'border-red-500/30 bg-red-500/[0.06]',
   NEXT_30_DAYS: 'border-amber-500/30 bg-amber-500/[0.06]',
-  LONGER_TERM: 'border-cyan-500/30 bg-cyan-500/[0.06]',
+  LONGER_TERM: 'border-gold-500/30 bg-gold-500/[0.06]',
 } as const;
 
 export function ReportView({ data }: { data: ReportData }) {
@@ -97,7 +97,7 @@ function ReportCover({ data }: { data: ReportData }) {
               <p className="text-lg font-bold tracking-tight">{data.branding.companyName}</p>
             ) : (
               <p className="text-lg font-bold tracking-tight">
-                Rank<span className="text-[#5ccec1]">Clear</span>
+                Rank<span className="text-mint-400">Clear</span>
               </p>
             )}
             <p className="mt-1 text-xs tracking-[0.16em] text-slate-400 uppercase">
@@ -174,7 +174,7 @@ function ExecutiveSummary({ data }: { data: ReportData }) {
         </p>
         {data.llmEnhanced ? (
           <p className="mt-4 flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
-            <Sparkles className="size-3.5 text-violet-500" aria-hidden="true" />
+            <Sparkles className="text-mint-500 size-3.5" aria-hidden="true" />
             This summary was rewritten for clarity by {data.llmModel ?? 'an AI model'} on{' '}
             {formatDate(data.llmGeneratedAt, 'datetime')}. Scores and evidence are computed by the
             rule-based audit engine and were not altered.
@@ -424,7 +424,7 @@ function StatusIcon({ status }: { status: ReportData['findings'][number]['status
     default:
       return (
         <>
-          <Info className={cn(common, 'text-cyan-500')} aria-hidden="true" />
+          <Info className={cn(common, 'text-gold-500')} aria-hidden="true" />
           <span className="sr-only">Informational:</span>
         </>
       );
@@ -905,14 +905,14 @@ function MethodologySection({ data }: { data: ReportData }) {
             </span>
           </li>
           <li className="flex gap-2.5">
-            <CircleDot className="mt-0.5 size-3.5 shrink-0 text-cyan-500" aria-hidden="true" />
+            <CircleDot className="text-gold-500 mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
             <span>
               <strong className="text-[var(--foreground)]">Public-web observation</strong> — what
               was publicly visible in search results at audit time. Never scored.
             </span>
           </li>
           <li className="flex gap-2.5">
-            <CircleDot className="mt-0.5 size-3.5 shrink-0 text-violet-500" aria-hidden="true" />
+            <CircleDot className="text-mint-500 mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
             <span>
               <strong className="text-[var(--foreground)]">AI-enhanced</strong> — wording improved
               by a language model working only from computed results. Never changes a score or
@@ -945,7 +945,7 @@ function LimitationsSection() {
               key={item}
               className="flex gap-2.5 text-sm leading-relaxed text-[var(--muted-foreground)]"
             >
-              <Info className="mt-0.5 size-4 shrink-0 text-cyan-500" aria-hidden="true" />
+              <Info className="text-gold-500 mt-0.5 size-4 shrink-0" aria-hidden="true" />
               {item}
             </li>
           ))}

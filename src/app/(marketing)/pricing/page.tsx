@@ -141,11 +141,11 @@ export default function PricingPage() {
           </ul>
           <p className="mt-4 text-sm text-slate-400">
             Read the full{' '}
-            <Link href="/legal/refunds" className="text-cyan-300 underline underline-offset-4">
+            <Link href="/legal/refunds" className="text-gold-300 underline underline-offset-4">
               Refund Policy
             </Link>{' '}
             and{' '}
-            <Link href="/legal/terms" className="text-cyan-300 underline underline-offset-4">
+            <Link href="/legal/terms" className="text-gold-300 underline underline-offset-4">
               Terms of Service
             </Link>
             .
@@ -176,7 +176,7 @@ function BillingNote({
 }) {
   return (
     <Card className="bg-ink-900/60 border-white/12 p-5">
-      <span className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
+      <span className="bg-mint-500/15 text-mint-300 flex size-9 items-center justify-center rounded-lg">
         <Icon className="size-4.5" aria-hidden />
       </span>
       <h3 className="mt-3.5 text-sm font-semibold text-white">{title}</h3>

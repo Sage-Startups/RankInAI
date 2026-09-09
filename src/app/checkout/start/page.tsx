@@ -48,7 +48,7 @@ export default async function CheckoutStartPage({
       <main id="main" className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
           <Card className="p-6 sm:p-8">
-            <p className="text-xs font-semibold tracking-[0.14em] text-violet-600 uppercase dark:text-violet-300">
+            <p className="text-mint-600 dark:text-mint-300 text-xs font-semibold tracking-[0.14em] uppercase">
               Confirm your purchase
             </p>
             <h1 className="mt-2 text-2xl font-bold">{product.name}</h1>
@@ -67,7 +67,7 @@ export default async function CheckoutStartPage({
               {product.features.map((feature) => (
                 <li key={feature} className="flex gap-2.5 text-sm text-[var(--muted-foreground)]">
                   <span
-                    className="mt-1.5 size-1.5 shrink-0 rounded-full bg-violet-500"
+                    className="bg-mint-500 mt-1.5 size-1.5 shrink-0 rounded-full"
                     aria-hidden="true"
                   />
                   {feature}

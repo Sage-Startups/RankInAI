@@ -28,7 +28,7 @@ export default async function SignOutPage() {
 
   return (
     <div>
-      <LogOut className="size-10 text-violet-500" aria-hidden="true" />
+      <LogOut className="text-mint-500 size-10" aria-hidden="true" />
       <h1 className="mt-5 text-2xl font-bold">Sign out of RankClear?</h1>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted-foreground)]">
         You are signed in as <strong className="text-[var(--foreground)]">{user.email}</strong>.

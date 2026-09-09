@@ -23,8 +23,8 @@ import { formatUsd } from '@/lib/utils';
  * without relying on the visualization.
  */
 
-const VIOLET = '#6d5ef0';
-const CYAN = '#22d3ee';
+const MINT = '#2f9e8f';
+const GOLD = '#c89a4b';
 
 interface DailyPoint {
   date: string;
@@ -84,8 +84,8 @@ export function RevenueChart({ data, title }: { data: DailyPoint[]; title: strin
           <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id="revenue-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={VIOLET} stopOpacity={0.32} />
-                <stop offset="100%" stopColor={VIOLET} stopOpacity={0.02} />
+                <stop offset="0%" stopColor={MINT} stopOpacity={0.32} />
+                <stop offset="100%" stopColor={MINT} stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -113,7 +113,7 @@ export function RevenueChart({ data, title }: { data: DailyPoint[]; title: strin
               type="monotone"
               dataKey="revenueCents"
               name="Revenue"
-              stroke={VIOLET}
+              stroke={MINT}
               strokeWidth={2}
               fill="url(#revenue-fill)"
             />
@@ -148,7 +148,7 @@ export function SignupChart({ data, title }: { data: DailyPoint[]; title: string
               width={32}
             />
             <Tooltip content={<ChartTooltip valueFormatter={(value) => String(value)} />} />
-            <Bar dataKey="signups" name="Sign-ups" fill={CYAN} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="signups" name="Sign-ups" fill={GOLD} radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -180,7 +180,7 @@ export function AuditsChart({ data, title }: { data: DailyPoint[]; title: string
               width={32}
             />
             <Tooltip content={<ChartTooltip valueFormatter={(value) => String(value)} />} />
-            <Bar dataKey="audits" name="Audits created" fill={VIOLET} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="audits" name="Audits created" fill={MINT} radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -214,7 +214,7 @@ export function ConversionFunnel({ steps }: { steps: Array<{ label: string; valu
             </div>
             <div className="h-6 w-full overflow-hidden rounded bg-[var(--surface-muted)]">
               <div
-                className="h-full rounded bg-gradient-to-r from-violet-500 to-cyan-400"
+                className="from-mint-500 to-gold-400 h-full rounded bg-gradient-to-r"
                 style={{ width: `${width}%` }}
               />
             </div>

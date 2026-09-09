@@ -90,7 +90,7 @@ export function AuditProgress({
   return (
     <Card className="p-6">
       <div className="flex items-center gap-3">
-        <Loader2 className="size-5 animate-spin text-violet-500" aria-hidden="true" />
+        <Loader2 className="text-mint-500 size-5 animate-spin" aria-hidden="true" />
         <h2 className="text-base font-semibold">
           {status === 'QUEUED' ? 'Waiting in the queue' : 'Audit in progress'}
         </h2>

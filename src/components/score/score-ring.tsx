@@ -2,8 +2,8 @@ import { cn, scoreBand, scoreBandLabel } from '@/lib/utils';
 
 const BAND_COLORS: Record<ReturnType<typeof scoreBand>, { stroke: string; text: string }> = {
   excellent: { stroke: '#10b981', text: 'text-emerald-600 dark:text-emerald-400' },
-  // cyan-600 is only 3.7:1 on the white surface; cyan-700 clears AA at 5.4:1.
-  good: { stroke: '#22d3ee', text: 'text-cyan-700 dark:text-cyan-400' },
+  // gold-600 is only 3.7:1 on the white surface; gold-700 clears AA at 5.4:1.
+  good: { stroke: '#2f9e8f', text: 'text-gold-700 dark:text-gold-400' },
   fair: { stroke: '#f59e0b', text: 'text-amber-600 dark:text-amber-400' },
   poor: { stroke: '#f97316', text: 'text-orange-600 dark:text-orange-400' },
   critical: { stroke: '#ef4444', text: 'text-red-600 dark:text-red-400' },

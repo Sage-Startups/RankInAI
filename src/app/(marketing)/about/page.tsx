@@ -143,7 +143,7 @@ export default function AboutPage() {
           <p className="mt-5">
             <Link
               href="/contact"
-              className="text-sm font-medium text-cyan-300 underline underline-offset-4 hover:text-cyan-200"
+              className="text-gold-300 hover:text-gold-200 text-sm font-medium underline underline-offset-4"
             >
               Get in touch
             </Link>

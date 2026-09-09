@@ -130,7 +130,7 @@ function SidebarNav({
             className={cn(
               'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
               active
-                ? 'bg-violet-500/10 text-violet-700 dark:text-violet-300'
+                ? 'bg-mint-500/10 text-mint-700 dark:text-mint-300'
                 : 'text-[var(--muted-foreground)] hover:bg-[var(--surface-muted)] hover:text-[var(--foreground)]',
             )}
           >
@@ -149,7 +149,7 @@ function SidebarNav({
             className={cn(
               'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
               pathname.startsWith('/admin')
-                ? 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300'
+                ? 'bg-gold-500/10 text-gold-700 dark:text-gold-300'
                 : 'text-[var(--muted-foreground)] hover:bg-[var(--surface-muted)] hover:text-[var(--foreground)]',
             )}
           >
@@ -176,7 +176,7 @@ function UserFooter({
     <div className="border-t border-[var(--border)] p-3">
       <div className="flex items-center gap-3 rounded-lg px-2 py-2">
         <span
-          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-violet-500/15 text-xs font-bold text-violet-700 dark:text-violet-300"
+          className="bg-mint-500/15 text-mint-700 dark:text-mint-300 flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold"
           aria-hidden="true"
         >
           {initials}

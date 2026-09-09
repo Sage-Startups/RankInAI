@@ -111,15 +111,15 @@ function layout(title: string, body: string, footerNote?: string): string {
   const env = getEnv();
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>${escapeHtml(title)}</title></head>
-<body style="margin:0;padding:0;background:#0b1020;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b1020;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#0d1219;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d1219;padding:32px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;">
-        <tr><td style="background:#0b1020;padding:22px 28px;">
+        <tr><td style="background:#0d1219;padding:22px 28px;">
           <span style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:-0.3px;">Rank<span style="color:#5ccec1;">Clear</span></span>
         </td></tr>
         <tr><td style="padding:28px;color:#0f172a;font-size:15px;line-height:1.6;">
-          <h1 style="margin:0 0 16px;font-size:20px;color:#0b1020;">${escapeHtml(title)}</h1>
+          <h1 style="margin:0 0 16px;font-size:20px;color:#0d1219;">${escapeHtml(title)}</h1>
           ${body}
         </td></tr>
         <tr><td style="padding:18px 28px;background:#f8fafc;color:#64748b;font-size:12px;line-height:1.5;">
@@ -134,7 +134,7 @@ function layout(title: string, body: string, footerNote?: string): string {
 }
 
 function button(href: string, label: string): string {
-  return `<p style="margin:24px 0;"><a href="${escapeHtml(href)}" style="display:inline-block;background:#6d5ef0;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:9px;font-weight:600;font-size:15px;">${escapeHtml(label)}</a></p>`;
+  return `<p style="margin:24px 0;"><a href="${escapeHtml(href)}" style="display:inline-block;background:#12766a;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:9px;font-weight:600;font-size:15px;">${escapeHtml(label)}</a></p>`;
 }
 
 function escapeHtml(value: string): string {
@@ -207,7 +207,7 @@ export async function sendAuditCompleteEmail(params: {
     html: layout(
       'Your audit is ready',
       `<p>The AI visibility audit for <strong>${escapeHtml(params.businessName)}</strong> has finished.</p>
-       <p style="font-size:34px;font-weight:700;color:#0b1020;margin:18px 0 4px;">${params.score}<span style="font-size:18px;color:#64748b;">/100</span></p>
+       <p style="font-size:34px;font-weight:700;color:#0d1219;margin:18px 0 4px;">${params.score}<span style="font-size:18px;color:#64748b;">/100</span></p>
        <p style="color:#475569;margin-top:0;">Overall AI Visibility Score</p>
        ${button(url, 'Open the full report')}`,
     ),

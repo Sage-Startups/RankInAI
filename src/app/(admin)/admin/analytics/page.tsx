@@ -91,7 +91,7 @@ export default async function AdminAnalyticsPage({
             href={`/admin/analytics?days=${option}${includeDemo ? '&demo=1' : ''}`}
             className={
               option === days
-                ? 'rounded-lg border border-violet-500 bg-violet-500/10 px-3.5 py-1.5 text-sm font-medium'
+                ? 'border-mint-500 bg-mint-500/10 rounded-lg border px-3.5 py-1.5 text-sm font-medium'
                 : 'rounded-lg border border-[var(--border-strong)] px-3.5 py-1.5 text-sm text-[var(--muted-foreground)] hover:bg-[var(--surface-muted)]'
             }
           >

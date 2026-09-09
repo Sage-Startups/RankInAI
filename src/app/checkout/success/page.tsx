@@ -84,8 +84,8 @@ export default async function CheckoutSuccessPage({
               </>
             ) : (
               <>
-                <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-violet-500/12">
-                  <Clock className="size-7 text-violet-500" aria-hidden="true" />
+                <div className="bg-mint-500/12 mx-auto flex size-14 items-center justify-center rounded-full">
+                  <Clock className="text-mint-500 size-7" aria-hidden="true" />
                 </div>
                 <h1 className="mt-5 text-2xl font-bold">Payment processing</h1>
                 <p className="mt-2 text-sm leading-relaxed text-[var(--muted-foreground)]">

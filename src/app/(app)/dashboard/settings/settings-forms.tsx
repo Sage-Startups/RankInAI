@@ -281,7 +281,7 @@ export function BrandingForm({
           <Input
             id="branding-accent"
             name="brandingAccentColor"
-            placeholder="#6D5EF0"
+            placeholder="#12766A"
             defaultValue={defaults.brandingAccentColor}
             maxLength={7}
             className="mt-2"

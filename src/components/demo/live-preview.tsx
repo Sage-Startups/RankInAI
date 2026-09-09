@@ -156,7 +156,7 @@ export function LivePreview({ compact = false }: { compact?: boolean }) {
       {loading ? (
         <Card className="bg-ink-900/70 mt-6 border-white/12 p-6">
           <div className="flex items-center gap-3 text-slate-300">
-            <Loader2 className="size-5 animate-spin text-violet-300" aria-hidden="true" />
+            <Loader2 className="text-mint-300 size-5 animate-spin" aria-hidden="true" />
             <p className="text-sm">Fetching your homepage and inspecting public signals…</p>
           </div>
         </Card>
@@ -179,7 +179,7 @@ function PreviewResult({ data }: { data: NonNullable<PreviewResponse['data']> })
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
           <ScoreRing score={data.previewScore} size={124} showLabel={false} className="shrink-0" />
           <div className="min-w-0 flex-1 text-center sm:text-left">
-            <p className="text-xs font-semibold tracking-[0.14em] text-cyan-300 uppercase">
+            <p className="text-gold-300 text-xs font-semibold tracking-[0.14em] uppercase">
               Limited preview score
             </p>
             <h3 className="mt-1 text-lg font-semibold text-white">
@@ -234,9 +234,9 @@ function PreviewResult({ data }: { data: NonNullable<PreviewResponse['data']> })
           ))}
         </ul>
 
-        <Alert tone="info" className="mt-6 border-violet-500/30 bg-violet-500/[0.09]">
+        <Alert tone="info" className="border-mint-500/30 bg-mint-500/[0.09] mt-6">
           <div className="flex items-start gap-3">
-            <Info className="mt-0.5 size-4 shrink-0 text-violet-300" aria-hidden="true" />
+            <Info className="text-mint-300 mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <div className="text-slate-300">
               <p className="font-medium text-white">This is a preview, not the full audit.</p>
               <p className="mt-1 text-[0.8125rem] leading-relaxed">

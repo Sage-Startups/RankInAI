@@ -43,12 +43,11 @@ export function PricingCard({
     <Card
       className={cn(
         'bg-ink-900/60 relative flex flex-col border-white/12 text-slate-200',
-        highlight &&
-          'border-violet-500/50 shadow-lg ring-1 shadow-violet-900/30 ring-violet-500/30',
+        highlight && 'border-mint-500/50 shadow-mint-900/30 ring-mint-500/30 shadow-lg ring-1',
       )}
     >
       {highlight ? (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-violet-600 px-3 py-1 text-xs font-semibold text-white">
+        <span className="bg-mint-600 absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold text-white">
           Most Popular
         </span>
       ) : null}
@@ -85,7 +84,7 @@ export function PricingCard({
               key={feature}
               className="flex gap-2.5 text-[0.8125rem] leading-relaxed text-slate-300"
             >
-              <Check className="mt-0.5 size-4 shrink-0 text-violet-400" aria-hidden="true" />
+              <Check className="text-mint-400 mt-0.5 size-4 shrink-0" aria-hidden="true" />
               {feature}
             </li>
           ))}
@@ -111,7 +110,7 @@ export function ComparisonTable() {
             <th scope="col" className="px-5 py-4 font-semibold text-white">
               Starter
             </th>
-            <th scope="col" className="px-5 py-4 font-semibold text-violet-300">
+            <th scope="col" className="text-mint-300 px-5 py-4 font-semibold">
               Growth
             </th>
             <th scope="col" className="px-5 py-4 font-semibold text-white">

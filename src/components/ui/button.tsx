@@ -10,8 +10,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        // Mint inverts across surfaces: a deep mint carries white text on the
+        // light app (5.5:1), and the pale mint of the mark carries dark text on
+        // the marketing shell (12:1). Both directions are the accent, so both
+        // read as the same button rather than as two different components.
         primary:
-          'bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-800 shadow-sm shadow-violet-600/20',
+          'bg-mint-600 text-white hover:bg-mint-700 active:bg-mint-800 shadow-sm shadow-mint-600/20 dark:bg-mint-300 dark:text-ink-950 dark:hover:bg-mint-200 dark:active:bg-mint-400 dark:shadow-mint-300/20',
         secondary:
           'bg-[var(--surface-muted)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--surface-raised)] hover:border-[var(--border-strong)]',
         outline:

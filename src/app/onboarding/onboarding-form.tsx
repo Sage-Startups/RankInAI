@@ -132,13 +132,13 @@ export function OnboardingForm({
             ].map((option) => (
               <label
                 key={option.value}
-                className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-[var(--border-strong)] px-4 py-3 text-sm transition-colors hover:bg-[var(--surface-muted)] has-[:checked]:border-violet-500 has-[:checked]:bg-violet-500/8"
+                className="has-[:checked]:border-mint-500 has-[:checked]:bg-mint-500/8 flex cursor-pointer items-center gap-2.5 rounded-lg border border-[var(--border-strong)] px-4 py-3 text-sm transition-colors hover:bg-[var(--surface-muted)]"
               >
                 <input
                   type="radio"
                   name="auditingOwnWebsite"
                   value={option.value}
-                  className="size-4 accent-violet-600"
+                  className="accent-mint-600 size-4"
                 />
                 {option.label}
               </label>

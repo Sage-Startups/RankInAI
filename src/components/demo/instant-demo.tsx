@@ -74,7 +74,7 @@ export function InstantDemo({
     <Card
       className={cn(
         'bg-ink-900/70 overflow-hidden border-white/12 text-slate-100 backdrop-blur',
-        size === 'full' && 'shadow-2xl shadow-violet-900/20',
+        size === 'full' && 'shadow-mint-900/20 shadow-2xl',
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-white/[0.03] px-5 py-3.5">
@@ -109,7 +109,7 @@ export function InstantDemo({
 function IdleState({ onStart }: { onStart: () => void }) {
   return (
     <div className="py-6 text-center">
-      <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-violet-500/15 text-violet-300">
+      <div className="bg-mint-500/15 text-mint-300 mx-auto flex size-14 items-center justify-center rounded-full">
         <Play className="size-6" aria-hidden="true" />
       </div>
       <h3 className="mt-4 text-lg font-semibold text-white">See a completed audit in 5 seconds</h3>
@@ -139,7 +139,7 @@ function RunningState({ stepIndex }: { stepIndex: number }) {
         aria-label="Demo audit progress"
       >
         <div
-          className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 transition-[width] duration-500 ease-out"
+          className="from-mint-500 to-gold-400 h-full rounded-full bg-gradient-to-r transition-[width] duration-500 ease-out"
           style={{ width: `${Math.max(6, progress)}%` }}
         />
       </div>
@@ -162,7 +162,7 @@ function RunningState({ stepIndex }: { stepIndex: number }) {
                 {done ? (
                   <Check className="size-4 text-emerald-400" aria-hidden="true" />
                 ) : active ? (
-                  <Loader2 className="size-4 animate-spin text-violet-300" aria-hidden="true" />
+                  <Loader2 className="text-mint-300 size-4 animate-spin" aria-hidden="true" />
                 ) : (
                   <span className="size-1.5 rounded-full bg-slate-600" aria-hidden="true" />
                 )}
@@ -190,7 +190,7 @@ function MiniReport({ size, onReplay }: { size: 'compact' | 'full'; onReplay: ()
           className="shrink-0"
         />
         <div className="min-w-0 flex-1 text-center sm:text-left">
-          <p className="text-xs font-semibold tracking-[0.14em] text-violet-300 uppercase">
+          <p className="text-mint-300 text-xs font-semibold tracking-[0.14em] uppercase">
             Overall AI Visibility Score
           </p>
           <h3 className="mt-1 text-lg font-semibold text-white">
@@ -251,8 +251,8 @@ function MiniReport({ size, onReplay }: { size: 'compact' | 'full'; onReplay: ()
         </div>
       </div>
 
-      <div className="mt-4 rounded-lg border border-violet-500/30 bg-violet-500/[0.09] p-4">
-        <h4 className="flex items-center gap-2 text-sm font-semibold text-violet-200">
+      <div className="border-mint-500/30 bg-mint-500/[0.09] mt-4 rounded-lg border p-4">
+        <h4 className="text-mint-200 flex items-center gap-2 text-sm font-semibold">
           <CircleAlert className="size-4" aria-hidden="true" />
           Recommended next action
         </h4>

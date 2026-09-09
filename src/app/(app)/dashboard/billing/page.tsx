@@ -176,7 +176,7 @@ export default async function BillingPage() {
           <ul className="mt-5 space-y-2">
             {PRODUCTS.ONE_TIME_AUDIT.features.slice(0, 5).map((feature) => (
               <li key={feature} className="flex gap-2.5 text-xs text-[var(--muted-foreground)]">
-                <Check className="mt-0.5 size-3.5 shrink-0 text-violet-500" aria-hidden="true" />
+                <Check className="text-mint-500 mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                 {feature}
               </li>
             ))}
@@ -202,7 +202,7 @@ export default async function BillingPage() {
                 className={cn(
                   'rounded-xl border p-5',
                   isCurrent
-                    ? 'border-violet-500/50 bg-violet-500/5'
+                    ? 'border-mint-500/50 bg-mint-500/5'
                     : product.mostPopular
                       ? 'border-[var(--border-strong)]'
                       : 'border-[var(--border)]',

@@ -46,7 +46,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="rk-hero-wash absolute inset-0" aria-hidden="true" />
         <div className="rk-grid-lines absolute inset-0" aria-hidden="true" />
         <div className="relative flex h-full flex-col justify-center px-12 xl:px-16">
-          <p className="text-xs font-semibold tracking-[0.16em] text-violet-300 uppercase">
+          <p className="text-mint-300 text-xs font-semibold tracking-[0.16em] uppercase">
             AI visibility &amp; GEO audits
           </p>
           <h2 className="mt-5 max-w-md text-3xl leading-tight font-bold text-white">
@@ -58,7 +58,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <ul className="mt-9 space-y-3.5">
             {POINTS.map((point) => (
               <li key={point} className="flex gap-3 text-sm leading-relaxed text-slate-300">
-                <Check className="mt-0.5 size-4 shrink-0 text-cyan-400" aria-hidden="true" />
+                <Check className="text-gold-400 mt-0.5 size-4 shrink-0" aria-hidden="true" />
                 {point}
               </li>
             ))}

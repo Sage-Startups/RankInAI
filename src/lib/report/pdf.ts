@@ -22,15 +22,15 @@ const MARGIN = { top: 64, bottom: 62, left: 54, right: 54 };
 const CONTENT_WIDTH = PAGE.width - MARGIN.left - MARGIN.right;
 
 const COLORS = {
-  ink: '#0B1020',
-  body: '#2B3350',
-  muted: '#5A6480',
-  border: '#DFE3EE',
-  surface: '#F6F7FB',
-  violet: '#5844D8',
-  cyan: '#0E7490',
+  ink: '#0D1219',
+  body: '#2B3540',
+  muted: '#55636B',
+  border: '#E2E8E7',
+  surface: '#F4F7F6',
+  mint: '#12766A',
+  gold: '#85622A',
   excellent: '#0F9D6E',
-  good: '#0E9BB8',
+  good: '#12766A',
   fair: '#C77700',
   poor: '#DB6B10',
   critical: '#D0342C',
@@ -145,7 +145,7 @@ function sectionHeading(doc: Doc, title: string, opts: { newPage?: boolean } = {
     .moveTo(MARGIN.left, y)
     .lineTo(MARGIN.left + CONTENT_WIDTH, y)
     .lineWidth(1)
-    .strokeColor(COLORS.violet)
+    .strokeColor(COLORS.mint)
     .stroke();
 
   doc.y = y + 14;
@@ -198,7 +198,7 @@ function bulletList(doc: Doc, items: string[], opts: { color?: string } = {}) {
 
     doc
       .circle(MARGIN.left + 3, doc.y + 4.5, 1.8)
-      .fillColor(opts.color ?? COLORS.violet)
+      .fillColor(opts.color ?? COLORS.mint)
       .fill();
 
     doc
@@ -592,7 +592,7 @@ function renderFindings(ctx: RenderContext) {
     doc
       .font('Helvetica-Bold')
       .fontSize(11.5)
-      .fillColor(COLORS.violet)
+      .fillColor(COLORS.mint)
       .text(`${category.label} — ${category.score}/100`, MARGIN.left, doc.y);
     doc.y += 8;
 
@@ -644,7 +644,7 @@ function renderFinding(ctx: RenderContext, finding: ReportData['findings'][numbe
         ? COLORS.critical
         : finding.status === 'WARN'
           ? COLORS.fair
-          : COLORS.cyan;
+          : COLORS.gold;
 
   // Left accent rule.
   doc.rect(MARGIN.left, y, 2.5, total).fillColor(accent).fill();
@@ -862,7 +862,7 @@ function renderActionPlan(ctx: RenderContext) {
   const groups = [
     { key: 'DO_FIRST' as const, color: COLORS.critical },
     { key: 'NEXT_30_DAYS' as const, color: COLORS.fair },
-    { key: 'LONGER_TERM' as const, color: COLORS.cyan },
+    { key: 'LONGER_TERM' as const, color: COLORS.gold },
   ];
 
   for (const group of groups) {
@@ -1122,7 +1122,7 @@ function renderMethodology(ctx: RenderContext) {
 function renderLimitations(ctx: RenderContext) {
   const { doc } = ctx;
   sectionHeading(doc, '9. Limitations and disclaimer');
-  bulletList(doc, REPORT_LIMITATIONS, { color: COLORS.cyan });
+  bulletList(doc, REPORT_LIMITATIONS, { color: COLORS.gold });
 }
 
 /* -------------------------------------------------------------------------- */

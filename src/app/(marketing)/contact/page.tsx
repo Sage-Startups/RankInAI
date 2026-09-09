@@ -43,14 +43,14 @@ export default async function ContactPage() {
 
           <div className="space-y-5">
             <Card className="bg-ink-900/60 border-white/12 p-6">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
+              <span className="bg-mint-500/15 text-mint-300 flex size-9 items-center justify-center rounded-lg">
                 <Mail className="size-4.5" aria-hidden="true" />
               </span>
               <h3 className="mt-3.5 text-sm font-semibold text-white">Email us directly</h3>
               <p className="mt-1.5 text-sm text-slate-400">
                 <a
                   href={`mailto:${settings.supportEmail}`}
-                  className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200"
+                  className="text-gold-300 hover:text-gold-200 underline underline-offset-4"
                 >
                   {settings.supportEmail}
                 </a>
@@ -58,7 +58,7 @@ export default async function ContactPage() {
             </Card>
 
             <Card className="bg-ink-900/60 border-white/12 p-6">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-cyan-500/12 text-cyan-300">
+              <span className="bg-gold-500/12 text-gold-300 flex size-9 items-center justify-center rounded-lg">
                 <Clock className="size-4.5" aria-hidden="true" />
               </span>
               <h3 className="mt-3.5 text-sm font-semibold text-white">Response times</h3>
@@ -86,13 +86,13 @@ export default async function ContactPage() {
               <h3 className="mt-3.5 text-sm font-semibold text-white">Before you write</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
                 Many questions are answered on the{' '}
-                <Link href="/pricing#faq" className="text-cyan-300 underline underline-offset-4">
+                <Link href="/pricing#faq" className="text-gold-300 underline underline-offset-4">
                   pricing FAQ
                 </Link>{' '}
                 and in the{' '}
                 <Link
                   href="/how-it-works#methodology"
-                  className="text-cyan-300 underline underline-offset-4"
+                  className="text-gold-300 underline underline-offset-4"
                 >
                   scoring methodology
                 </Link>

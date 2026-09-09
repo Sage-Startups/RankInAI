@@ -225,7 +225,7 @@ export default function FeaturesPage() {
                 <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:gap-10">
                   <div>
                     <div className="flex items-center gap-3">
-                      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/12 text-cyan-300">
+                      <span className="bg-gold-500/12 text-gold-300 flex size-11 shrink-0 items-center justify-center rounded-xl">
                         <Icon className="size-5" aria-hidden="true" />
                       </span>
                       <span className="rounded-full border border-white/12 px-2.5 py-0.5 text-xs text-slate-400 tabular-nums">
@@ -249,7 +249,7 @@ export default function FeaturesPage() {
                           className="flex gap-2.5 text-[0.8125rem] leading-relaxed text-slate-300"
                         >
                           <span
-                            className="mt-1.5 size-1 shrink-0 rounded-full bg-violet-400"
+                            className="bg-mint-400 mt-1.5 size-1 shrink-0 rounded-full"
                             aria-hidden="true"
                           />
                           {check}
@@ -276,7 +276,7 @@ export default function FeaturesPage() {
               const Icon = feature.icon;
               return (
                 <Card key={feature.title} className="bg-ink-900/60 border-white/12 p-5">
-                  <span className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
+                  <span className="bg-mint-500/15 text-mint-300 flex size-9 items-center justify-center rounded-lg">
                     <Icon className="size-4.5" aria-hidden="true" />
                   </span>
                   <h3 className="mt-3.5 text-sm font-semibold text-white">{feature.title}</h3>

@@ -49,18 +49,18 @@ export function LogoMark({
         cx="20"
         cy="20"
         r="18.4"
-        className="stroke-[#c4e7e1] dark:stroke-[#2a5f58]"
+        className="stroke-mint-200 dark:stroke-mint-800"
         strokeWidth="1.5"
       />
 
       <g strokeWidth="2.9" strokeLinecap="round">
-        <path d={ARC_MINT_TOP} className="stroke-[#4fc7b8]" />
-        <path d={ARC_MINT_LOWER} className="stroke-[#4fc7b8]" />
-        <path d={ARC_GOLD_LOWER} className="stroke-[#c89a4b]" />
-        <path d={ARC_GOLD_TOP} className="stroke-[#c89a4b]" />
+        <path d={ARC_MINT_TOP} className="stroke-mint-400" />
+        <path d={ARC_MINT_LOWER} className="stroke-mint-400" />
+        <path d={ARC_GOLD_LOWER} className="stroke-gold-500" />
+        <path d={ARC_GOLD_TOP} className="stroke-gold-500" />
       </g>
 
-      <circle cx="20" cy="20" r="5.4" className="fill-[#101a26] dark:fill-white" />
+      <circle cx="20" cy="20" r="5.4" className="fill-ink-900 dark:fill-white" />
     </svg>
   );
 }
@@ -95,7 +95,7 @@ export function Logo({
             for text at this weight and size, so light mode uses a darker tone of
             the same hue (5.5:1) and dark mode uses the mark's own mint (10:1).
           */}
-          <span className="text-[#12766a] dark:text-[#5ccec1]">Clear</span>
+          <span className="text-mint-600 dark:text-mint-400">Clear</span>
         </span>
       ) : null}
     </span>

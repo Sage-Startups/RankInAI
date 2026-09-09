@@ -60,11 +60,11 @@ const badgeVariants = cva(
     variants: {
       tone: {
         neutral: 'border-[var(--border)] bg-[var(--surface-muted)] text-[var(--muted-foreground)]',
-        accent: 'border-violet-300/50 bg-violet-500/10 text-violet-700 dark:text-violet-300',
+        accent: 'border-mint-300/50 bg-mint-500/10 text-mint-700 dark:text-mint-300',
         success: 'border-emerald-300/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
         warning: 'border-amber-300/50 bg-amber-500/10 text-amber-700 dark:text-amber-300',
         danger: 'border-red-300/50 bg-red-500/10 text-red-700 dark:text-red-300',
-        info: 'border-cyan-300/50 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300',
+        info: 'border-gold-300/50 bg-gold-500/10 text-gold-700 dark:text-gold-300',
         demo: 'border-amber-400/60 bg-amber-400/15 text-amber-800 dark:text-amber-200 font-semibold',
       },
     },
@@ -182,7 +182,7 @@ export function Checkbox({ className, ...props }: React.InputHTMLAttributes<HTML
     <input
       type="checkbox"
       className={cn(
-        'mt-0.5 size-4 shrink-0 cursor-pointer rounded border-[var(--border-strong)] text-violet-600 accent-violet-600',
+        'text-mint-600 accent-mint-600 mt-0.5 size-4 shrink-0 cursor-pointer rounded border-[var(--border-strong)]',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]',
         className,
       )}
@@ -198,7 +198,7 @@ export function Checkbox({ className, ...props }: React.InputHTMLAttributes<HTML
 const alertVariants = cva('rounded-lg border p-4 text-sm', {
   variants: {
     tone: {
-      info: 'border-cyan-500/30 bg-cyan-500/8 text-[var(--foreground)]',
+      info: 'border-gold-500/30 bg-gold-500/8 text-[var(--foreground)]',
       success: 'border-emerald-500/30 bg-emerald-500/8 text-[var(--foreground)]',
       warning: 'border-amber-500/35 bg-amber-500/10 text-[var(--foreground)]',
       danger: 'border-red-500/35 bg-red-500/8 text-[var(--foreground)]',
@@ -248,7 +248,7 @@ export function EmptyState({
       )}
     >
       {icon ? (
-        <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-300">
+        <div className="bg-mint-500/10 text-mint-600 dark:text-mint-300 mb-4 flex size-12 items-center justify-center rounded-full">
           {icon}
         </div>
       ) : null}
@@ -289,7 +289,7 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? (
-        <p className="mb-3 text-xs font-semibold tracking-[0.14em] text-violet-600 uppercase dark:text-violet-300">
+        <p className="text-mint-600 dark:text-mint-300 mb-3 text-xs font-semibold tracking-[0.14em] uppercase">
           {eyebrow}
         </p>
       ) : null}
@@ -323,7 +323,7 @@ export function Progress({
       aria-label={label ?? 'Progress'}
     >
       <div
-        className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 transition-[width] duration-500 ease-out"
+        className="from-mint-500 to-gold-400 h-full rounded-full bg-gradient-to-r transition-[width] duration-500 ease-out"
         style={{ width: `${clamped}%` }}
       />
     </div>

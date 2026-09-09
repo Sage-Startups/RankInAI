@@ -60,7 +60,7 @@ export default async function DemoPage() {
               </ul>
               <p className="mt-4 text-sm text-slate-400">
                 Want the full version?{' '}
-                <Link href="/sample-report" className="text-cyan-300 underline underline-offset-4">
+                <Link href="/sample-report" className="text-gold-300 underline underline-offset-4">
                   Open the complete sample report
                 </Link>
                 .

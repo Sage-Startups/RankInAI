@@ -49,7 +49,7 @@ export default async function OnboardingPage() {
       <main id="main" className="rk-container py-10 lg:py-14">
         <div className="mx-auto max-w-2xl">
           <div className="mb-7">
-            <p className="text-xs font-semibold tracking-[0.14em] text-violet-600 uppercase dark:text-violet-300">
+            <p className="text-mint-600 dark:text-mint-300 text-xs font-semibold tracking-[0.14em] uppercase">
               Step 1 of 1
             </p>
             <h1 className="mt-2 text-2xl font-bold">Tell us a little about your work</h1>
@@ -61,7 +61,7 @@ export default async function OnboardingPage() {
           </div>
 
           {pendingPlan ? (
-            <Card className="mb-5 border-violet-500/40 bg-violet-500/5 p-5">
+            <Card className="border-mint-500/40 bg-mint-500/5 mb-5 p-5">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge tone="accent">Selected plan</Badge>
                 <span className="text-sm font-medium">

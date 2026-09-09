@@ -108,7 +108,7 @@ export default function HowItWorksPage() {
                 <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
                   <div className="flex flex-col gap-6 sm:flex-row">
                     <div className="flex shrink-0 items-start gap-4">
-                      <span className="flex size-12 items-center justify-center rounded-xl bg-violet-500/15 text-violet-300">
+                      <span className="bg-mint-500/15 text-mint-300 flex size-12 items-center justify-center rounded-xl">
                         <Icon className="size-5.5" aria-hidden="true" />
                       </span>
                       <span className="text-2xl font-bold text-white/15 tabular-nums sm:hidden">
@@ -132,7 +132,7 @@ export default function HowItWorksPage() {
                             className="flex gap-2.5 text-sm leading-relaxed text-slate-400"
                           >
                             <span
-                              className="mt-2 size-1 shrink-0 rounded-full bg-cyan-400"
+                              className="bg-gold-400 mt-2 size-1 shrink-0 rounded-full"
                               aria-hidden="true"
                             />
                             {line}
@@ -158,7 +158,7 @@ export default function HowItWorksPage() {
 
           <div className="mx-auto mt-10 max-w-3xl">
             <Card className="bg-ink-900/60 border-white/12 p-6 sm:p-8">
-              <h3 className="text-sm font-semibold tracking-[0.12em] text-violet-300 uppercase">
+              <h3 className="text-mint-300 text-sm font-semibold tracking-[0.12em] uppercase">
                 Category score
               </h3>
               <pre
@@ -171,7 +171,7 @@ export default function HowItWorksPage() {
   — a check that cannot apply is excluded from both sums`}
               </pre>
 
-              <h3 className="mt-8 text-sm font-semibold tracking-[0.12em] text-violet-300 uppercase">
+              <h3 className="text-mint-300 mt-8 text-sm font-semibold tracking-[0.12em] uppercase">
                 Overall score
               </h3>
               <pre
@@ -212,7 +212,7 @@ effective_weight = base_weight / Σ(base_weight of available categories)`}
                 </tbody>
               </table>
 
-              <Alert tone="info" className="mt-6 border-cyan-500/25 bg-cyan-500/[0.07]">
+              <Alert tone="info" className="border-gold-500/25 bg-gold-500/[0.07] mt-6">
                 <p className="font-medium text-white">Competitive Visibility rebalancing</p>
                 <p className="mt-1 text-[0.8125rem] leading-relaxed">
                   If you supply no competitor URL — or none can be reached — Competitive Visibility
@@ -274,7 +274,7 @@ effective_weight = base_weight / Σ(base_weight of available categories)`}
         <div className="mt-8 text-center">
           <Link
             href="/features"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300 underline underline-offset-4 hover:text-cyan-200"
+            className="text-gold-300 hover:text-gold-200 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4"
           >
             See every check the audit runs
             <ArrowRight className="size-4" aria-hidden="true" />

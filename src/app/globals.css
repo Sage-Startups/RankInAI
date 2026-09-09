@@ -3,38 +3,47 @@
 /*
   RankClear design tokens.
 
-  Foundation: dark navy / near-black. Content surfaces: white (light) or
-  elevated navy (dark). Accents: a controlled violet and cyan pair, used
-  sparingly for emphasis and never for large fills.
+  Foundation: a neutral near-black. Content surfaces: white (light) or
+  elevated ink (dark). Accents: the mark's mint and gold pair, used sparingly
+  for emphasis and never for large fills.
+
+  Each accent step is tuned to the ROLE it plays, not to its literal position
+  on a lightness ramp: -300 is the dark-surface text tone, -500 the decorative
+  fill/border tone (almost always at low opacity), -600 the light-surface text
+  tone. Mint and gold do not darken at the same rate as the violet and cyan
+  they replaced, so matching step numbers rather than roles would have quietly
+  dropped several labels below 4.5:1.
 */
 
 @theme {
-  --color-ink-950: #05070f;
-  --color-ink-900: #0b1020;
-  --color-ink-850: #101733;
-  --color-ink-800: #151d3b;
-  --color-ink-700: #1e2950;
-  --color-ink-600: #2c3a66;
+  --color-ink-950: #080b0f;
+  --color-ink-900: #0d1219;
+  --color-ink-850: #121922;
+  --color-ink-800: #172029;
+  --color-ink-700: #202c37;
+  --color-ink-600: #2d3b48;
 
-  --color-violet-50: #f2f0ff;
-  --color-violet-100: #e6e2ff;
-  --color-violet-200: #cfc7ff;
-  --color-violet-300: #b0a3fb;
-  --color-violet-400: #8f7df5;
-  --color-violet-500: #6d5ef0;
-  --color-violet-600: #5844d8;
-  --color-violet-700: #4634ad;
-  --color-violet-800: #362981;
-  --color-violet-900: #251c58;
+  --color-mint-50: #f0faf8;
+  --color-mint-100: #d8f3ec;
+  --color-mint-200: #b0e6dc;
+  --color-mint-300: #8ed8cb;
+  --color-mint-400: #5ccec1;
+  --color-mint-500: #2f9e8f;
+  --color-mint-600: #12766a;
+  --color-mint-700: #0f5f56;
+  --color-mint-800: #0c4a43;
+  --color-mint-900: #093630;
 
-  --color-cyan-50: #ecfeff;
-  --color-cyan-100: #cffafe;
-  --color-cyan-200: #a5f3fc;
-  --color-cyan-300: #67e8f9;
-  --color-cyan-400: #22d3ee;
-  --color-cyan-500: #06b6d4;
-  --color-cyan-600: #0891b2;
-  --color-cyan-700: #0e7490;
+  --color-gold-50: #fdf8ef;
+  --color-gold-100: #f9ecd4;
+  --color-gold-200: #f0d9a9;
+  --color-gold-300: #e3c17e;
+  --color-gold-400: #d2a55f;
+  --color-gold-500: #c89a4b;
+  --color-gold-600: #9c7331;
+  --color-gold-700: #85622a;
+  --color-gold-800: #6a4e23;
+  --color-gold-900: #533d1c;
 
   --font-sans:
     ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
@@ -56,7 +65,7 @@
 
   The design tokens below are switched by `.dark`, so leaving the utilities on
   the media query made the two disagree: on a dark-OS browser
-  `dark:text-violet-300` would fire while `--foreground` stayed near-black.
+  `dark:text-mint-300` would fire while `--foreground` stayed near-black.
   That is how the marketing shell — which is dark in every theme — ended up
   with headings at a 1.06:1 contrast ratio. One trigger, no drift.
 */
@@ -65,16 +74,16 @@
 @layer base {
   :root {
     --background: #ffffff;
-    --foreground: #0b1020;
+    --foreground: #0d1219;
     --surface: #ffffff;
-    --surface-muted: #f6f7fb;
+    --surface-muted: #f4f7f6;
     --surface-raised: #ffffff;
-    --border: #e3e6f0;
-    --border-strong: #cdd3e4;
-    --muted-foreground: #5a6480;
-    --accent: #5844d8;
+    --border: #e2e8e7;
+    --border-strong: #c9d4d2;
+    --muted-foreground: #55636b;
+    --accent: #12766a;
     --accent-foreground: #ffffff;
-    --ring: #6d5ef0;
+    --ring: #12766a;
 
     --success: #0f7b53;
     --success-bg: #e7f7ef;
@@ -82,25 +91,25 @@
     --warning-bg: #fdf3e0;
     --danger: #b42318;
     --danger-bg: #fdeceb;
-    --info: #0e6f8b;
-    --info-bg: #e6f6fb;
+    --info: #0b6a8a;
+    --info-bg: #e8f4f9;
 
     color-scheme: light;
   }
 
   /* Applied by the `.dark` class on the document or on any subtree. */
   .dark {
-    --background: #05070f;
-    --foreground: #eef1f8;
-    --surface: #0b1020;
-    --surface-muted: #101733;
-    --surface-raised: #151d3b;
-    --border: #222c50;
-    --border-strong: #33406e;
-    --muted-foreground: #a3adc9;
-    --accent: #8f7df5;
-    --accent-foreground: #080b16;
-    --ring: #8f7df5;
+    --background: #080b0f;
+    --foreground: #f2efe9;
+    --surface: #0d1219;
+    --surface-muted: #121922;
+    --surface-raised: #172029;
+    --border: #1f2b36;
+    --border-strong: #2d3b48;
+    --muted-foreground: #a3b0b8;
+    --accent: #8ed8cb;
+    --accent-foreground: #08110f;
+    --ring: #8ed8cb;
 
     --success: #4ade80;
     --success-bg: #0d2b1e;
@@ -108,8 +117,8 @@
     --warning-bg: #33260a;
     --danger: #fb7185;
     --danger-bg: #3a1218;
-    --info: #67e8f9;
-    --info-bg: #0a2833;
+    --info: #7dd3fc;
+    --info-bg: #0a2430;
 
     color-scheme: dark;
   }
@@ -195,20 +204,20 @@
   /* Sparing gradient wash used behind hero and section headers. */
   .rk-hero-wash {
     background-image:
-      radial-gradient(60rem 30rem at 15% -10%, rgba(109, 94, 240, 0.22), transparent 60%),
-      radial-gradient(45rem 26rem at 85% 0%, rgba(34, 211, 238, 0.14), transparent 62%);
+      radial-gradient(60rem 30rem at 15% -10%, rgba(92, 206, 193, 0.16), transparent 60%),
+      radial-gradient(45rem 26rem at 85% 0%, rgba(200, 154, 75, 0.12), transparent 62%);
   }
 
   .rk-grid-lines {
     background-image:
-      linear-gradient(to right, rgba(148, 163, 205, 0.09) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(148, 163, 205, 0.09) 1px, transparent 1px);
+      linear-gradient(to right, rgba(163, 176, 184, 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(163, 176, 184, 0.09) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
   }
 
   .rk-gradient-text {
-    background-image: linear-gradient(100deg, #a99bff 0%, #67e8f9 100%);
+    background-image: linear-gradient(100deg, #b0e6dc 0%, #8ed8cb 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
