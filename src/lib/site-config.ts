@@ -30,6 +30,7 @@ export const MAIN_NAV = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/sample-report', label: 'Sample report' },
   { href: '/demo', label: 'Demo' },
+  { href: '/blog', label: 'Blog' },
 ] as const;
 
 export const FOOTER_NAV: Array<{

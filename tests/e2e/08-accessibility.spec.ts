@@ -67,10 +67,20 @@ test.describe('Accessibility: no serious or critical violations', () => {
       ['/pricing', 'pricing'],
       ['/signin', 'sign in'],
       ['/signup', 'sign up'],
+      ['/blog', 'blog index'],
     ] as const) {
       await page.goto(path);
       await scan(page, label);
     }
+
+    // A post renders author-written markup, so it is scanned as well as the
+    // index. Navigate directly rather than clicking through: a client-side
+    // transition briefly leaves document.title empty, and axe scores that as a
+    // missing title even though the served HTML has one.
+    await page.goto('/blog');
+    const href = await page.getByRole('link', { name: /Read /i }).first().getAttribute('href');
+    await page.goto(href ?? '/blog');
+    await scan(page, 'blog post');
   });
 
   test('signed-in pages and a completed report', async ({ page }) => {

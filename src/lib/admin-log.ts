@@ -19,7 +19,11 @@ export type AdminAction =
   | 'audit.cancel'
   | 'audit.archive'
   | 'contact.status_change'
-  | 'settings.update';
+  | 'settings.update'
+  | 'blog.create'
+  | 'blog.update'
+  | 'blog.publish'
+  | 'blog.delete';
 
 export async function logAdminAction(params: {
   adminUserId: string;
@@ -54,4 +58,8 @@ export const ADMIN_ACTION_LABELS: Record<AdminAction, string> = {
   'audit.archive': 'Archived audit',
   'contact.status_change': 'Updated contact submission',
   'settings.update': 'Updated system settings',
+  'blog.create': 'Created blog post',
+  'blog.update': 'Updated blog post',
+  'blog.publish': 'Published blog post',
+  'blog.delete': 'Deleted blog post',
 };

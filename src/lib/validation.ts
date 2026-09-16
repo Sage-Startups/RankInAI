@@ -280,6 +280,26 @@ export const adminSettingsSchema = z.object({
   signupsEnabled: z.coerce.boolean(),
 });
 
+export const BLOG_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * A blog post as submitted by a super admin.
+ *
+ * `body` is the restricted markup parsed by `src/lib/blog/content.ts`, never
+ * HTML — see the note there for why the field is not a rich-text blob.
+ */
+export const blogPostSchema = z.object({
+  title: trimmed(160).min(3),
+  slug: trimmed(80)
+    .min(3)
+    .regex(BLOG_SLUG_PATTERN, 'Use lowercase letters, numbers and single hyphens.'),
+  excerpt: trimmed(320).min(20),
+  body: trimmed(60_000).min(50),
+  metaTitle: trimmed(70).optional().or(z.literal('')),
+  metaDescription: trimmed(180).optional().or(z.literal('')),
+  publish: z.coerce.boolean(),
+});
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------

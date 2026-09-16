@@ -189,24 +189,24 @@ enum CompetitorStatus {
 // ---------------------------------------------------------------------------
 
 model User {
-  id               String        @id @default(cuid())
-  email            String        @unique
-  emailVerified    DateTime?
-  passwordHash     String?
-  name             String?
-  image            String?
-  role             Role          @default(USER)
-  status           AccountStatus @default(ACTIVE)
-  stripeCustomerId String?       @unique
-  oneTimeCredits   Int           @default(0)
-  lastLoginAt      DateTime?
-  suspendedAt      DateTime?
-  suspendedReason  String?
-  isDemo           Boolean       @default(false)
+  id                  String        @id @default(cuid())
+  email               String        @unique
+  emailVerified       DateTime?
+  passwordHash        String?
+  name                String?
+  image               String?
+  role                Role          @default(USER)
+  status              AccountStatus @default(ACTIVE)
+  stripeCustomerId    String?       @unique
+  oneTimeCredits      Int           @default(0)
+  lastLoginAt         DateTime?
+  suspendedAt         DateTime?
+  suspendedReason     String?
+  isDemo              Boolean       @default(false)
   deletionRequestedAt DateTime?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  deletedAt        DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  deletedAt           DateTime?
 
   profile             UserProfile?
   accounts            Account[]
@@ -216,13 +216,14 @@ model User {
   subscriptions       Subscription[]
   payments            Payment[]
   purchases           Purchase[]
-  creditLedger        AuditCreditLedger[]   @relation("CreditLedgerUser")
-  grantedCredits      AuditCreditLedger[]   @relation("CreditLedgerAdmin")
+  creditLedger        AuditCreditLedger[]      @relation("CreditLedgerUser")
+  grantedCredits      AuditCreditLedger[]      @relation("CreditLedgerAdmin")
   audits              Audit[]
-  adminActivity       AdminActivity[]       @relation("AdminActor")
+  adminActivity       AdminActivity[]          @relation("AdminActor")
   analyticsEvents     AnalyticsEvent[]
-  handledContacts     ContactSubmission[]   @relation("ContactHandler")
-  settingUpdates      SystemSetting[]       @relation("SettingUpdatedBy")
+  handledContacts     ContactSubmission[]      @relation("ContactHandler")
+  settingUpdates      SystemSetting[]          @relation("SettingUpdatedBy")
+  blogPosts           BlogPost[]               @relation("BlogAuthor")
 
   @@index([role])
   @@index([status])
@@ -528,46 +529,46 @@ model AuditJob {
 }
 
 model AuditPage {
-  id              String   @id @default(cuid())
-  auditId         String
-  url             String
-  finalUrl        String?
-  role            PageRole @default(OTHER)
-  depth           Int      @default(0)
-  statusCode      Int?
-  redirectChain   Json?
-  contentType     String?
-  title           String?
-  metaDescription String?
-  canonical       String?
-  robotsMeta      String?
-  langAttr        String?
-  viewport        String?
-  h1              Json?
-  headings        Json?
-  wordCount       Int      @default(0)
-  imageCount      Int      @default(0)
-  imagesWithAlt   Int      @default(0)
-  internalLinks   Int      @default(0)
-  externalLinks   Int      @default(0)
-  brokenLinks     Json?
-  schemaTypes     Json?
-  jsonLdSummary   Json?
-  openGraph       Json?
-  twitterCard     Json?
-  hasFaqSignals   Boolean  @default(false)
-  hasQuestionHeadings Boolean @default(false)
-  listCount       Int      @default(0)
-  tableCount      Int      @default(0)
-  publishedDate   String?
-  modifiedDate    String?
-  authors         Json?
-  isHttps         Boolean  @default(false)
-  fetchMs         Int      @default(0)
-  bytes           Int      @default(0)
-  error           String?
-  blockedByRobots Boolean  @default(false)
-  createdAt       DateTime @default(now())
+  id                  String   @id @default(cuid())
+  auditId             String
+  url                 String
+  finalUrl            String?
+  role                PageRole @default(OTHER)
+  depth               Int      @default(0)
+  statusCode          Int?
+  redirectChain       Json?
+  contentType         String?
+  title               String?
+  metaDescription     String?
+  canonical           String?
+  robotsMeta          String?
+  langAttr            String?
+  viewport            String?
+  h1                  Json?
+  headings            Json?
+  wordCount           Int      @default(0)
+  imageCount          Int      @default(0)
+  imagesWithAlt       Int      @default(0)
+  internalLinks       Int      @default(0)
+  externalLinks       Int      @default(0)
+  brokenLinks         Json?
+  schemaTypes         Json?
+  jsonLdSummary       Json?
+  openGraph           Json?
+  twitterCard         Json?
+  hasFaqSignals       Boolean  @default(false)
+  hasQuestionHeadings Boolean  @default(false)
+  listCount           Int      @default(0)
+  tableCount          Int      @default(0)
+  publishedDate       String?
+  modifiedDate        String?
+  authors             Json?
+  isHttps             Boolean  @default(false)
+  fetchMs             Int      @default(0)
+  bytes               Int      @default(0)
+  error               String?
+  blockedByRobots     Boolean  @default(false)
+  createdAt           DateTime @default(now())
 
   audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
 
@@ -644,17 +645,17 @@ model AuditCompetitor {
 }
 
 model AuditScore {
-  id             String        @id @default(cuid())
-  auditId        String
-  category       AuditCategory
-  score          Int
-  available      Boolean       @default(true)
-  baseWeight     Float
+  id              String        @id @default(cuid())
+  auditId         String
+  category        AuditCategory
+  score           Int
+  available       Boolean       @default(true)
+  baseWeight      Float
   effectiveWeight Float
-  rawPoints      Float         @default(0)
-  maxPoints      Float         @default(0)
-  summary        String?       @db.Text
-  createdAt      DateTime      @default(now())
+  rawPoints       Float         @default(0)
+  maxPoints       Float         @default(0)
+  summary         String?       @db.Text
+  createdAt       DateTime      @default(now())
 
   audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
 
@@ -771,18 +772,18 @@ model AnalyticsEvent {
 /// Aggregated daily figures backing the /business-snapshot buyer preview.
 /// Every row is fabricated demonstration data — `isDemo` is always true.
 model DemoAnalyticsRecord {
-  id            String   @id @default(cuid())
-  date          DateTime
-  signups       Int      @default(0)
-  oneTimeSales  Int      @default(0)
-  revenueCents  Int      @default(0)
-  auditsCreated Int      @default(0)
-  auditsCompleted Int    @default(0)
-  demoRuns      Int      @default(0)
-  previewRuns   Int      @default(0)
-  isDemo        Boolean  @default(true)
-  note          String?
-  createdAt     DateTime @default(now())
+  id              String   @id @default(cuid())
+  date            DateTime
+  signups         Int      @default(0)
+  oneTimeSales    Int      @default(0)
+  revenueCents    Int      @default(0)
+  auditsCreated   Int      @default(0)
+  auditsCompleted Int      @default(0)
+  demoRuns        Int      @default(0)
+  previewRuns     Int      @default(0)
+  isDemo          Boolean  @default(true)
+  note            String?
+  createdAt       DateTime @default(now())
 
   @@unique([date])
   @@index([date])
@@ -791,18 +792,54 @@ model DemoAnalyticsRecord {
 /// Minimal operational metadata for the anonymous free preview. Stores a hashed
 /// domain + hashed client identifier only — no page content is retained.
 model FreePreviewRun {
-  id          String   @id @default(cuid())
-  domainHash  String
-  domain      String
-  ipHash      String
-  score       Int?
-  findingCount Int     @default(0)
-  succeeded   Boolean  @default(false)
-  errorCode   String?
-  durationMs  Int      @default(0)
-  isDemo      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id           String   @id @default(cuid())
+  domainHash   String
+  domain       String
+  ipHash       String
+  score        Int?
+  findingCount Int      @default(0)
+  succeeded    Boolean  @default(false)
+  errorCode    String?
+  durationMs   Int      @default(0)
+  isDemo       Boolean  @default(false)
+  createdAt    DateTime @default(now())
 
   @@index([ipHash, createdAt])
   @@index([createdAt])
+}
+
+/// Editorial blog.
+///
+/// Authoring is a super-admin-only capability: every mutation goes through
+/// `requireAdmin` and is written to the admin audit trail. Only PUBLISHED
+/// posts are readable by the public, so a draft cannot leak through the
+/// public route by guessing its slug.
+///
+/// `body` holds the restricted markup described in `src/lib/blog/content.ts`,
+/// never HTML — the renderer builds React elements from it, so there is no
+/// path from a stored post to `dangerouslySetInnerHTML`.
+model BlogPost {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  title           String
+  excerpt         String         @db.Text
+  body            String         @db.Text
+  status          BlogPostStatus @default(DRAFT)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  authorId        String?
+  isDemo          Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  author User? @relation("BlogAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([status, publishedAt])
+  @@index([createdAt])
+}
+
+enum BlogPostStatus {
+  DRAFT
+  PUBLISHED
 }

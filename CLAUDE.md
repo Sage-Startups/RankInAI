@@ -20,6 +20,7 @@ src/
     billing/          Stripe client, checkout, webhook processing
     report/           report data assembly, PDF rendering
     auth/             Auth.js config, guards, pure role predicates
+    blog/             post body parsing and blog reads
     demo/             seeded sample audit and the April 2026 buyer dataset
   worker/             the queue worker process
 prisma/               schema, migrations, seed
@@ -106,6 +107,24 @@ double-granting.
 Billing test mode runs `fulfillSimulatedCheckout`, which is the _same_ fulfillment
 code the webhook calls — so the simulated path exercises the production entitlement
 logic rather than a parallel implementation.
+
+### A blog post body is parsed, never trusted as markup
+
+`body` holds a restricted markup — headings, lists, quotes, bold, code and
+http(s) links — that `src/lib/blog/content.ts` turns into a plain data
+structure, which `src/components/blog/post-body.tsx` renders as React elements.
+Nothing in that path touches `dangerouslySetInnerHTML`.
+
+Posts are authored only by a super admin, but "the author is trusted" is a weak
+reason to put raw markup on a public page: one stolen admin session would
+otherwise become stored XSS on every visitor. A `javascript:` or `data:` href
+does not render as an inert link — the link is discarded and only its text
+survives.
+
+Authoring authorization lives on the server actions themselves, not on the
+`(admin)` layout. A server action is a POST endpoint: anyone who knows its id
+can invoke it without the layout ever rendering, so each action calls
+`requireAdmin` first.
 
 ### Demo data is segregated by a flag, not by convention
 

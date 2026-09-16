@@ -49,16 +49,16 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **269 passed**, 0 failed   | `npm run test:unit`        |
+| Unit                  | **283 passed**, 0 failed   | `npm run test:unit`        |
 | Integration           | **94 passed**, 0 failed    | `npm run test:integration` |
-| End-to-end            | **38 passed**, 0 failed    | `npm run test:e2e`         |
+| End-to-end            | **43 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
 | Lint                  | clean, 0 errors 0 warnings | `npm run lint`             |
 | Format                | clean                      | `npm run format:check`     |
 | Production build      | succeeds                   | `npm run build`            |
 | Full audit validation | passed                     | `npm run audit:full-test`  |
 
-No test is skipped. The E2E suite includes axe-core accessibility scans of nine
+No test is skipped. The E2E suite includes axe-core accessibility scans of eleven
 screens with serious and critical violations set to fail the build; all are clean.
 
 The full audit validation run is recorded in `FULL_AUDIT_TEST_REPORT.md`: a complete
@@ -114,12 +114,27 @@ headless browser, no local disk.
 ### Super admin
 
 Overview, users, user detail, audits, audit detail, jobs, payments, subscriptions,
-analytics, contacts, settings, system, demo data, and a one-page demonstration
+analytics, contacts, blog authoring, settings, system, demo data, and a one-page demonstration
 revenue snapshot for June–July 2026 (three one-time Full Audits, a Starter and a
 Growth subscription, $284 fabricated gross). Real metrics exclude demonstration
 records unless "Include demo data" is explicitly turned on, which is off by default
 everywhere and displays a warning when on. Every privileged action writes to an audit
 trail.
+
+### Blog
+
+A database-backed editorial blog at `/blog`, linked from the public header.
+Authoring — create, edit, publish, unpublish and delete — is super-admin only:
+every server action calls `requireAdmin` and writes to the audit trail, which is
+the authorization, since a server action is a POST endpoint that can be invoked
+without ever rendering the admin layout. Drafts are invisible to the public and
+return 404 to anyone who is not a signed-in administrator, so a draft slug
+cannot be enumerated; an administrator sees the draft at its real URL behind a
+banner. Post bodies are stored as a restricted markup, never HTML, and are
+parsed into React elements — there is no path from a stored post to
+`dangerouslySetInnerHTML`, so a stolen admin session cannot become stored XSS.
+Published posts appear in the sitemap. Two starter articles ship seeded; they are
+real editorial content, not demonstration records.
 
 ### Buyer preview
 

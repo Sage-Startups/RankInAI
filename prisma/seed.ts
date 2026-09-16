@@ -34,6 +34,7 @@ import {
 } from '../src/lib/demo/buyer-snapshot';
 import { CATEGORY_ORDER, CATEGORY_WEIGHTS } from '../src/lib/audit/scoring';
 import { DEFAULT_SETTINGS, SETTINGS_KEY } from '../src/lib/settings';
+import { seedBlogPosts } from './blog-seed';
 
 /**
  * Database seed.
@@ -549,6 +550,11 @@ async function main() {
   const demoUserId = await seedDemoCustomer();
   await seedDemoAudit(demoUserId);
   await seedBuyerPreview();
+
+  // Starter articles. Real editorial content, not demonstration records —
+  // upserted by slug so an owner's edits are never overwritten.
+  const posts = await seedBlogPosts(prisma, adminId);
+  log(`${posts} starter blog posts ensured.`);
 
   const [users, audits, demoRecords] = await Promise.all([
     prisma.user.count(),
