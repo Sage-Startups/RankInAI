@@ -34,7 +34,7 @@ export const TEST_ENV = {
   AUTH_SECRET: 'e2e-secret-value-long-enough-for-the-production-guard-abcdef',
   AUTH_TRUST_HOST: 'true',
   NEXT_PUBLIC_APP_URL: E2E_BASE_URL,
-  SUPER_ADMIN_EMAIL: 'admin@rankclear.com',
+  SUPER_ADMIN_EMAIL: 'admin@rankclear.ai',
   SUPER_ADMIN_SEED_PASSWORD: 'RankClear-Dev-Admin-2026!',
   BILLING_TEST_MODE: 'true',
   EMAIL_PROVIDER: 'console',

@@ -76,7 +76,7 @@ async function seedSettings() {
 }
 
 async function seedSuperAdmin(): Promise<string> {
-  const email = (process.env.SUPER_ADMIN_EMAIL ?? 'admin@rankclear.com').trim().toLowerCase();
+  const email = (process.env.SUPER_ADMIN_EMAIL ?? 'admin@rankclear.ai').trim().toLowerCase();
   const seedPassword = process.env.SUPER_ADMIN_SEED_PASSWORD;
 
   const passwordHash = seedPassword ? await bcrypt.hash(seedPassword, 12) : undefined;

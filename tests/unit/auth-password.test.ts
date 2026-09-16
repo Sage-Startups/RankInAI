@@ -115,7 +115,7 @@ describe('password hashing', () => {
 describe('normalizeEmail', () => {
   it.each([
     ['  User@Example.COM  ', 'user@example.com'],
-    ['ADMIN@RANKCLEAR.COM', 'admin@rankclear.com'],
+    ['ADMIN@RANKCLEAR.AI', 'admin@rankclear.ai'],
   ])('normalizes %j', (input, expected) => {
     expect(normalizeEmail(input)).toBe(expected);
   });

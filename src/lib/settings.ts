@@ -27,7 +27,7 @@ export interface SystemSettings {
 
 export const DEFAULT_SETTINGS: SystemSettings = {
   applicationName: 'RankClear',
-  supportEmail: 'support@rankclear.com',
+  supportEmail: 'support@rankclear.ai',
   demoModeEnabled: true,
   freePreviewEnabled: true,
   maxCrawlPagesHardLimit: 50,

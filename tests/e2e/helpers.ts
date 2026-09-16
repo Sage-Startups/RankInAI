@@ -37,7 +37,7 @@ export { expect };
 
 export const FIXTURE_SITE = 'http://127.0.0.1:4321';
 export const STRONG_PASSWORD = 'E2E-Journey-Test-42';
-export const SUPER_ADMIN_EMAIL = 'admin@rankclear.com';
+export const SUPER_ADMIN_EMAIL = 'admin@rankclear.ai';
 export const SUPER_ADMIN_PASSWORD = 'RankClear-Dev-Admin-2026!';
 
 let counter = 0;

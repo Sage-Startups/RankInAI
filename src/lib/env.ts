@@ -61,7 +61,7 @@ const schema = z.object({
   // `.catch` on the forgiving fields below: a malformed optional value must
   // degrade to its default, not fail the parse and 500 every request. Only
   // DATABASE_URL stays strict — nothing works without it.
-  SUPER_ADMIN_EMAIL: z.string().email().catch('admin@rankclear.com').default('admin@rankclear.com'),
+  SUPER_ADMIN_EMAIL: z.string().email().catch('admin@rankclear.ai').default('admin@rankclear.ai'),
   SUPER_ADMIN_SEED_PASSWORD: z.string().optional(),
 
   STRIPE_SECRET_KEY: z.string().optional(),
@@ -81,9 +81,9 @@ const schema = z.object({
   SERPER_API_KEY: z.string().optional(),
 
   EMAIL_PROVIDER: z.enum(['console', 'resend']).catch('console').default('console'),
-  EMAIL_FROM: z.string().default('RankClear <no-reply@rankclear.com>'),
+  EMAIL_FROM: z.string().default('RankClear <no-reply@rankclear.ai>'),
   EMAIL_PROVIDER_API_KEY: z.string().optional(),
-  SUPPORT_EMAIL: z.string().default('support@rankclear.com'),
+  SUPPORT_EMAIL: z.string().default('support@rankclear.ai'),
 
   CRON_SECRET: z.string().optional(),
   AUDIT_WORKER_SECRET: z.string().optional(),
@@ -95,7 +95,7 @@ const schema = z.object({
   CRAWL_MAX_BYTES: intFromString(3_000_000),
   CRAWL_MAX_REDIRECTS: intFromString(5),
   CRAWL_DELAY_MS: intFromString(400),
-  CRAWL_USER_AGENT: z.string().default('RankClear-Auditor/1.0 (+https://rankclear.com/crawler)'),
+  CRAWL_USER_AGENT: z.string().default('RankClear-Auditor/1.0 (+https://rankclear.ai/crawler)'),
 
   ALLOW_TEST_FIXTURE_HOST: z.string().optional(),
   TEST_FIXTURE_ORIGIN: z.string().optional(),
