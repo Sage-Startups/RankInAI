@@ -1,10 +1,11 @@
 /**
  * Legal page content.
  *
- * IMPORTANT: these are software-generated starting templates, not legal advice.
- * The admin area surfaces a standing reminder that they must be reviewed by a
- * qualified attorney before commercial launch. Operators can edit this file, or
- * replace the pages entirely.
+ * IMPORTANT, for whoever maintains this file: these are software-generated
+ * starting templates, not legal advice. They carry no on-page disclaimer — that
+ * was removed deliberately — so nothing on the site tells a reader they are
+ * unreviewed. Have them reviewed by a qualified attorney and adapted to your
+ * jurisdiction, or replace the pages entirely.
  */
 
 export interface LegalSection {
@@ -21,9 +22,6 @@ export interface LegalDocument {
   intro: string;
   sections: LegalSection[];
 }
-
-export const LEGAL_TEMPLATE_NOTICE =
-  'This document is a software-generated starting template provided with the RankClear platform. It has not been reviewed by an attorney and does not constitute legal advice. Have it reviewed and adapted to your jurisdiction and business before commercial launch.';
 
 const LAST_UPDATED = 'April 1, 2026';
 

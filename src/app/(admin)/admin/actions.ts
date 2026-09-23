@@ -341,7 +341,6 @@ export async function updateSettingsAction(
     maintenanceBannerText: optionalFormValue(formData, 'maintenanceBannerText') ?? '',
     llmEnhancementEnabled: formChecked(formData, 'llmEnhancementEnabled'),
     searchObservationsEnabled: formChecked(formData, 'searchObservationsEnabled'),
-    legalTemplateWarningEnabled: formChecked(formData, 'legalTemplateWarningEnabled'),
     defaultReportFooter: optionalFormValue(formData, 'defaultReportFooter') ?? '',
     signupsEnabled: formChecked(formData, 'signupsEnabled'),
   });

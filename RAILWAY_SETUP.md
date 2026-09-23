@@ -50,6 +50,25 @@ The dual-stack bind is load-bearing: Railway's health checks and edge proxy conn
 over the private network, which is IPv6. An app bound only to `0.0.0.0` starts
 cleanly and then never receives a single request.
 
+## Adding an administrator later
+
+The seed creates the super admin named by `SUPER_ADMIN_EMAIL`. To add or
+promote one on a running deployment without reseeding, run this from the web
+service's shell (Railway → the service → the shell, or `railway run` locally
+against the production `DATABASE_URL`):
+
+```bash
+npm run admin:grant -- someone@rankclear.ai
+```
+
+It promotes the account if it exists and creates it if it does not, clearing
+any suspension so the granted role is actually usable. When it creates an
+account and no `--password` is given it prints a strong generated password
+**once** — it is never stored in plaintext and cannot be recovered, so capture
+it then, sign in, and change it. The grant is written to the admin audit trail.
+
+Pass `--password '<at least 12 characters>'` to set one explicitly instead.
+
 ## 3. Worker service
 
 **New → GitHub Repo →** the same repository, a second service.

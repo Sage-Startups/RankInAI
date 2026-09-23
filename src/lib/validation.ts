@@ -275,7 +275,6 @@ export const adminSettingsSchema = z.object({
   maintenanceBannerText: trimmed(300).optional().or(z.literal('')),
   llmEnhancementEnabled: z.coerce.boolean(),
   searchObservationsEnabled: z.coerce.boolean(),
-  legalTemplateWarningEnabled: z.coerce.boolean(),
   defaultReportFooter: trimmed(200).optional().or(z.literal('')),
   signupsEnabled: z.coerce.boolean(),
 });

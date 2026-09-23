@@ -32,7 +32,6 @@ const TOGGLES: Array<keyof SystemSettings> = [
   'freePreviewEnabled',
   'llmEnhancementEnabled',
   'searchObservationsEnabled',
-  'legalTemplateWarningEnabled',
   'maintenanceBannerEnabled',
 ];
 
@@ -42,7 +41,6 @@ const TOGGLE_LABELS: Record<string, string> = {
   freePreviewEnabled: 'Allow the anonymous homepage preview',
   llmEnhancementEnabled: 'Allow LLM narrative enhancement',
   searchObservationsEnabled: 'Allow public-web search observations',
-  legalTemplateWarningEnabled: 'Show the legal template warning',
   maintenanceBannerEnabled: 'Show the maintenance banner',
 };
 

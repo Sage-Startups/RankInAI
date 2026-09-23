@@ -73,8 +73,9 @@ Home (announcement bar, hero, instant demo, capability list, workflow, category
 explainer, scoring weights, dashboard and report previews, free live preview,
 pricing, comparison table, testimonials labeled as samples, FAQ, CTA band), pricing,
 how it works, features, sample report, demo, about, contact (database-backed with
-honeypot and rate limiting), and five legal pages rendered from editable templates
-with an admin warning.
+honeypot and rate limiting), and five legal pages rendered from editable templates.
+The on-page "template document" notice was removed at the owner's request, so
+nothing on the site tells a reader the templates are unreviewed.
 
 ### Demo experience
 
@@ -184,7 +185,7 @@ None of these are code gaps. Each needs a secret this environment does not have.
 | AI narrative enhancement         | `OPENAI_API_KEY`. Optional — audits are fully functional without it and scores never depend on it.                                                                                 |
 | Public-web search observations   | `SEARCH_PROVIDER=serper` and `SERPER_API_KEY`. Optional — the report states when they are unavailable.                                                                             |
 | Transactional email              | An email provider key. Falls back to console logging.                                                                                                                              |
-| Legal review                     | The five legal pages are editable templates and are marked as such in the admin area. They are not legal advice and should be reviewed before taking payments.                     |
+| Legal review                     | The five legal pages are editable templates with no on-page disclaimer. They are not legal advice and should be reviewed before taking payments.                                   |
 
 ## Known limitations
 

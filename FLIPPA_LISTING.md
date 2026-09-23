@@ -248,10 +248,11 @@ anyway:**
    repository. The setup document has the exact steps.
 3. **Configure an email provider.** Verification and notification emails currently
    log to the console rather than sending.
-4. **Have the legal pages reviewed.** Terms, privacy policy, refund policy, cookie
-   policy and disclaimer are editable templates flagged in the admin area as
-   requiring legal review. They are a starting point, not legal advice, and they
-   have not been reviewed by a lawyer.
+4. **Have the legal pages reviewed.** Terms, privacy policy, refund policy,
+   cookie policy and disclaimer are editable templates. They are a starting
+   point, not legal advice, they have not been reviewed by a lawyer, and they
+   carry no on-page notice saying so — nothing on the site tells a reader they
+   are unreviewed.
 5. **Optionally enable the LLM narrative layer.** An OpenAI-compatible key adds
    written narrative to reports. It is off by default, and — deliberately — it never
    changes a score, so the audit stays deterministic with or without it.

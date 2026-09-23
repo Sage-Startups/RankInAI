@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { Alert, Card } from '@/components/ui/primitives';
-import { LEGAL_DOCUMENTS, LEGAL_SLUGS, LEGAL_TEMPLATE_NOTICE } from '@/lib/legal-content';
-import { getSettings } from '@/lib/settings';
+import { Card } from '@/components/ui/primitives';
+import { LEGAL_DOCUMENTS, LEGAL_SLUGS } from '@/lib/legal-content';
 
 export function generateStaticParams() {
   return LEGAL_SLUGS.map((slug) => ({ slug }));
@@ -29,8 +28,6 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const document = LEGAL_DOCUMENTS[slug];
   if (!document) notFound();
-
-  const settings = await getSettings();
 
   return (
     <>
@@ -57,12 +54,6 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
 
       <div className="bg-[var(--background)]">
         <div className="rk-container py-12 lg:py-16">
-          {settings.legalTemplateWarningEnabled ? (
-            <Alert tone="warning" title="Template document" className="mx-auto mb-8 max-w-3xl">
-              {LEGAL_TEMPLATE_NOTICE}
-            </Alert>
-          ) : null}
-
           <Card className="mx-auto max-w-3xl p-6 sm:p-9">
             <div className="rk-prose max-w-none">
               {document.sections.map((section) => (

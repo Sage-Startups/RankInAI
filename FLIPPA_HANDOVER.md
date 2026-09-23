@@ -56,7 +56,7 @@ customers, no revenue and no traffic.
 | Build       | `npm run build` succeeds; standalone output ready for Railway.                                                                                                                                                                                                                        |
 | Deployment  | **Live** on Railway at https://rankinai-production.up.railway.app — `/api/health` reports ok. That host keeps the pre-rebrand name because it derives from the Railway service name; renaming the service changes it. The worker service is not yet running; see RAILWAY_SETUP.md §3. |
 | Stripe      | Integrated and tested through a simulated path that runs the real fulfillment code. Needs a Stripe account and the setup script to take live payments.                                                                                                                                |
-| Legal pages | Editable templates, flagged as such in the admin area. Not reviewed by a lawyer.                                                                                                                                                                                                      |
+| Legal pages | Editable templates. Not reviewed by a lawyer, and they no longer carry an on-page notice saying so — it was removed at the owner's request, so nothing on the site tells a reader they are unreviewed.                                                                                |
 
 `BUILD_STATUS.md` has the detailed breakdown, including everything found and fixed
 during the build.

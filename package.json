@@ -34,6 +34,7 @@
     "fixture:serve": "tsx tests/fixtures/server.ts",
     "security:audit": "npm audit --audit-level=high",
     "verify": "tsx scripts/verify.ts",
+    "admin:grant": "tsx scripts/grant-admin.ts",
     "lint:fix": "eslint . --fix"
   },
   "prisma": {
