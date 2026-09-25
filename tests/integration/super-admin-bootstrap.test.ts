@@ -3,6 +3,8 @@ import { createRequire } from 'node:module';
 import { AccountStatus, Role } from '@prisma/client';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { verifyPassword } from '@/lib/auth/password';
+
 import {
   cleanupTestData,
   createTestUser,
@@ -19,8 +21,14 @@ const { ensureSuperAdmin } = require('../../scripts/ensure-super-admin.js') as {
   ensureSuperAdmin: (input: {
     prisma: unknown;
     email?: string;
+    password?: string;
     log?: (level: string, fields: Record<string, unknown>) => void;
-  }) => Promise<{ action: string; reason?: string; from?: { role: string; status: string } }>;
+  }) => Promise<{
+    action: string;
+    reason?: string;
+    password?: string;
+    from?: { role: string; status: string };
+  }>;
 };
 
 /**
@@ -108,6 +116,37 @@ describe('boot-time super-admin reconciliation', () => {
 
     expect((await ensureSuperAdmin({ prisma, email })).action).toBe('absent');
     expect(await prisma.user.findUnique({ where: { email } })).toBeNull();
+  });
+
+  it('sets a password the application itself then accepts', async () => {
+    // The point of the whole path: on a deployment with no email provider the
+    // reset flow cannot be used, so this variable is the only way in. A hash
+    // the app's own verifier rejects would be indistinguishable from a wrong
+    // password.
+    const password = 'A-Strong-Boot-Password-2026';
+    const user = await createTestUser({ role: Role.SUPER_ADMIN });
+    await prisma.user.update({ where: { id: user.id }, data: { passwordHash: null } });
+
+    const result = await ensureSuperAdmin({ prisma, email: user.email, password });
+    expect(result.password).toBe('set');
+
+    const after = await prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+      select: { passwordHash: true },
+    });
+    await expect(verifyPassword(password, after.passwordHash)).resolves.toBe(true);
+    await expect(verifyPassword('not-the-password', after.passwordHash)).resolves.toBe(false);
+
+    // A redeploy with the variable still set writes nothing, so the audit trail
+    // does not fill with a row per restart.
+    expect((await ensureSuperAdmin({ prisma, email: user.email, password })).password).toBe(
+      'unchanged',
+    );
+    expect(
+      await prisma.adminActivity.count({
+        where: { targetId: user.id, action: 'user.password_reset' },
+      }),
+    ).toBe(1);
   });
 
   it('promotes nobody when the variable is unset', async () => {

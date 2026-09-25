@@ -144,6 +144,15 @@ handles that, and a passwordless account nobody asked for is worse than an hones
 "sign up first"), a soft-deleted account stays deleted, and the grant is written to
 the admin audit trail.
 
+`SUPER_ADMIN_SEED_PASSWORD` is honored for that same account at boot, for the same
+reason: a role nobody can sign in to is not access, and "Forgot password" cannot
+help when no email provider is configured — `sendEmail` logs the reset _link_ only
+outside production, because a reset token in a platform's log is a credential in a
+readable place. Do not "fix" that by logging links in production. The password is
+rehashed only when the stored hash does not already match, so a redeploy is silent,
+and every boot warns while the variable is set, because it overrides a password
+later changed in Settings.
+
 ### Demo data is segregated by a flag, not by convention
 
 Every business table has `isDemo`. Admin metrics exclude demo rows unless the

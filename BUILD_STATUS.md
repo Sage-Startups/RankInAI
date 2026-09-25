@@ -55,8 +55,8 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **304 passed**, 0 failed   | `npm run test:unit`        |
-| Integration           | **99 passed**, 0 failed    | `npm run test:integration` |
+| Unit                  | **313 passed**, 0 failed   | `npm run test:unit`        |
+| Integration           | **100 passed**, 0 failed   | `npm run test:integration` |
 | End-to-end            | **43 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
 | Lint                  | clean, 0 errors 0 warnings | `npm run lint`             |

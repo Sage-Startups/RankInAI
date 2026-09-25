@@ -261,7 +261,14 @@ function reconcileSuperAdmin() {
     for (let attempt = 0; attempt < delays.length; attempt += 1) {
       await new Promise((r) => setTimeout(r, delays[attempt]));
       try {
-        const result = await ensureSuperAdmin({ prisma: client, email, log: bootLog });
+        const result = await ensureSuperAdmin({
+          prisma: client,
+          email,
+          // Honored the way the seed honors it, for the deployment that has no
+          // email provider and therefore no working password reset.
+          password: process.env.SUPER_ADMIN_SEED_PASSWORD,
+          log: bootLog,
+        });
         if (result.action === 'skipped') {
           bootLog('warn', { message: 'Super-admin check skipped', reason: result.reason });
         }

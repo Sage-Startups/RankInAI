@@ -31,6 +31,10 @@
  *   - a soft-deleted account is left alone;
  *   - it writes to the admin audit trail, because a role change is a state
  *     change worth a record no matter who made it.
+ *
+ * `SUPER_ADMIN_SEED_PASSWORD` is honored for the same account and for the same
+ * reason — see `applySeedPassword` below. A role nobody can sign in to is not
+ * access.
  */
 
 const SUPER_ADMIN = 'SUPER_ADMIN';
@@ -46,14 +50,93 @@ function looksLikeEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+const MIN_PASSWORD_LENGTH = 12;
+
 /**
- * @returns one of:
+ * Apply `SUPER_ADMIN_SEED_PASSWORD` to the owner account.
+ *
+ * Without this, an administrator with no usable password has exactly one way
+ * in — the forgot-password email — and this deployment logs reset links only
+ * outside production, deliberately: a reset token in a platform's log is a
+ * credential sitting in a place many people can read. So on a deployment with
+ * no email provider configured the owner is simply locked out, with the
+ * password they need sitting in a variable the seed would have honored.
+ *
+ * It rehashes only when the stored hash does not already match, so a redeploy
+ * is silent, and it warns on every boot while the variable is set, because it
+ * will keep overriding a password changed later in Settings. The password
+ * itself is never logged.
+ *
+ * @returns 'none' | 'ignored' | 'unchanged' | 'set'
+ */
+async function applySeedPassword({ prisma, user, address, password, log }) {
+  if (!password) return 'none';
+
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    log('warn', {
+      message: 'SUPER_ADMIN_SEED_PASSWORD ignored — too short',
+      needs: `at least ${MIN_PASSWORD_LENGTH} characters`,
+    });
+    return 'ignored';
+  }
+
+  let bcrypt;
+  try {
+    bcrypt = require('bcryptjs');
+  } catch (error) {
+    log('warn', {
+      message: 'SUPER_ADMIN_SEED_PASSWORD could not be applied — bcryptjs unavailable',
+      error: error && error.message,
+    });
+    return 'ignored';
+  }
+
+  if (user.passwordHash && (await bcrypt.compare(password, user.passwordHash))) {
+    log('warn', {
+      message: 'SUPER_ADMIN_SEED_PASSWORD is still set — remove it now that you can sign in',
+      why: 'while it is set it overrides this account’s password on every deploy',
+      email: address,
+    });
+    return 'unchanged';
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordHash: await bcrypt.hash(password, 12) },
+  });
+
+  log('warn', {
+    message: 'Set the owner account’s password from SUPER_ADMIN_SEED_PASSWORD',
+    email: address,
+    next: 'Sign in, change it under Settings, then REMOVE the variable',
+  });
+
+  try {
+    await prisma.adminActivity.create({
+      data: {
+        adminUserId: user.id,
+        action: 'user.password_reset',
+        targetType: 'User',
+        targetId: user.id,
+        summary: `Set the password for ${address} at web startup from SUPER_ADMIN_SEED_PASSWORD`,
+      },
+    });
+  } catch {
+    // Reported below by the caller's own audit-trail handling; a missing trail
+    // row must not undo a password the operator asked for.
+  }
+
+  return 'set';
+}
+
+/**
+ * @returns one of, each also carrying `password`:
  *   { action: 'skipped',    reason }  nothing to do, and nothing was read
  *   { action: 'absent',     email }   no account holds the address yet
  *   { action: 'unchanged',  email }   already an active super admin
  *   { action: 'reconciled', email, from: { role, status } }
  */
-async function ensureSuperAdmin({ prisma, email, log = () => {} }) {
+async function ensureSuperAdmin({ prisma, email, password, log = () => {} }) {
   const address = normalizeEmail(email);
 
   if (!address) {
@@ -65,7 +148,7 @@ async function ensureSuperAdmin({ prisma, email, log = () => {} }) {
 
   const existing = await prisma.user.findUnique({
     where: { email: address },
-    select: { id: true, role: true, status: true, deletedAt: true },
+    select: { id: true, role: true, status: true, deletedAt: true, passwordHash: true },
   });
 
   if (!existing) {
@@ -73,7 +156,7 @@ async function ensureSuperAdmin({ prisma, email, log = () => {} }) {
       message: 'Owner address has no account yet — it becomes an admin when it registers',
       email: address,
     });
-    return { action: 'absent', email: address };
+    return { action: 'absent', email: address, password: 'none' };
   }
 
   if (existing.deletedAt) {
@@ -83,8 +166,19 @@ async function ensureSuperAdmin({ prisma, email, log = () => {} }) {
     };
   }
 
+  // The password is applied whatever the role turns out to be: an account that
+  // already holds the role is precisely the one whose owner may be locked out
+  // of it.
+  const passwordAction = await applySeedPassword({
+    prisma,
+    user: existing,
+    address,
+    password,
+    log,
+  });
+
   if (existing.role === SUPER_ADMIN && existing.status === ACTIVE) {
-    return { action: 'unchanged', email: address };
+    return { action: 'unchanged', email: address, password: passwordAction };
   }
 
   const from = { role: existing.role, status: existing.status };
@@ -130,7 +224,7 @@ async function ensureSuperAdmin({ prisma, email, log = () => {} }) {
     });
   }
 
-  return { action: 'reconciled', email: address, from };
+  return { action: 'reconciled', email: address, from, password: passwordAction };
 }
 
 module.exports = { ensureSuperAdmin, normalizeEmail, looksLikeEmail };

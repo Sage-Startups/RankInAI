@@ -79,6 +79,28 @@ supplies `DATABASE_URL` and `AUTH_SECRET`.
 Setting the variable on the worker service does nothing — the worker does not
 serve the admin area. Set it on the **web** service.
 
+### Locked out of the admin area
+
+The role is useless without a way to sign in, and **"Forgot password" cannot help
+on a deployment with no email provider**: with `EMAIL_PROVIDER` unset the mail is
+written to the log, and outside development the reset _link is deliberately left
+out_ of that line — a reset token is a credential, and a platform's logs are not a
+private place.
+
+So the password comes from a variable, the same one the seed uses:
+
+1. **Variables** on the **web** service → `SUPER_ADMIN_SEED_PASSWORD` → a password
+   you choose, at least 12 characters.
+2. Redeploy. The log says
+   `Set the owner account's password from SUPER_ADMIN_SEED_PASSWORD`.
+3. Sign in as `SUPER_ADMIN_EMAIL` with that password.
+4. Change it under **Settings**, then **delete the variable**.
+
+Step 4 matters: while the variable is set, every deploy resets that account's
+password back to it, and the log says so on each boot. It applies to the
+`SUPER_ADMIN_EMAIL` account only, it is never written to the log, and the change
+is recorded in the admin audit trail.
+
 ### The way that needs a shell
 
 To grant the role to an address that is _not_ the configured owner, run this
@@ -164,7 +186,7 @@ Set these on **both** the web and worker services unless noted.
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ALLOW_TEST_FIXTURE_HOST`   | **Ignored in production** — the crawler never relaxes SSRF protection there — but its presence is a mistake, warned about in the logs and `/api/health`. |
 | `BILLING_TEST_MODE`         | **Forced off in production** unless `BILLING_TEST_MODE_ALLOW_PRODUCTION=true` explicitly acknowledges simulated billing. Warned, never silent.           |
-| `SUPER_ADMIN_SEED_PASSWORD` | Needed once for the initial seed, then remove it.                                                                                                        |
+| `SUPER_ADMIN_SEED_PASSWORD` | Needed once to set the owner's password, then remove it — while it is set, every deploy resets that password to it. See "Locked out of the admin area".  |
 | `NODE_ENV`                  | Nixpacks sets it in the runtime image already. Setting it yourself also applies it at build time, where npm reads it as "skip devDependencies".          |
 
 ## 5. First deploy
