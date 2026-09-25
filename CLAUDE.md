@@ -126,6 +126,24 @@ Authoring authorization lives on the server actions themselves, not on the
 can invoke it without the layout ever rendering, so each action calls
 `requireAdmin` first.
 
+### `SUPER_ADMIN_EMAIL` is reconciled at boot, not only at seed
+
+The seed upserts that address as a super admin, and registration promotes it when
+it signs up. Both are one-shot, which leaves the ordinary live case unfixable: the
+owner registered before the variable was set, so their row says `USER` and `/admin`
+answers "access denied" no matter how many times the variable is changed. The
+remedy — a shell on the production service — is the one thing a hosted platform
+makes awkward.
+
+So `scripts/start-web.js` calls `ensureSuperAdmin` in the background on every
+boot. The authority is the environment, the same authority that supplies
+`DATABASE_URL` and `AUTH_SECRET`; nothing in that path reads a request. It is
+narrow on purpose: the variable must be set explicitly (no default), only that one
+exact address is touched, an account is never created (registration already
+handles that, and a passwordless account nobody asked for is worse than an honest
+"sign up first"), a soft-deleted account stays deleted, and the grant is written to
+the admin audit trail.
+
 ### Demo data is segregated by a flag, not by convention
 
 Every business table has `isDemo`. Admin metrics exclude demo rows unless the

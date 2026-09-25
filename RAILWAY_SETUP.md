@@ -52,10 +52,38 @@ cleanly and then never receives a single request.
 
 ## Adding an administrator later
 
-The seed creates the super admin named by `SUPER_ADMIN_EMAIL`. To add or
-promote one on a running deployment without reseeding, run this from the web
-service's shell (Railway → the service → the shell, or `railway run` locally
-against the production `DATABASE_URL`):
+### The way that needs no shell
+
+`SUPER_ADMIN_EMAIL` is authoritative, and the web service applies it **on every
+boot**:
+
+1. **Variables** on the **web** service → set `SUPER_ADMIN_EMAIL` to the
+   address, exactly as it is spelled in the account (case does not matter).
+2. **Deploy** — Railway redeploys when a variable changes; if it did not, use
+   **Deploy → Redeploy**.
+3. Sign out and sign back in. `/admin` opens.
+
+The startup log says which of the three things happened:
+
+| Log line                                              | Meaning                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------- |
+| `Granted SUPER_ADMIN to the configured owner address` | The account was an ordinary user (or suspended) and has been fixed. |
+| nothing about the owner address                       | It already held the role — there was nothing to change.             |
+| `Owner address has no account yet`                    | **Sign up with that address.** Registration grants the role.        |
+
+Only that one exact address is ever touched, an account is never created for
+it, a deleted account is left deleted, and the grant is written to the admin
+audit trail. The authority is the environment, which is the same authority that
+supplies `DATABASE_URL` and `AUTH_SECRET`.
+
+Setting the variable on the worker service does nothing — the worker does not
+serve the admin area. Set it on the **web** service.
+
+### The way that needs a shell
+
+To grant the role to an address that is _not_ the configured owner, run this
+from the web service's shell (Railway → the service → the shell, or
+`railway run` locally against the production `DATABASE_URL`):
 
 ```bash
 npm run admin:grant -- someone@rankclear.ai
@@ -102,7 +130,7 @@ Set these on **both** the web and worker services unless noted.
 | `AUTH_SECRET`         | 48 random bytes — `openssl rand -base64 48`          |
 | `AUTH_TRUST_HOST`     | `true` (Railway terminates TLS in front of the app)  |
 | `NEXT_PUBLIC_APP_URL` | `https://<your-domain>.up.railway.app` — web service |
-| `SUPER_ADMIN_EMAIL`   | The address that gets the admin role at seed time    |
+| `SUPER_ADMIN_EMAIL`   | The owner's address — gets the admin role on boot    |
 
 ### Stripe (required for real payments)
 

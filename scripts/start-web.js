@@ -61,6 +61,27 @@ const root = path.resolve(__dirname, '..');
 const standaloneDir = path.join(root, '.next', 'standalone');
 const serverEntry = path.join(standaloneDir, 'server.js');
 
+/**
+ * Give this script the same configuration the app gets.
+ *
+ * Next copies `.env` into the standalone output and reads it itself, so the
+ * application is configured either way — but this script runs first and sees
+ * only the real environment, which left its database probe and its super-admin
+ * check inert on any machine that keeps configuration in a file. Real
+ * environment variables always win; see scripts/load-env-file.js.
+ */
+{
+  const { loadEnvFile } = require('./load-env-file');
+  const result = loadEnvFile(path.join(root, '.env'));
+  if (result.present && result.loaded.length > 0) {
+    bootLog('info', {
+      message: 'Read configuration from .env for the boot checks',
+      loaded: result.loaded.length,
+      overriddenByEnvironment: result.skipped.length,
+    });
+  }
+}
+
 if (!existsSync(serverEntry)) {
   bootLog('error', {
     message: 'Fatal: .next/standalone/server.js is missing',
@@ -205,6 +226,63 @@ function probeDatabase() {
   })();
 }
 
+/**
+ * Make sure the address in SUPER_ADMIN_EMAIL actually holds the admin role.
+ *
+ * The seed and the registration path each apply that variable once, which
+ * leaves the usual live case unfixable without a production shell: the owner
+ * registered before the variable was set, so their row says USER and the admin
+ * area refuses them however many times the variable is changed. See
+ * scripts/ensure-super-admin.js for why doing this from the environment is
+ * consistent with the rest of the boot sequence.
+ *
+ * Like the probe, this runs in the background, retries while the database comes
+ * up, and can never exit the process.
+ */
+function reconcileSuperAdmin() {
+  const email = process.env.SUPER_ADMIN_EMAIL;
+  if (!email || !process.env.DATABASE_URL) return;
+
+  const { ensureSuperAdmin } = require('./ensure-super-admin');
+
+  let client;
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    client = new PrismaClient({ log: [] });
+  } catch {
+    // The probe above already reports an unavailable Prisma client; one line
+    // about it is enough.
+    return;
+  }
+
+  const delays = [1500, 4000, 10000];
+
+  (async () => {
+    for (let attempt = 0; attempt < delays.length; attempt += 1) {
+      await new Promise((r) => setTimeout(r, delays[attempt]));
+      try {
+        const result = await ensureSuperAdmin({ prisma: client, email, log: bootLog });
+        if (result.action === 'skipped') {
+          bootLog('warn', { message: 'Super-admin check skipped', reason: result.reason });
+        }
+        return;
+      } catch (error) {
+        const last = attempt === delays.length - 1;
+        bootLog(last ? 'error' : 'warn', {
+          message: last
+            ? 'Could not verify the super-admin role — the admin area may refuse the owner'
+            : 'Super-admin check could not read the database yet, retrying',
+          attempt: attempt + 1,
+          of: delays.length,
+          error: error && error.message,
+        });
+      }
+    }
+  })().finally(() => {
+    client.$disconnect().catch(() => {});
+  });
+}
+
 // Belt and braces: a diagnostic must never be the reason the server fails to
 // boot, so even an unanticipated throw here is swallowed and reported.
 try {
@@ -212,6 +290,15 @@ try {
 } catch (error) {
   bootLog('error', {
     message: 'Database probe failed to run — continuing to start the server',
+    error: error && error.message,
+  });
+}
+
+try {
+  reconcileSuperAdmin();
+} catch (error) {
+  bootLog('error', {
+    message: 'Super-admin check failed to run — continuing to start the server',
     error: error && error.message,
   });
 }

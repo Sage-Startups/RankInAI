@@ -42,6 +42,12 @@ runbook:
   at all while the app logged a clean startup. `scripts/bind-host.js` now
   honors only a value that parses as an address, and binds dual-stack
   otherwise.
+- `SUPER_ADMIN_EMAIL` was applied only by the seed and at registration, both
+  one-shot. An owner who signed up before setting it stayed an ordinary user,
+  so `/admin` answered "access denied" however many times the variable was
+  changed — and the remedy was a production shell. The web entrypoint now
+  reconciles that one address on every boot and says in the log which of
+  promoted / already correct / no such account happened.
 
 ## Test results
 
@@ -49,8 +55,8 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **283 passed**, 0 failed   | `npm run test:unit`        |
-| Integration           | **94 passed**, 0 failed    | `npm run test:integration` |
+| Unit                  | **304 passed**, 0 failed   | `npm run test:unit`        |
+| Integration           | **99 passed**, 0 failed    | `npm run test:integration` |
 | End-to-end            | **43 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
 | Lint                  | clean, 0 errors 0 warnings | `npm run lint`             |
@@ -121,6 +127,12 @@ Growth subscription, $284 fabricated gross). Real metrics exclude demonstration
 records unless "Include demo data" is explicitly turned on, which is off by default
 everywhere and displays a warning when on. Every privileged action writes to an audit
 trail.
+
+Access is granted two ways, both of which write to that trail. `SUPER_ADMIN_EMAIL`
+is reconciled with the database on every web boot, so setting it in the platform's
+variables and redeploying is enough — no shell, and the startup log says whether the
+account was promoted, already correct, or does not exist yet. For any other address,
+`npm run admin:grant -- <email>` promotes or creates one from a server shell.
 
 ### Blog
 

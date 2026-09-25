@@ -68,8 +68,22 @@ async function main() {
   let userId: string;
 
   if (existing) {
+    // An explicit --password is a request in its own right, so it is applied
+    // even when the role needs no change — otherwise the one command that can
+    // recover a locked-out administrator would silently do nothing.
     if (existing.role === Role.SUPER_ADMIN && existing.status === AccountStatus.ACTIVE) {
-      console.log(`[grant-admin] ${email} is already an active super admin. Nothing to do.`);
+      if (!password) {
+        console.log(`[grant-admin] ${email} is already an active super admin. Nothing to do.`);
+        return;
+      }
+
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: { passwordHash: await bcrypt.hash(password, 12) },
+      });
+      console.log(
+        `[grant-admin] ${email} was already an active super admin; password reset to the one supplied.`,
+      );
       return;
     }
 
