@@ -23,7 +23,7 @@ test.describe('Journey 6: authorization boundaries', () => {
   test.describe.configure({ timeout: 240_000 });
 
   test('an ordinary user is refused the admin area and its data', async ({ page }) => {
-    await signUp(page, { name: 'Ordinary User' });
+    const email = await signUp(page, { name: 'Ordinary User' });
     await skipOnboarding(page);
 
     // No admin link is offered…
@@ -47,6 +47,10 @@ test.describe('Journey 6: authorization boundaries', () => {
       await expect(page).toHaveURL(/\/dashboard\?denied=admin/);
       await expect(page.getByRole('heading', { name: 'Admin overview' })).toHaveCount(0);
     }
+
+    // The refusal names the account it refused, so someone signed in as the
+    // wrong address can see that rather than guessing at their role.
+    await expect(page.getByText(`${email} does not have administrator permissions.`)).toBeVisible();
   });
 
   test('a user cannot read or download another user’s audit', async ({ page, browser }) => {

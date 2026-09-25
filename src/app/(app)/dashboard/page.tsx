@@ -112,7 +112,14 @@ export default async function DashboardPage({
         <Alert tone="danger" title="Access denied">
           <span className="flex items-center gap-2">
             <ShieldAlert className="size-4 shrink-0" aria-hidden="true" />
-            Your account does not have administrator permissions.
+            {/* Naming the refused account is the difference between a dead end
+                and a diagnosis: the usual cause is being signed in as a
+                different address than the one granted the role. It is the
+                reader's own address, so it discloses nothing. */}
+            <span>
+              <strong className="font-medium">{user.email}</strong> does not have administrator
+              permissions.
+            </span>
           </span>
         </Alert>
       ) : null}
