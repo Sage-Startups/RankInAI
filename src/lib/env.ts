@@ -80,9 +80,20 @@ const schema = z.object({
   SEARCH_PROVIDER: z.enum(['none', 'serper']).catch('none').default('none'),
   SERPER_API_KEY: z.string().optional(),
 
-  EMAIL_PROVIDER: z.enum(['console', 'resend']).catch('console').default('console'),
+  EMAIL_PROVIDER: z.enum(['console', 'resend', 'socketlabs']).catch('console').default('console'),
   EMAIL_FROM: z.string().default('RankClear <no-reply@rankclear.ai>'),
   EMAIL_PROVIDER_API_KEY: z.string().optional(),
+  // SocketLabs identifies the sending server by a numeric id alongside the key.
+  // Undefined rather than a fallback: a guessed server id would silently post
+  // to somebody else's server number, so the provider reports it as missing.
+  EMAIL_SOCKETLABS_SERVER_ID: z
+    .string()
+    .optional()
+    .transform((v) => {
+      if (!v) return undefined;
+      const n = Number.parseInt(v.trim(), 10);
+      return Number.isFinite(n) && n > 0 ? n : undefined;
+    }),
   SUPPORT_EMAIL: z.string().default('support@rankclear.ai'),
 
   CRON_SECRET: z.string().optional(),
@@ -238,6 +249,23 @@ function build(): AppEnv {
     if (!isBuildPhase) {
       warn(
         'BILLING_TEST_MODE is set but FORCED OFF in production. Unset it, or set BILLING_TEST_MODE_ALLOW_PRODUCTION=true to run simulated billing deliberately.',
+      );
+    }
+  }
+
+  // A half-configured email provider is worse than none: the app believes it
+  // can send, so a password reset reports success while nothing is delivered.
+  // Say which piece is missing, at boot, rather than in a failed send later.
+  if (raw.EMAIL_PROVIDER !== 'console' && !isBuildPhase) {
+    const missing: string[] = [];
+    if (!raw.EMAIL_PROVIDER_API_KEY) missing.push('EMAIL_PROVIDER_API_KEY');
+    if (raw.EMAIL_PROVIDER === 'socketlabs' && !raw.EMAIL_SOCKETLABS_SERVER_ID) {
+      missing.push('EMAIL_SOCKETLABS_SERVER_ID');
+    }
+    if (missing.length > 0) {
+      warn(
+        `EMAIL_PROVIDER is "${raw.EMAIL_PROVIDER}" but ${missing.join(' and ')} ` +
+          'is not set — no email can be sent, including password resets.',
       );
     }
   }

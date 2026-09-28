@@ -119,6 +119,42 @@ it then, sign in, and change it. The grant is written to the admin audit trail.
 
 Pass `--password '<at least 12 characters>'` to set one explicitly instead.
 
+## Email — needed before "Forgot password" works
+
+Until a provider is configured, every message is written to the log and nothing
+is delivered, so a user who forgets their password has no way back in. Two
+providers are supported, both over plain HTTPS.
+
+### SocketLabs
+
+Two values, from **Configuration → API Keys** (or the Injection API panel) in the
+SocketLabs dashboard:
+
+| Variable                     | Value                                 |
+| ---------------------------- | ------------------------------------- |
+| `EMAIL_PROVIDER`             | `socketlabs`                          |
+| `EMAIL_SOCKETLABS_SERVER_ID` | the numeric **Server ID**             |
+| `EMAIL_PROVIDER_API_KEY`     | the API key for that server           |
+| `EMAIL_FROM`                 | `RankClear <no-reply@yourdomain.com>` |
+
+The domain in `EMAIL_FROM` must be one SocketLabs has verified for that server
+— add and verify it under their sending-domain settings first, or every message
+comes back `InvalidFromAddress`. The app reports that rejection rather than
+reporting a send, because SocketLabs answers **HTTP 200 even when it refuses a
+message**: the verdict is an `ErrorCode` in the response body.
+
+### Resend
+
+| Variable                 | Value                                  |
+| ------------------------ | -------------------------------------- |
+| `EMAIL_PROVIDER`         | `resend`                               |
+| `EMAIL_PROVIDER_API_KEY` | `re_…`                                 |
+| `EMAIL_FROM`             | an address on a domain Resend verified |
+
+Either way, `npm run verify` fails if the provider is half-configured, and the
+web service warns at boot with the exact variable that is missing. Test it by
+using "Forgot password" on a real address you can read.
+
 ## 3. Worker service
 
 **New → GitHub Repo →** the same repository, a second service.
@@ -169,16 +205,16 @@ Set these on **both** the web and worker services unless noted.
 
 ### Optional
 
-| Variable                                                                                           | Effect when unset                                                                         |
-| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`                                                                                   | Audits use deterministic report templates. Scores and evidence are rule-based either way. |
-| `OPENAI_MODEL`                                                                                     | Defaults to a small, cheap model                                                          |
-| `SEARCH_PROVIDER` / `SERPER_API_KEY`                                                               | Public-web search observations are omitted, and the report says so                        |
-| `EMAIL_PROVIDER` / `EMAIL_PROVIDER_API_KEY` / `EMAIL_FROM`                                         | Email is logged to the console instead of sent                                            |
-| `SUPPORT_EMAIL`                                                                                    | Falls back to a default shown on contact and legal pages                                  |
-| `CRON_SECRET`                                                                                      | Scheduled maintenance endpoints are unauthenticated — set it if you use them              |
-| `WORKER_POLL_INTERVAL_MS`                                                                          | Defaults to 5000                                                                          |
-| `CRAWL_TIMEOUT_MS`, `CRAWL_MAX_BYTES`, `CRAWL_MAX_REDIRECTS`, `CRAWL_DELAY_MS`, `CRAWL_USER_AGENT` | Sensible defaults                                                                         |
+| Variable                                                                                           | Effect when unset                                                                          |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `OPENAI_API_KEY`                                                                                   | Audits use deterministic report templates. Scores and evidence are rule-based either way.  |
+| `OPENAI_MODEL`                                                                                     | Defaults to a small, cheap model                                                           |
+| `SEARCH_PROVIDER` / `SERPER_API_KEY`                                                               | Public-web search observations are omitted, and the report says so                         |
+| `EMAIL_PROVIDER` / `EMAIL_PROVIDER_API_KEY` / `EMAIL_FROM`                                         | Email is logged to the console instead of sent, so password reset cannot work. See "Email" |
+| `SUPPORT_EMAIL`                                                                                    | Falls back to a default shown on contact and legal pages                                   |
+| `CRON_SECRET`                                                                                      | Scheduled maintenance endpoints are unauthenticated — set it if you use them               |
+| `WORKER_POLL_INTERVAL_MS`                                                                          | Defaults to 5000                                                                           |
+| `CRAWL_TIMEOUT_MS`, `CRAWL_MAX_BYTES`, `CRAWL_MAX_REDIRECTS`, `CRAWL_DELAY_MS`, `CRAWL_USER_AGENT` | Sensible defaults                                                                          |
 
 ### Should not be set in production
 

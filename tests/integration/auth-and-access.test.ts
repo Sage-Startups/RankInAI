@@ -11,6 +11,7 @@ import {
   pruneRateLimitEvents,
 } from '@/lib/rate-limit';
 import { clearCapturedEmails, lastEmailTo, sendPasswordResetEmail } from '@/lib/email';
+import { resetEnvCache } from '@/lib/env';
 import {
   cleanupTestData,
   createTestUser,
@@ -215,6 +216,51 @@ describe('password reset tokens', () => {
     expect(captured?.text).toContain(url);
     // The email must state the expiry so the user is not surprised.
     expect(captured?.text).toContain('60 minutes');
+  });
+
+  it('sends the reset through the configured provider, not just to the console', async () => {
+    // The console provider makes every other test here pass whether or not a
+    // real provider is wired into this path at all. This one proves the wiring:
+    // the same call, with SocketLabs configured, reaches SocketLabs carrying the
+    // link.
+    const email = testEmail('reset-provider');
+    const url = 'http://localhost:3000/reset-password?token=live-token';
+    const saved = {
+      provider: process.env.EMAIL_PROVIDER,
+      key: process.env.EMAIL_PROVIDER_API_KEY,
+      serverId: process.env.EMAIL_SOCKETLABS_SERVER_ID,
+    };
+    const requests: string[] = [];
+    const realFetch = globalThis.fetch;
+
+    process.env.EMAIL_PROVIDER = 'socketlabs';
+    process.env.EMAIL_PROVIDER_API_KEY = 'itest-key';
+    process.env.EMAIL_SOCKETLABS_SERVER_ID = '4242';
+    resetEnvCache();
+    globalThis.fetch = (async (target: string, init: RequestInit) => {
+      requests.push(`${target} ${String(init.body)}`);
+      return new Response(JSON.stringify({ ErrorCode: 'Success', MessageResults: [] }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }) as typeof globalThis.fetch;
+
+    try {
+      const result = await sendPasswordResetEmail(email, url);
+      expect(result).toMatchObject({ ok: true, provider: 'socketlabs' });
+      expect(requests).toHaveLength(1);
+      expect(requests[0]).toContain('https://inject.socketlabs.com/api/v1/email');
+      expect(requests[0]).toContain('"ServerId":4242');
+      expect(requests[0]).toContain(url);
+    } finally {
+      globalThis.fetch = realFetch;
+      process.env.EMAIL_PROVIDER = saved.provider;
+      if (saved.key === undefined) delete process.env.EMAIL_PROVIDER_API_KEY;
+      else process.env.EMAIL_PROVIDER_API_KEY = saved.key;
+      if (saved.serverId === undefined) delete process.env.EMAIL_SOCKETLABS_SERVER_ID;
+      else process.env.EMAIL_SOCKETLABS_SERVER_ID = saved.serverId;
+      resetEnvCache();
+    }
   });
 
   it('generates unpredictable tokens', () => {

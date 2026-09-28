@@ -5,7 +5,12 @@ import { getEnv } from '@/lib/env';
  *
  * `console` (the default in development and test) records the message in
  * memory and logs a summary, so password-reset flows are fully exercisable
- * without an email provider. `resend` posts to the Resend HTTP API.
+ * without an email provider. `resend` posts to the Resend HTTP API, and
+ * `socketlabs` to the SocketLabs Injection API.
+ *
+ * Both real providers are plain HTTPS calls, deliberately: SMTP would mean a
+ * new dependency and a long-lived socket in a request handler, and every
+ * provider worth using offers an HTTP endpoint.
  *
  * Nothing here ever logs a full token URL in production.
  */
@@ -79,11 +84,116 @@ async function sendViaResend(message: EmailMessage): Promise<SendResult> {
   }
 }
 
+/**
+ * Split `EMAIL_FROM` into the parts SocketLabs wants.
+ *
+ * `EMAIL_FROM` holds one RFC-5322 string — `RankClear <no-reply@rankclear.ai>`
+ * — because Resend takes it whole. SocketLabs wants the address and the display
+ * name as separate fields, and rejects the combined form as an invalid address.
+ */
+export function parseFromAddress(value: string): { address: string; name: string | null } {
+  const match = value.match(/^\s*(.*?)\s*<\s*([^<>\s]+)\s*>\s*$/);
+  if (match) {
+    const name = (match[1] ?? '').replace(/^"|"$/g, '').trim();
+    return { address: match[2] ?? '', name: name.length > 0 ? name : null };
+  }
+  return { address: value.trim(), name: null };
+}
+
+/**
+ * SocketLabs returns HTTP 200 for a request it refused.
+ *
+ * The body carries `ErrorCode`, and anything other than `Success` means nothing
+ * was sent — a bad ServerId, an unverified sending domain, a rejected
+ * recipient. Trusting the status code alone would report every one of those as
+ * a delivered password reset, which is the worst possible way to be wrong here:
+ * the user waits for an email that was never accepted.
+ */
+async function sendViaSocketLabs(message: EmailMessage): Promise<SendResult> {
+  const env = getEnv();
+  const provider = 'socketlabs';
+
+  if (!env.EMAIL_PROVIDER_API_KEY) {
+    return { ok: false, provider, error: 'EMAIL_PROVIDER_API_KEY is not set.' };
+  }
+  if (!env.EMAIL_SOCKETLABS_SERVER_ID) {
+    return { ok: false, provider, error: 'EMAIL_SOCKETLABS_SERVER_ID is not set.' };
+  }
+
+  const from = parseFromAddress(env.EMAIL_FROM);
+
+  try {
+    const response = await fetch('https://inject.socketlabs.com/api/v1/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ServerId: env.EMAIL_SOCKETLABS_SERVER_ID,
+        ApiKey: env.EMAIL_PROVIDER_API_KEY,
+        Messages: [
+          {
+            To: [{ EmailAddress: message.to }],
+            From: {
+              EmailAddress: from.address,
+              ...(from.name ? { FriendlyName: from.name } : {}),
+            },
+            Subject: message.subject,
+            HtmlBody: message.html,
+            TextBody: message.text,
+          },
+        ],
+      }),
+      signal: AbortSignal.timeout(15_000),
+    });
+
+    const body: unknown = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        provider,
+        error: `HTTP ${response.status}: ${JSON.stringify(body ?? '').slice(0, 200)}`,
+      };
+    }
+
+    const errorCode =
+      body && typeof body === 'object' && 'ErrorCode' in body
+        ? String((body as { ErrorCode: unknown }).ErrorCode)
+        : null;
+
+    if (errorCode !== 'Success') {
+      // The per-message result names the real cause when the envelope does not.
+      const messageErrors =
+        body && typeof body === 'object' && 'MessageResults' in body
+          ? JSON.stringify((body as { MessageResults: unknown }).MessageResults).slice(0, 200)
+          : '';
+      return {
+        ok: false,
+        provider,
+        error: `SocketLabs refused the message: ${errorCode ?? 'unrecognized response'}${
+          messageErrors ? ` ${messageErrors}` : ''
+        }`,
+      };
+    }
+
+    return { ok: true, provider, error: null };
+  } catch (error) {
+    return {
+      ok: false,
+      provider,
+      error: error instanceof Error ? error.message : 'Request failed',
+    };
+  }
+}
+
 export async function sendEmail(message: EmailMessage): Promise<SendResult> {
   const env = getEnv();
 
   if (env.EMAIL_PROVIDER === 'resend') {
     return sendViaResend(message);
+  }
+
+  if (env.EMAIL_PROVIDER === 'socketlabs') {
+    return sendViaSocketLabs(message);
   }
 
   captured.push({ ...message, sentAt: new Date() });

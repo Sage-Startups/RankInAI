@@ -92,6 +92,51 @@ async function checkDatabase() {
   }
 }
 
+/**
+ * Email, with the pieces each provider actually needs.
+ *
+ * A half-configured provider is the worst state: the app believes it can send,
+ * so "Forgot password" reports success and nothing arrives. Worth a hard fail
+ * here rather than a shrug about one missing key.
+ */
+function checkEmail() {
+  const provider = process.env.EMAIL_PROVIDER ?? 'console';
+  const key = process.env.EMAIL_PROVIDER_API_KEY;
+
+  if (provider === 'console') {
+    record(
+      'email',
+      'warn',
+      'console provider — nothing is delivered, so password reset is unusable for real users. Set EMAIL_PROVIDER to resend or socketlabs.',
+    );
+    return;
+  }
+
+  const missing: string[] = [];
+  if (!key || key.trim().length === 0) missing.push('EMAIL_PROVIDER_API_KEY');
+  if (provider === 'socketlabs') {
+    const serverId = process.env.EMAIL_SOCKETLABS_SERVER_ID;
+    if (!serverId || !Number.isFinite(Number.parseInt(serverId, 10))) {
+      missing.push('EMAIL_SOCKETLABS_SERVER_ID');
+    }
+  }
+
+  if (missing.length > 0) {
+    record(
+      'email',
+      'fail',
+      `EMAIL_PROVIDER=${provider} but ${missing.join(' and ')} is missing — no email can be sent.`,
+    );
+    return;
+  }
+
+  record(
+    'email',
+    'pass',
+    `${provider}, configured (sending from ${process.env.EMAIL_FROM ?? '—'})`,
+  );
+}
+
 function checkBilling() {
   const testMode = process.env.BILLING_TEST_MODE === 'true';
   const hasSecret = Boolean(process.env.STRIPE_SECRET_KEY);
@@ -191,7 +236,7 @@ async function main() {
 
   optional('OPENAI_API_KEY', 'audits use deterministic templates instead of AI-written narrative');
   optional('SERPER_API_KEY', 'optional public-web search observations are disabled');
-  optional('EMAIL_PROVIDER_API_KEY', 'transactional email falls back to the console provider');
+  checkEmail();
   required('SUPER_ADMIN_EMAIL', 'the seed needs to know which account is the administrator');
 
   const width = Math.max(...results.map((r) => r.name.length));
