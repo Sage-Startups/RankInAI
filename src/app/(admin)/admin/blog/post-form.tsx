@@ -38,7 +38,7 @@ function Save({ label }: { label: string }) {
 }
 
 const BODY_HELP =
-  'Supported: ## and ### headings, - or 1. lists, > quotes, **bold**, `code`, and [text](https://example.com) links. HTML is not rendered — it is shown as plain text.';
+  'Supported: ## and ### headings, - or 1. lists, > quotes, **bold**, `code`, [text](https://example.com) links, and ![description](/api/blog/images/…) images on their own line. HTML is not rendered — it is shown as plain text.';
 
 export function PostForm({ initial }: { initial: PostFormValues }) {
   const isEdit = Boolean(initial.id);
@@ -124,6 +124,18 @@ export function PostForm({ initial }: { initial: PostFormValues }) {
           className="font-mono text-[0.8125rem]"
         />
         <FieldHint>{BODY_HELP}</FieldHint>
+        <p className="mt-1.5 text-sm text-[var(--muted-foreground)]">
+          To add an image, upload it on the{' '}
+          <a
+            href="/admin/blog/images"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[var(--accent)] underline underline-offset-4"
+          >
+            blog images page
+          </a>{' '}
+          and paste the line it gives you where the image should appear.
+        </p>
         <FieldError message={firstError(state?.fieldErrors, 'body')} />
       </div>
 

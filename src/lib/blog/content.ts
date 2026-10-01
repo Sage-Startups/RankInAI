@@ -15,13 +15,20 @@
  *   > Quote             →  blockquote
  *   - item              →  unordered list
  *   1. item             →  ordered list
+ *   ![alt](/api/…)      →  figure + img, uploads and https only
  *   blank line          →  paragraph break
  *
  * Inline syntax:
  *   **bold**            →  <strong>
  *   `code`              →  <code>
  *   [text](https://…)   →  link, http(s) only
+ *
+ * An image is a block and never inline, so it cannot end up inside a
+ * paragraph, and its alt text is required by the upload form rather than
+ * optional here.
  */
+
+import { BLOG_IMAGE_PATH } from '@/lib/blog/images';
 
 export type InlineNode =
   | { type: 'text'; value: string }
@@ -33,7 +40,36 @@ export type Block =
   | { type: 'heading'; level: 2 | 3; content: InlineNode[] }
   | { type: 'paragraph'; content: InlineNode[] }
   | { type: 'quote'; content: InlineNode[] }
-  | { type: 'list'; ordered: boolean; items: InlineNode[][] };
+  | { type: 'list'; ordered: boolean; items: InlineNode[][] }
+  | { type: 'image'; src: string; alt: string };
+
+/**
+ * An image source, allowing only the two shapes that cannot carry script:
+ * an upload served by this application, and an absolute https URL.
+ *
+ * `data:` is refused even though a data URI cannot execute in `<img>`, because
+ * allowing it would put author-controlled bytes into the HTML itself and make
+ * the upload limits pointless. Plain `http:` is refused because the site is
+ * served over https and a mixed-content image is simply blocked by the browser
+ * — an author would see a broken image with no explanation.
+ */
+function safeImageSrc(raw: string): string | null {
+  const src = raw.trim();
+
+  // An upload: /api/blog/images/<id>, and nothing that climbs out of it.
+  if (src.startsWith(`${BLOG_IMAGE_PATH}/`)) {
+    const id = src.slice(BLOG_IMAGE_PATH.length + 1);
+    return /^[A-Za-z0-9_-]{1,64}$/.test(id) ? `${BLOG_IMAGE_PATH}/${id}` : null;
+  }
+
+  if (!/^https:\/\//i.test(src)) return null;
+  try {
+    const url = new URL(src);
+    return url.protocol === 'https:' ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Only http and https survive. A `javascript:` or `data:` href is not a
@@ -116,6 +152,19 @@ export function parseBlogBody(body: string): Block[] {
       continue;
     }
 
+    // ![alt](src) alone on a line. An unusable src keeps the alt text as a
+    // paragraph, the same way an unsafe link keeps its text: content an author
+    // typed is never silently dropped.
+    const image = /^!\[([^\]]*)\]\(([^)\s]+)\)$/.exec(line);
+    if (image) {
+      flushAll();
+      const src = safeImageSrc(image[2]);
+      const alt = image[1].trim();
+      if (src) blocks.push({ type: 'image', src, alt });
+      else if (alt) blocks.push({ type: 'paragraph', content: parseInline(alt) });
+      continue;
+    }
+
     const heading = /^(#{2,3})\s+(.*)$/.exec(line);
     if (heading) {
       flushAll();
@@ -167,11 +216,15 @@ export function parseBlogBody(body: string): Block[] {
 /** Plain text of a post, for reading-time and excerpt fallbacks. */
 export function blogBodyToPlainText(body: string): string {
   return parseBlogBody(body)
-    .flatMap((block) =>
-      block.type === 'list'
-        ? block.items.map((item) => item.map((n) => n.value).join(''))
-        : [block.content.map((n) => n.value).join('')],
-    )
+    .flatMap((block) => {
+      if (block.type === 'list') {
+        return block.items.map((item) => item.map((n) => n.value).join(''));
+      }
+      // An image contributes its alt text and nothing else — it has no inline
+      // content, and reading it as if it did would throw.
+      if (block.type === 'image') return [block.alt];
+      return [block.content.map((n) => n.value).join('')];
+    })
     .join(' ')
     .replace(/\s+/g, ' ')
     .trim();

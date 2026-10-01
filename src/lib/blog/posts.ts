@@ -3,6 +3,7 @@ import 'server-only';
 import { BlogPostStatus, type Prisma } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
+import { extractBlogImageIds, type ImageSizes } from '@/lib/blog/images';
 
 /**
  * Blog reads.
@@ -60,6 +61,81 @@ export async function listAllPostsForAdmin() {
     select: { ...LIST_SELECT, status: true, isDemo: true, createdAt: true },
     orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
   });
+}
+
+/**
+ * Stored dimensions for the uploads a body references, so the renderer can
+ * reserve each image's space instead of reflowing the article as it loads.
+ *
+ * One query per post, and only for ids the body actually mentions. An image
+ * whose dimensions could not be read from its header is simply absent.
+ */
+export async function blogImageSizes(body: string): Promise<ImageSizes> {
+  const ids = extractBlogImageIds(body);
+  if (ids.length === 0) return {};
+
+  const rows = await prisma.blogImage.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, width: true, height: true },
+  });
+
+  const sizes: ImageSizes = {};
+  for (const row of rows) {
+    if (row.width && row.height) sizes[row.id] = { width: row.width, height: row.height };
+  }
+  return sizes;
+}
+
+export async function listBlogImagesForAdmin() {
+  return prisma.blogImage.findMany({
+    select: {
+      id: true,
+      filename: true,
+      contentType: true,
+      altText: true,
+      bytes: true,
+      width: true,
+      height: true,
+      createdAt: true,
+      uploadedBy: { select: { name: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 200,
+  });
+}
+
+export type AdminBlogImage = Awaited<ReturnType<typeof listBlogImagesForAdmin>>[number];
+
+export interface ImageUsage {
+  slug: string;
+  title: string;
+  published: boolean;
+}
+
+/**
+ * Which posts use which image.
+ *
+ * Deleting an image a published post still references would leave a broken
+ * image on a live page, so the library says what each one is used by before
+ * offering to delete it. Built from one pass over the bodies rather than a
+ * `contains` query per image.
+ */
+export async function blogImageUsage(): Promise<Record<string, ImageUsage[]>> {
+  const posts = await prisma.blogPost.findMany({
+    select: { slug: true, title: true, status: true, body: true },
+  });
+
+  const usage: Record<string, ImageUsage[]> = {};
+  for (const post of posts) {
+    for (const id of extractBlogImageIds(post.body)) {
+      (usage[id] ??= []).push({
+        slug: post.slug,
+        title: post.title,
+        published: post.status === BlogPostStatus.PUBLISHED,
+      });
+    }
+  }
+  return usage;
 }
 
 /** Slugs of published posts, for the sitemap. */

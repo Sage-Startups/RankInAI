@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BlogPostStatus } from '@prisma/client';
-import { ExternalLink, Plus } from 'lucide-react';
+import { ExternalLink, Image as ImageIcon, Plus } from 'lucide-react';
 
 import { Badge, Card } from '@/components/ui/primitives';
 import { Button } from '@/components/ui/button';
@@ -30,12 +30,20 @@ export default async function AdminBlogPage() {
             super admin can create, edit or delete a post.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/admin/blog/new">
-            <Plus aria-hidden="true" />
-            New post
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button asChild variant="secondary">
+            <Link href="/admin/blog/images">
+              <ImageIcon aria-hidden="true" />
+              Images
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/admin/blog/new">
+              <Plus aria-hidden="true" />
+              New post
+            </Link>
+          </Button>
+        </div>
       </header>
 
       <Card>

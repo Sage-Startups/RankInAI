@@ -23,7 +23,9 @@ export type AdminAction =
   | 'blog.create'
   | 'blog.update'
   | 'blog.publish'
-  | 'blog.delete';
+  | 'blog.delete'
+  | 'blog.image_upload'
+  | 'blog.image_delete';
 
 export async function logAdminAction(params: {
   adminUserId: string;
@@ -62,4 +64,6 @@ export const ADMIN_ACTION_LABELS: Record<AdminAction, string> = {
   'blog.update': 'Updated blog post',
   'blog.publish': 'Published blog post',
   'blog.delete': 'Deleted blog post',
+  'blog.image_upload': 'Uploaded blog image',
+  'blog.image_delete': 'Deleted blog image',
 };

@@ -95,6 +95,96 @@ describe('blog body parsing', () => {
   });
 });
 
+/**
+ * Images.
+ *
+ * The src allowlist is the security boundary here. The renderer puts whatever
+ * survives into an `<img src>`, so anything that is not an upload of ours or a
+ * plain https URL has to be discarded by the parser — the renderer never gets
+ * the chance to decide.
+ */
+describe('image blocks', () => {
+  it('parses an uploaded image into a block of its own', () => {
+    expect(parseBlogBody('![A score ring](/api/blog/images/abc123)')).toEqual([
+      { type: 'image', src: '/api/blog/images/abc123', alt: 'A score ring' },
+    ]);
+  });
+
+  it('accepts an absolute https image', () => {
+    const blocks = parseBlogBody('![Remote](https://example.com/a.png)');
+    expect(blocks).toEqual([{ type: 'image', src: 'https://example.com/a.png', alt: 'Remote' }]);
+  });
+
+  it('never produces an image or a link from a javascript: or data: src', () => {
+    for (const src of [
+      'javascript:alert(1)',
+      'data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=',
+      'vbscript:msgbox(1)',
+      'JavaScript:alert(1)',
+    ]) {
+      const blocks = parseBlogBody(`![Looks fine](${src})`);
+
+      // The shape of the fallback varies with how the line tokenizes — what
+      // must hold is that no element carrying that URL is ever emitted.
+      expect(blocks.some((b) => b.type === 'image')).toBe(false);
+      for (const block of blocks) {
+        if (block.type === 'image' || block.type === 'list') continue;
+        expect(block.content.some((node) => node.type === 'link')).toBe(false);
+      }
+      expect(JSON.stringify(blocks)).toContain('Looks fine');
+    }
+  });
+
+  it('discards a plain http src, which a browser on https would block anyway', () => {
+    expect(parseBlogBody('![Insecure](http://example.com/a.png)')).toEqual([
+      { type: 'paragraph', content: [{ type: 'text', value: 'Insecure' }] },
+    ]);
+  });
+
+  it('refuses a path that only looks like an upload', () => {
+    for (const src of [
+      '/api/blog/images/../../../etc/passwd',
+      '/api/blog/images/abc/../..',
+      '/api/blog/imageslookalike/abc',
+      '//evil.example.com/a.png',
+    ]) {
+      const blocks = parseBlogBody(`![Nope](${src})`);
+      expect(blocks.some((b) => b.type === 'image')).toBe(false);
+    }
+  });
+
+  it('keeps an image out of the surrounding paragraph', () => {
+    const blocks = parseBlogBody(
+      ['Before the image.', '![Shot](/api/blog/images/abc123)', 'After the image.'].join('\n'),
+    );
+
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'image', 'paragraph']);
+  });
+
+  it('ends a list cleanly rather than swallowing the image', () => {
+    const blocks = parseBlogBody(['- one', '- two', '![Shot](/api/blog/images/abc123)'].join('\n'));
+    expect(blocks.map((b) => b.type)).toEqual(['list', 'image']);
+  });
+
+  it('leaves an inline-looking image as plain text, since images are blocks', () => {
+    const blocks = parseBlogBody('Text with ![an image](/api/blog/images/abc123) inside it.');
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0]?.type).toBe('paragraph');
+  });
+
+  it('allows empty alt text in the markup without producing a broken block', () => {
+    expect(parseBlogBody('![](/api/blog/images/abc123)')).toEqual([
+      { type: 'image', src: '/api/blog/images/abc123', alt: '' },
+    ]);
+  });
+
+  it('counts an image as its description in the plain text, and never throws', () => {
+    const body = '![A chart of scores](/api/blog/images/abc123)\n\nSome words.';
+    expect(blogBodyToPlainText(body)).toBe('A chart of scores Some words.');
+    expect(readingTimeMinutes(body)).toBe(1);
+  });
+});
+
 describe('slugify', () => {
   it('produces a URL-safe slug', () => {
     expect(slugify('What GEO Actually Is')).toBe('what-geo-actually-is');

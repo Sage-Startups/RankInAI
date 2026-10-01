@@ -7,6 +7,7 @@ import { BlogPostStatus, Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/guards';
 import { logAdminAction } from '@/lib/admin-log';
+import { MAX_IMAGE_BYTES, blogImageMarkup, formatImageBytes, sniffImage } from '@/lib/blog/images';
 import {
   blogPostSchema,
   formChecked,
@@ -162,6 +163,142 @@ export async function updateBlogPostAction(
   revalidateBlog(fields.slug);
 
   return { ok: true, message: publish ? 'Saved and published.' : 'Saved as a draft.' };
+}
+
+/**
+ * Upload an image for use in a post body.
+ *
+ * The declared type and the filename are both author-controlled, so neither
+ * decides what is stored: the bytes are sniffed, and an upload whose header is
+ * not one of the four supported raster formats is refused. That is what stops a
+ * stolen admin session turning an "image" upload into a stored document served
+ * from our own origin — the attack SVG would walk straight through.
+ *
+ * Alt text is required rather than optional. A decorative-image escape hatch
+ * would be used for every image, and the blog is a public page the product's
+ * own audit would mark down for it.
+ */
+export async function uploadBlogImageAction(
+  _previous: ActionResult<{ markup: string }> | null,
+  formData: FormData,
+): Promise<ActionResult<{ markup: string }>> {
+  const admin = await requireAdmin();
+
+  const file = formData.get('file');
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: 'Choose an image file to upload.' };
+  }
+
+  const altText = (optionalFormValue(formData, 'altText') ?? '').trim();
+  if (altText.length < 3) {
+    return {
+      ok: false,
+      message: 'Please describe the image.',
+      fieldErrors: {
+        altText: ['Alt text is required — it is what a screen reader reads out.'],
+      },
+    };
+  }
+  if (altText.length > 200) {
+    return {
+      ok: false,
+      message: 'Please shorten the description.',
+      fieldErrors: { altText: ['Keep alt text under 200 characters.'] },
+    };
+  }
+
+  // Checked before the bytes are read into memory, not after.
+  if (file.size > MAX_IMAGE_BYTES) {
+    return {
+      ok: false,
+      message: `That file is ${formatImageBytes(file.size)}. The limit is ${formatImageBytes(
+        MAX_IMAGE_BYTES,
+      )}.`,
+    };
+  }
+
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  // A streamed upload can exceed what `size` claimed, so re-check the truth.
+  if (bytes.byteLength > MAX_IMAGE_BYTES) {
+    return { ok: false, message: 'That file is larger than the 4 MB limit.' };
+  }
+
+  const sniffed = sniffImage(bytes);
+  if (!sniffed) {
+    return {
+      ok: false,
+      message:
+        'That file is not a PNG, JPEG, WebP or GIF image. SVG is not supported, because an SVG can carry script.',
+    };
+  }
+
+  const created = await prisma.blogImage.create({
+    data: {
+      // The name is for the author's benefit in the library list, so it is
+      // stored, but it never reaches a header or a path.
+      filename: file.name.slice(0, 160) || 'upload',
+      contentType: sniffed.contentType,
+      altText,
+      data: bytes,
+      bytes: bytes.byteLength,
+      width: sniffed.width,
+      height: sniffed.height,
+      uploadedById: admin.id,
+    },
+    select: { id: true },
+  });
+
+  await logAdminAction({
+    adminUserId: admin.id,
+    action: 'blog.image_upload',
+    summary: `Uploaded blog image "${altText}" (${sniffed.contentType}, ${formatImageBytes(
+      bytes.byteLength,
+    )})`,
+    targetType: 'BlogImage',
+    targetId: created.id,
+  });
+
+  revalidatePath('/admin/blog/images');
+
+  return {
+    ok: true,
+    message: 'Uploaded. Paste the line below into a post body.',
+    data: { markup: blogImageMarkup(created.id, altText) },
+  };
+}
+
+/**
+ * Bound directly to a `<form action>`, which requires a void result.
+ *
+ * Deleting an image a published post still references would leave a broken
+ * image on a live page, so the library page shows what uses it before offering
+ * this.
+ */
+export async function deleteBlogImageAction(formData: FormData): Promise<void> {
+  const admin = await requireAdmin();
+
+  const id = formValue(formData, 'id');
+  if (!id) redirect('/admin/blog/images');
+
+  const existing = await prisma.blogImage.findUnique({
+    where: { id },
+    select: { id: true, altText: true },
+  });
+  if (!existing) redirect('/admin/blog/images');
+
+  await prisma.blogImage.delete({ where: { id } });
+
+  await logAdminAction({
+    adminUserId: admin.id,
+    action: 'blog.image_delete',
+    summary: `Deleted blog image "${existing.altText}"`,
+    targetType: 'BlogImage',
+    targetId: existing.id,
+  });
+
+  revalidatePath('/admin/blog/images');
+  revalidatePath('/blog');
+  redirect('/admin/blog/images?deleted=1');
 }
 
 /**

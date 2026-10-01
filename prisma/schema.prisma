@@ -224,6 +224,7 @@ model User {
   handledContacts     ContactSubmission[]      @relation("ContactHandler")
   settingUpdates      SystemSetting[]          @relation("SettingUpdatedBy")
   blogPosts           BlogPost[]               @relation("BlogAuthor")
+  blogImages          BlogImage[]              @relation("BlogImageUploader")
 
   @@index([role])
   @@index([status])
@@ -842,4 +843,28 @@ model BlogPost {
 enum BlogPostStatus {
   DRAFT
   PUBLISHED
+}
+
+/// An image uploaded for use in a post body.
+///
+/// The bytes live here rather than on disk because the platform's filesystem is
+/// ephemeral — the same reason report PDFs are cached in Postgres. `contentType`
+/// is the type read from the file's leading bytes, never the one the browser
+/// declared, and it is what the serving route sends back.
+model BlogImage {
+  id           String    @id @default(cuid())
+  filename     String
+  contentType  String
+  altText      String
+  data         Bytes
+  bytes        Int
+  width        Int?
+  height       Int?
+  uploadedById String?
+  isDemo       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+
+  uploadedBy User? @relation("BlogImageUploader", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
 }

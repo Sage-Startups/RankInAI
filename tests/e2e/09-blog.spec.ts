@@ -23,6 +23,12 @@ const stamp = Date.now();
 const SLUG = `e2e-post-${stamp}`;
 const DRAFT_SLUG = `e2e-draft-${stamp}`;
 
+/** A real 1×1 PNG, so the header the upload path sniffs is genuine. */
+const PNG_1X1 = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==',
+  'base64',
+);
+
 const BODY = [
   '## A heading the parser understands',
   '',
@@ -165,12 +171,92 @@ test.describe('Journey 8: the blog', () => {
     }
   });
 
+  test('a super admin uploads an image and it appears in a published post', async ({ page }) => {
+    await signIn(page, SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD);
+
+    const alt = `A one pixel test image ${stamp}`;
+    await page.goto('/admin/blog/images');
+    await page.setInputFiles('input[type=file]', {
+      name: 'test-image.png',
+      mimeType: 'image/png',
+      buffer: PNG_1X1,
+    });
+    await page.getByRole('textbox', { name: 'Describe the image', exact: true }).fill(alt);
+    await page.getByRole('button', { name: 'Upload image' }).click();
+
+    // The upload hands back the line to paste, and that line is the only way
+    // an image gets into a body — there is no raw-HTML escape hatch.
+    const markupField = page.getByRole('textbox', { name: 'Image markup' });
+    await expect(markupField).toBeVisible();
+    const markup = await markupField.inputValue();
+    expect(markup).toMatch(/^!\[.+\]\(\/api\/blog\/images\/[A-Za-z0-9_-]+\)$/);
+
+    const src = markup.slice(markup.indexOf('](') + 2, -1);
+
+    // The bytes come back from our own origin, with the type read from the
+    // file's header rather than the one the browser declared.
+    const served = await page.request.get(src);
+    expect(served.status()).toBe(200);
+    expect(served.headers()['content-type']).toBe('image/png');
+    expect(served.headers()['x-content-type-options']).toBe('nosniff');
+
+    const slug = `e2e-image-post-${stamp}`;
+    await page.goto('/admin/blog/new');
+    await fillPost(page, {
+      title: `E2E post with an image ${stamp}`,
+      slug,
+      excerpt: 'An end-to-end post that renders an uploaded image in its body.',
+      body: [`${markup}`, '', 'A paragraph after the image.'].join('\n'),
+      publish: true,
+    });
+    await page.getByRole('button', { name: 'Create post' }).click();
+    await page.waitForURL(/\/admin\/blog\/[a-z0-9]+\?saved=1/);
+
+    await page.goto(`/blog/${slug}`);
+    const image = page.getByRole('img', { name: alt });
+    await expect(image).toBeVisible();
+    await expect(image).toHaveAttribute('src', src);
+    // Stored dimensions are rendered, so the article does not reflow as the
+    // image loads.
+    await expect(image).toHaveAttribute('width', '1');
+
+    // The library says which post uses it, so deleting one cannot silently
+    // break a published page.
+    await page.goto('/admin/blog/images');
+    await expect(
+      page.getByText(`E2E post with an image ${stamp}`, { exact: false }).first(),
+    ).toBeVisible();
+  });
+
+  test('an upload that is not really an image is refused', async ({ page }) => {
+    await signIn(page, SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD);
+    await page.goto('/admin/blog/images');
+
+    // An SVG with a script in it, named and declared as a PNG. The name and the
+    // declared type are both author-controlled, so only the bytes decide.
+    await page.setInputFiles('input[type=file]', {
+      name: 'innocent.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(
+        '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>',
+      ),
+    });
+    await page
+      .getByRole('textbox', { name: 'Describe the image', exact: true })
+      .fill('Should never be stored');
+    await page.getByRole('button', { name: 'Upload image' }).click();
+
+    await expect(page.getByText(/not a PNG, JPEG, WebP or GIF image/i)).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Image markup' })).toHaveCount(0);
+    await expect(page.getByText('Should never be stored')).toHaveCount(0);
+  });
+
   test('an ordinary user cannot reach any blog authoring route', async ({ page }) => {
     const email = uniqueEmail('blog-user');
     await signUp(page, { email, name: 'Ordinary Reader' });
     await skipOnboarding(page);
 
-    for (const path of ['/admin/blog', '/admin/blog/new']) {
+    for (const path of ['/admin/blog', '/admin/blog/new', '/admin/blog/images']) {
       const response = await page.goto(path);
       expect(response?.status()).toBeLessThan(500);
       expect(page.url()).not.toContain('/admin');
@@ -178,11 +264,12 @@ test.describe('Journey 8: the blog', () => {
       // The authoring UI is not merely hidden — it never rendered.
       await expect(page.getByRole('button', { name: 'Create post' })).toHaveCount(0);
       await expect(page.getByRole('link', { name: 'New post' })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: 'Upload image' })).toHaveCount(0);
     }
   });
 
   test('signed-out visitors are redirected away from the authoring routes', async ({ page }) => {
-    for (const path of ['/admin/blog', '/admin/blog/new']) {
+    for (const path of ['/admin/blog', '/admin/blog/new', '/admin/blog/images']) {
       await page.goto(path);
       await expect(page).toHaveURL(/\/signin\?callbackUrl=/);
     }

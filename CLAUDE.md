@@ -126,6 +126,30 @@ Authoring authorization lives on the server actions themselves, not on the
 can invoke it without the layout ever rendering, so each action calls
 `requireAdmin` first.
 
+### An uploaded image is identified by its bytes, and SVG is not an image here
+
+`uploadBlogImageAction` ignores `file.type` and the filename — both are whatever
+the client said, which in the case this guards against (a stolen admin session)
+means attacker-controlled. `sniffImage` reads the leading bytes, and the type it
+returns is what gets stored and what `/api/blog/images/[id]` later sends, with
+`nosniff`. The route re-checks the stored type against the allowlist so a row
+from some other version of the upload path cannot decide what a browser renders.
+
+**SVG is deliberately unsupported, and there is no flag for it.** An `<svg>` can
+carry `<script>`, and served from our own origin it would run with our origin's
+privileges — handing back exactly the stored XSS that the parsed-markup design
+exists to prevent.
+
+Images live in Postgres, like report PDFs, because the platform filesystem is
+ephemeral. `safeImageSrc` in `content.ts` accepts only `/api/blog/images/<id>`
+and absolute `https:` URLs; `http:` is refused because the browser would block
+it as mixed content and the author would see a broken image with no explanation.
+
+The renderer uses a plain `<img>`, never `next/image`: the optimizer would route
+author-supplied bytes through sharp, whose libvips advisories `BUILD_STATUS.md`
+documents rather than adopts. Width and height come from the dimensions read at
+upload time, so a post does not reflow as its images load.
+
 ### `SUPER_ADMIN_EMAIL` is reconciled at boot, not only at seed
 
 The seed upserts that address as a super admin, and registration promotes it when

@@ -8,7 +8,7 @@ import { Alert } from '@/components/ui/primitives';
 import { CtaBand } from '@/components/site/marketing-blocks';
 import { PostBody } from '@/components/blog/post-body';
 import { auth } from '@/lib/auth';
-import { getPostBySlugForAdmin, getPublishedPost } from '@/lib/blog/posts';
+import { blogImageSizes, getPostBySlugForAdmin, getPublishedPost } from '@/lib/blog/posts';
 import { readingTimeMinutes } from '@/lib/blog/content';
 import { formatDate } from '@/lib/utils';
 
@@ -60,6 +60,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const { post, isDraftPreview } = loaded;
   const minutes = readingTimeMinutes(post.body);
+  // Stored dimensions for the post's own uploads, so each image reserves its
+  // space rather than reflowing the article as it loads.
+  const imageSizes = await blogImageSizes(post.body);
 
   return (
     <>
@@ -106,7 +109,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </header>
 
         <div className="mt-6">
-          <PostBody body={post.body} />
+          <PostBody body={post.body} imageSizes={imageSizes} />
         </div>
       </article>
 

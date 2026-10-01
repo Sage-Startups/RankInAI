@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'server-only': fileURLToPath(new URL('./tests/stubs/server-only.ts', import.meta.url)),
     },
   },
   test: {
@@ -18,7 +19,14 @@ export default defineConfig({
     projects: [
       {
         resolve: {
-          alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+          alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            // A Next.js bundler marker with no runtime behavior, and no
+            // resolvable package outside Next. The markers stay in the source
+            // so the real build still refuses to bundle those modules into a
+            // client component.
+            'server-only': fileURLToPath(new URL('./tests/stubs/server-only.ts', import.meta.url)),
+          },
         },
         test: {
           name: 'unit',
@@ -30,7 +38,14 @@ export default defineConfig({
       },
       {
         resolve: {
-          alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+          alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            // A Next.js bundler marker with no runtime behavior, and no
+            // resolvable package outside Next. The markers stay in the source
+            // so the real build still refuses to bundle those modules into a
+            // client component.
+            'server-only': fileURLToPath(new URL('./tests/stubs/server-only.ts', import.meta.url)),
+          },
         },
         test: {
           name: 'integration',

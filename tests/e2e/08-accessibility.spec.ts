@@ -122,5 +122,12 @@ test.describe('Accessibility: no serious or critical violations', () => {
       page.getByRole('heading', { name: 'Demonstration revenue snapshot' }),
     ).toBeVisible();
     await scan(page, 'admin demo snapshot');
+
+    // A file input and a list of thumbnails is where unlabeled controls and
+    // missing alt text would hide — and this page is what produces the alt
+    // text every public post relies on.
+    await page.goto('/admin/blog/images');
+    await expect(page.getByRole('heading', { name: 'Blog images' })).toBeVisible();
+    await scan(page, 'admin blog images');
   });
 });

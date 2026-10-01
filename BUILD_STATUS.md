@@ -55,16 +55,16 @@ Every figure below is from an actual run, not an estimate.
 
 | Suite                 | Result                     | Command                    |
 | --------------------- | -------------------------- | -------------------------- |
-| Unit                  | **326 passed**, 0 failed   | `npm run test:unit`        |
-| Integration           | **101 passed**, 0 failed   | `npm run test:integration` |
-| End-to-end            | **43 passed**, 0 failed    | `npm run test:e2e`         |
+| Unit                  | **354 passed**, 0 failed   | `npm run test:unit`        |
+| Integration           | **109 passed**, 0 failed   | `npm run test:integration` |
+| End-to-end            | **45 passed**, 0 failed    | `npm run test:e2e`         |
 | Type check            | clean                      | `npm run typecheck`        |
 | Lint                  | clean, 0 errors 0 warnings | `npm run lint`             |
 | Format                | clean                      | `npm run format:check`     |
 | Production build      | succeeds                   | `npm run build`            |
 | Full audit validation | passed                     | `npm run audit:full-test`  |
 
-No test is skipped. The E2E suite includes axe-core accessibility scans of eleven
+No test is skipped. The E2E suite includes axe-core accessibility scans of twelve
 screens with serious and critical violations set to fail the build; all are clean.
 
 The full audit validation run is recorded in `FULL_AUDIT_TEST_REPORT.md`: a complete
@@ -148,6 +148,18 @@ parsed into React elements — there is no path from a stored post to
 `dangerouslySetInnerHTML`, so a stolen admin session cannot become stored XSS.
 Published posts appear in the sitemap. Two starter articles ship seeded; they are
 real editorial content, not demonstration records.
+
+Images are uploaded on `/admin/blog/images`, which hands back the one line to
+paste into a post body, lists every upload with the posts using it, and warns
+before deleting one a published post still references. The bytes are stored in
+PostgreSQL — the platform filesystem is ephemeral — and served from
+`/api/blog/images/[id]` with the content type read from the file's own header,
+`nosniff`, and a year-long immutable cache. **The declared type and the filename
+are ignored**: a file named `innocent.png` whose bytes are an SVG carrying a
+`<script>` is refused, which the E2E suite asserts through the real form. SVG is
+unsupported by design. Alt text is required at upload, dimensions are read from
+the image header so posts do not reflow as they load, and the renderer uses a
+plain `<img>` rather than `next/image` so no author-supplied bytes reach sharp.
 
 ### Buyer preview
 
